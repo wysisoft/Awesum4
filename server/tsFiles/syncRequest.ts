@@ -12,6 +12,7 @@ export type syncRequest = {
     enableNarrator: boolean
     groups: string
     id: string
+    lastSync: number
   }
   database?: {
     name: string

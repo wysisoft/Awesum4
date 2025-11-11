@@ -63,5 +63,8 @@
     private _id: string = "";
     public get id():string { return this._id; }
     public set id(v:string) {if(this._id != v){this._id=v;awesum.setTablePropertyValueById(this.id, 'id',v,this.table)}}
+    private _lastSync: number = 0;
+    public get lastSync():number { return this._lastSync; }
+    public set lastSync(v:number) {if(this._lastSync != v){this.version++;this.lastModified=new Date().getTime();this._lastSync=v;awesum.setTablePropertyValueById(this.id, 'lastSync',v,this.table)}}
   }
   

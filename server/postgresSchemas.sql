@@ -13,7 +13,8 @@
   "lang" VARCHAR(100) NOT NULL,
   "enableNarrator" BOOLEAN NOT NULL,
   "groups" VARCHAR(8000) NOT NULL,
-  "id" UUID PRIMARY KEY NOT NULL
+  "id" UUID PRIMARY KEY NOT NULL,
+  "lastSync" NUMERIC NOT NULL
 );
 
 DROP TABLE IF EXISTS awesum."Deletion";

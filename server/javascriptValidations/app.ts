@@ -22,7 +22,7 @@ isNameGloballyUnique: true,
 transform: ['trim', 'toLowerCase'],
 type: 'string'},
 version: { default: 0, minimum: 0, type: 'integer' },
-lastModified: { default: 1762879447790, type: 'number' },
+lastModified: { default: 1762885163314, type: 'number' },
 homePageImageType: { default: 0, minimum: 0, maximum: 3, type: 'integer' },
 homePageImage: {
 default: '00000000-0000-0000-0000-000000000001',
@@ -42,11 +42,11 @@ type: 'string'},
 enableNarrator: { default: false, type: 'boolean' },
 groups: { maxLength: 8000, type: 'string' },
 id: {
-default: '019a73cd-a2ee-7146-ac1c-398d6acb2fba',
+default: '019a7424-d933-71e8-89c8-0b9067a0b2b7',
 format: 'uuid',
 minLength: 36,
-type: 'string'
-}
+type: 'string'},
+lastSync: { type: 'number' }
 },
 required: [
 'email',
@@ -60,7 +60,8 @@ required: [
 'lang',
 'enableNarrator',
 'groups',
-'id'
+'id',
+'lastSync'
 ]
 }
 const func2 = (await import('ajv-keywords/dist/definitions/transform')).default.transform
@@ -95,7 +96,8 @@ if (
 (data.lang === undefined && (missing0 = 'lang')) ||
 (data.enableNarrator === undefined && (missing0 = 'enableNarrator')) ||
 (data.groups === undefined && (missing0 = 'groups')) ||
-(data.id === undefined && (missing0 = 'id'))
+(data.id === undefined && (missing0 = 'id')) ||
+(data.lastSync === undefined && (missing0 = 'lastSync'))
 ) {errors.push(
 {
 instancePath,
@@ -580,6 +582,29 @@ message: 'must be string'
 var valid0 = _errs23 === errors
 } else {
 var valid0 = true
+}
+if (valid0) {
+if (data.lastSync !== undefined) {
+let data12 = data.lastSync
+const _errs25 = errors
+if (
+!(
+typeof data12 == 'number' &&
+isFinite(data12)
+)
+) {errors.push(
+{
+instancePath: instancePath + '/lastSync',
+schemaPath: '#/properties/lastSync/type',
+keyword: 'type',
+params: { type: 'number' },
+ message: "Must_be_a_number"}
+);
+}
+var valid0 = _errs25 === errors
+} else {
+var valid0 = true
+}
 }
 }
 }

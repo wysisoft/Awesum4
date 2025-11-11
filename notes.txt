@@ -1,0 +1,31 @@
+#allows linux to serve port 443 by redirecting to 8443 internally
+sudo iptables -t nat -A PREROUTING -p tcp --dport 443 -j REDIRECT --to-port 8443
+sudo iptables -t nat -I OUTPUT -p tcp -d 127.0.0.1 --dport 443 -j REDIRECT --to-ports 8443
+sudo iptables-save
+
+netsh interface portproxy add v4tov4 listenport=443 listenaddress=* connectport=8443 connectaddress=127.0.0.1
+netsh interface portproxy add v4tov4 listenport=80 listenaddress=* connectport=8080 connectaddress=127.0.0.1
+
+#Certbot manual cert refresh
+sudo certbot -d awesum.app --manual --preferred-challenges dns certonly --key-type ecdsa
+sudo cp /etc/letsencrypt/live/awesum.app-0001/privkey.pem /home/b/snap/novnc/privkey.pem
+sudo cp /etc/letsencrypt/live/awesum.app-0001/fullchain.pem /home/b/snap/novnc/cert.pem
+sudo cp /etc/letsencrypt/live/awesum.app-0001/privkey.pem /home/b/Awesum2/bun/privkey.pem
+sudo cp /etc/letsencrypt/live/awesum.app-0001/fullchain.pem /home/b/Awesum2/bun/cert.pem
+sudo cp /etc/letsencrypt/live/awesum.app-0001/fullchain.pem /etc/nginx/ssl/awesum.app.crt;
+sudo cp /etc/letsencrypt/live/awesum.app-0001/privkey.pem /etc/nginx/ssl/awesum.app.key;
+
+
+#novnc command
+novnc --vnc localhost:5900 --web /home/a/snap/novnc --web-auth --auth-plugin BasicHTTPAuth --auth-source vnc:This4Now\!Welcome1\!
+
+npx sequelize-auto -o "./models" -c sequelize-auto-config.json -l ts
+
+scp C:/awesum4/awesum2/Awesum/src/router.py root@192.168.1.1/usr/lib/awesum/awesum.py
+
+rm -r ../bun/dist || true && npm run build && cp -r dist ../bun/dist
+
+bun run automation
+bun run index.ts --env=dev
+
+npx kysely-codegen --out-file ./db/db.d.ts --type-mapping='{"numeric":"number"}'

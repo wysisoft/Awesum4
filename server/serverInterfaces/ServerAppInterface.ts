@@ -18,5 +18,6 @@ export interface ServerAppInterface {
   enableNarrator: boolean;
   groups: string;
   id: string;
+  lastSync: number;
   
 }

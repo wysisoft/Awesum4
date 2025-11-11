@@ -6,6 +6,7 @@ import { Kysely, PostgresDialect,HandleEmptyInListsPlugin,type HandleEmptyInList
 import { type AwesumApp, type AwesumFollowerRequest,type AwesumFollowerDatabase, type DB, type AwesumFollowerDatabaseCompletion, type AwesumDatabaseUnit, type AwesumDatabaseItem, type AwesumRouter, type AwesumDatabase, type AwesumDnsEntry } from './db/db';
 import { Pool } from 'pg';
 
+
 // Define a custom logger (you can use any logging library you prefer)
 const logger = {
   log: (message: string) => console.log(message),  // Here we use console.log for simplicity
@@ -51,13 +52,13 @@ import * as middleware from "i18next-http-middleware";
 import type { ServerDatabaseUnitInterface } from "./serverInterfaces/ServerDatabaseUnitInterface";
 
 import type { ServerResetAllServerDataResponseInterface } from "./serverInterfaces/ServerResetAllServerDataResponseInterface";
-import { followerRequestStatus, ItemLevel, ServerMessageType } from "./typebox";
+import { followerRequestStatus, ItemLevel, ServerMessageType, syncResultType } from "./typebox";
 import type { ServerUpdateRouterTimesAndDurationsRequestInterface } from "./serverInterfaces/ServerUpdateRouterTimesAndDurationsRequestInterface";
 import type { ServerUpdateRouterStatusRequestInterface } from "./serverInterfaces/ServerUpdateRouterStatusRequestInterface";
 
 //add websocket server using websocket.js
 import ws from "ws";
-const WebSocketServer = ws.Server
+const WebSocketServer = (ws as any).Server
 import { isNameGloballyUnique } from "./serverAndClientFunctions";
 import type { Database, DatabaseItem, DatabaseUnit, ServerSyncRequestInterface } from "./serverInterfaces/ServerSyncRequestInterface";
 import { getEmailFromAppId, getAppIdFromEmail, doesEmailExist } from "./serverFunctions";
@@ -557,6 +558,13 @@ app.post("/api/sync", express.json({ limit: '1mb' }), async (req: express.Reques
       }
     }
 
+    if (syncRequestArray.length == 1 && syncRequestArray[0].deletion && syncRequestArray[0].deletion.level == ItemLevel.app && 
+      syncRequestArray[0].deletion.id == foundLeaderAppId) {
+    
+        await DeleteApp(foundLeaderAppId, syncResponseArray, res);
+        return;
+    }
+
 
     // Helper functions
     const populateFoundFollowers = async () => {
@@ -1047,6 +1055,7 @@ console.log("1")
               syncResponseArray.push({ message: { id: item.app.id, level: ItemLevel.app, message: "App not found" }})
             }
             else {
+              app.lastSync = new Date().getTime();
               await db.insertInto('awesum.App').values(app as AwesumApp).execute();
             }
           }
@@ -1248,163 +1257,6 @@ console.log("1")
   }
 });
 
-// Routes
-app.get(
-  "/api/resetAllServerData",
-  async (req: express.Request, res: express.Response) => {
-
-    var returnValue: ServerResetAllServerDataResponseInterface = {
-      appFound: false,
-      appDeleted: false,
-    };
-
-    if (!(req as any).user) {
-      res.status(401).json({
-        error: req.t!(resources.Authentication_Is_Required.key),
-      });
-      return;
-    }
-
-    const userEmail = (req as any).user.emails[0];
-
-    const foundLeaderAppId = await getAppIdFromEmail(userEmail);
-    if (!foundLeaderAppId) {
-      returnValue.appFound = false;
-      returnValue.appDeleted = false;
-      res.json(returnValue);
-      return;
-    }
-
-    //get all followerRequests where followerAppId is the foundLeaderAppId or leaderAppId is the foundLeaderAppId
-    // const followerRequests = await models.FOLLOWER_REQUEST.findAll({
-    //   where: {
-    //     [Op.or]: [
-    //       { followerAppId: foundLeaderAppId },
-    //       { leaderAppId: foundLeaderAppId },
-    //     ],
-    //   },
-    // });
-    const followerRequests = await db.selectFrom('awesum.FollowerRequest as fr')
-    .where(({ eb, or }) => 
-      eb('followerAppId','=',foundLeaderAppId).or
-      ('leaderAppId','=',foundLeaderAppId))
-    .selectAll()
-    .execute();
-
-    for (const followerRequest of followerRequests) {
-      //get all followerDatabases where followerRequestId is the followerRequest.id
-      // const followerDatabases = await models.FOLLOWER_DATABASE.findAll({
-      //   where: {
-      //     followerRequestId: followerRequest.id,
-      //   },
-      // });
-      const followerDatabases = await db.selectFrom('awesum.FollowerDatabase as fd')
-      .where(({ eb }) => 
-        eb('followerRequestId','=',followerRequest.id))
-      .selectAll()
-      .execute();
-
-      for (const followerDatabase of followerDatabases) {
-        await db.deleteFrom('awesum.FollowerDatabase').where('id','=',followerDatabase.id).execute();
-      }
-
-      // const followerDatabaseCompletions = await models.FOLLOWER_DATABASE_COMPLETION.findAll({
-      //   where: {
-      //     followerRequestId: followerRequest.id,
-      //   },
-      // });
-      const followerDatabaseCompletions = await db.selectFrom('awesum.FollowerDatabaseCompletion as fdc')
-      .where(({ eb }) => 
-        eb('followerRequestId','=',followerRequest.id))
-      .selectAll()
-      .execute();
-
-      for (const followerDatabaseCompletion of followerDatabaseCompletions) {
-        await db.deleteFrom('awesum.FollowerDatabaseCompletion').where('id','=',followerDatabaseCompletion.id).execute();
-      }
-
-      
-
-      await db.deleteFrom('awesum.FollowerRequest').where('id','=',followerRequest.id).execute();
-    }
-
-    // models.DATABASE.destroy({
-    //   where: {
-    //     appId: foundLeaderAppId,
-    //   },
-    // });
-    await db.deleteFrom('awesum.Database').where('appId','=',foundLeaderAppId).execute();
-
-
-    // const routers = await models.ROUTER.findAll({
-    //   where: {
-    //     appId: foundLeaderAppId,
-    //   },
-    // });
-    const routers = await db.selectFrom('awesum.Router as r')
-    .where(({ eb }) => 
-      eb('appId','=',foundLeaderAppId))
-    .selectAll()
-    .execute();
-
-    for (const router of routers) {
-      // const dnsEntries = await models.DNS_ENTRY.findAll({
-      //   where: {
-      //     routerId: router.id,
-      //   },
-      // });
-      const dnsEntries = await db.selectFrom('awesum.DnsEntry as de')
-      .where(({ eb }) => 
-        eb('routerId','=',router.id))
-      .selectAll()
-      .execute();
-
-      for (const dnsEntry of dnsEntries) {
-        await db.deleteFrom('awesum.DnsEntry').where('id','=',dnsEntry.id).execute();
-      }
-
-      routerMacToEmailMap.delete(router.routerMac);
-      await db.deleteFrom('awesum.Router').where('id','=',router.id).execute();
-    }
-
-
-
-    // models.DATABASE_UNIT.destroy({
-    //   where: {
-    //     appId: foundLeaderAppId,
-    //   },
-    // });
-    await db.deleteFrom('awesum.DatabaseUnit').where('appId','=',foundLeaderAppId).execute();
-
-    // models.DATABASE_ITEM.destroy({
-    //   where: {
-    //     appId: foundLeaderAppId,
-    //   },
-    // });
-    await db.deleteFrom('awesum.DatabaseItem').where('appId','=',foundLeaderAppId).execute();
-
-    // models.MEDIA.destroy({
-    //   where: {
-    //     appId: foundLeaderAppId,
-    //   },
-    // });
-    await db.deleteFrom('awesum.Media').where('appId','=',foundLeaderAppId).execute();
-
-    // models.APP.destroy({
-    //   where: {
-    //     id: foundLeaderAppId,
-    //   },
-    // });
-    await db.deleteFrom('awesum.App').where('id','=',foundLeaderAppId).execute();
-
-    res.json({
-      message: "Data deleted successfully",
-    });
-
-    return;
-  },
-);
-
 
 
 app.get("/api/profile", (req: express.Request, res: express.Response) => {
@@ -1504,6 +1356,113 @@ wss.on('upgrade', function (request, socket, head) {
 wss.on("connection", async (ws: WebSocket, req: express.Request) => {
   await handleWebSocketConnection(ws, req, "Secure");
 });
+
+async function DeleteApp(foundLeaderAppId: string, syncResponseArray: ServerSyncResponseInterface[], res: express.Response<any, Record<string, any>>) {
+  const followerRequests = await db.selectFrom('awesum.FollowerRequest as fr')
+    .where(({ eb, or }) => eb('followerAppId', '=', foundLeaderAppId).or('leaderAppId', '=', foundLeaderAppId))
+    .selectAll()
+    .execute();
+
+  for (const followerRequest of followerRequests) {
+    //get all followerDatabases where followerRequestId is the followerRequest.id
+    // const followerDatabases = await models.FOLLOWER_DATABASE.findAll({
+    //   where: {
+    //     followerRequestId: followerRequest.id,
+    //   },
+    // });
+    const followerDatabases = await db.selectFrom('awesum.FollowerDatabase as fd')
+      .where(({ eb }) => eb('followerRequestId', '=', followerRequest.id))
+      .selectAll()
+      .execute();
+
+    for (const followerDatabase of followerDatabases) {
+      await db.deleteFrom('awesum.FollowerDatabase').where('id', '=', followerDatabase.id).execute();
+    }
+
+    // const followerDatabaseCompletions = await models.FOLLOWER_DATABASE_COMPLETION.findAll({
+    //   where: {
+    //     followerRequestId: followerRequest.id,
+    //   },
+    // });
+    const followerDatabaseCompletions = await db.selectFrom('awesum.FollowerDatabaseCompletion as fdc')
+      .where(({ eb }) => eb('followerRequestId', '=', followerRequest.id))
+      .selectAll()
+      .execute();
+
+    for (const followerDatabaseCompletion of followerDatabaseCompletions) {
+      await db.deleteFrom('awesum.FollowerDatabaseCompletion').where('id', '=', followerDatabaseCompletion.id).execute();
+    }
+
+    await db.deleteFrom('awesum.FollowerRequest').where('id', '=', followerRequest.id).execute();
+  }
+
+  // models.DATABASE.destroy({
+  //   where: {
+  //     appId: foundLeaderAppId,
+  //   },
+  // });
+  await db.deleteFrom('awesum.Database').where('appId', '=', foundLeaderAppId).execute();
+
+  // const routers = await models.ROUTER.findAll({
+  //   where: {
+  //     appId: foundLeaderAppId,
+  //   },
+  // });
+  const routers = await db.selectFrom('awesum.Router as r')
+    .where(({ eb }) => eb('appId', '=', foundLeaderAppId))
+    .selectAll()
+    .execute();
+
+  for (const router of routers) {
+    // const dnsEntries = await models.DNS_ENTRY.findAll({
+    //   where: {
+    //     routerId: router.id,
+    //   },
+    // });
+    const dnsEntries = await db.selectFrom('awesum.DnsEntry as de')
+      .where(({ eb }) => eb('routerId', '=', router.id))
+      .selectAll()
+      .execute();
+
+    for (const dnsEntry of dnsEntries) {
+      await db.deleteFrom('awesum.DnsEntry').where('id', '=', dnsEntry.id).execute();
+    }
+
+    routerMacToEmailMap.delete(router.routerMac);
+    await db.deleteFrom('awesum.Router').where('id', '=', router.id).execute();
+  }
+
+  // models.DATABASE_UNIT.destroy({
+  //   where: {
+  //     appId: foundLeaderAppId,
+  //   },
+  // });
+  await db.deleteFrom('awesum.DatabaseUnit').where('appId', '=', foundLeaderAppId).execute();
+
+  // models.DATABASE_ITEM.destroy({
+  //   where: {
+  //     appId: foundLeaderAppId,
+  //   },
+  // });
+  await db.deleteFrom('awesum.DatabaseItem').where('appId', '=', foundLeaderAppId).execute();
+
+  // models.MEDIA.destroy({
+  //   where: {
+  //     appId: foundLeaderAppId,
+  //   },
+  // });
+  await db.deleteFrom('awesum.Media').where('appId', '=', foundLeaderAppId).execute();
+
+  // models.APP.destroy({
+  //   where: {
+  //     id: foundLeaderAppId,
+  //   },
+  // });
+  await db.deleteFrom('awesum.App').where('id', '=', foundLeaderAppId).execute();
+
+  syncResponseArray.push({ result: syncResultType.deleted });
+  res.status(200).json(syncResponseArray);
+}
 
 /* // Handle plain WebSocket connections for troubleshooting
 plainWss.on("connection", (ws: WebSocket, req: express.Request) =fgtttttttttttttttttn,length;p5> {

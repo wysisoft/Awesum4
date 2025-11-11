@@ -13,6 +13,7 @@ function recenter() {
   window.scrollTo(x, y);
 }
 
+
 function resetZoom() {
   const vp = document.querySelector("meta[name=viewport]");
   if (!vp) return;
@@ -180,7 +181,7 @@ export default {
         <button v-if="$awesum.serverEmail && !$awesum.noInternet" style="cursor: pointer;"
           :disabled="!$awesum.serverEmail" @click="$awesum.refresh()" class="btn btn-link">
           <ChRefresh />
-          <span>{{ $t($resources.Refresh.key) }}</span>
+          <span>{{ $t($resources.Sync.key) }}</span>
         </button>
 
         <button class="btn btn-link" @click="toggleFullScreen" role="link">

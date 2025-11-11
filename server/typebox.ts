@@ -232,6 +232,9 @@ export const types = [
                 minLength: 36,
                 minLengthMessage: "Must_be_36_characters",
             }),
+            lastSync: Type.Number({
+                typeMessage: "Must_be_a_number",
+            }),
 
         },
         { $id: "app" },

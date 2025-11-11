@@ -211,7 +211,7 @@ export default {
       <div v-if="$awesum.serverEmail">
         <h2 style="font-size:3.5svmin;">{{ $t($resources.Delete_All_Server_Data.key) }}</h2>
 
-        <div v-for="database in databases.filter(d => d.startsWith('awesum_'))"
+        <div v-for="database in databases.filter(d => d.startsWith('awesum_') && d != 'awesum_')"
           style="display:flex;flex-direction:row;align-items:baseline">
 
           <button v-if="$awesum.serverEmail" class="btn btn-primary btnMarginTop"

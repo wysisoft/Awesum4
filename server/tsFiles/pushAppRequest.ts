@@ -12,6 +12,7 @@ export type pushAppRequest = {
     enableNarrator: boolean
     groups: string
     id: string
+    lastSync: number
   }
   force: boolean
 }

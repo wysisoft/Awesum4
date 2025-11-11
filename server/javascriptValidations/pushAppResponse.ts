@@ -26,7 +26,7 @@ isNameGloballyUnique: true,
 transform: ['trim', 'toLowerCase'],
 type: 'string'},
 version: { default: 0, minimum: 0, type: 'integer' },
-lastModified: { default: 1762879447790, type: 'number' },
+lastModified: { default: 1762885163314, type: 'number' },
 homePageImageType: {
 default: 0,
 minimum: 0,
@@ -50,11 +50,11 @@ type: 'string'},
 enableNarrator: { default: false, type: 'boolean' },
 groups: { maxLength: 8000, type: 'string' },
 id: {
-default: '019a73cd-a2ee-7146-ac1c-398d6acb2fba',
+default: '019a7424-d933-71e8-89c8-0b9067a0b2b7',
 format: 'uuid',
 minLength: 36,
-type: 'string'
-}
+type: 'string'},
+lastSync: { type: 'number' }
 },
 required: [
 'email',
@@ -68,7 +68,8 @@ required: [
 'lang',
 'enableNarrator',
 'groups',
-'id'
+'id',
+'lastSync'
 ]
 }
 },
@@ -124,7 +125,8 @@ if (
 (data0.enableNarrator === undefined &&
 (missing1 = 'enableNarrator')) ||
 (data0.groups === undefined && (missing1 = 'groups')) ||
-(data0.id === undefined && (missing1 = 'id'))
+(data0.id === undefined && (missing1 = 'id')) ||
+(data0.lastSync === undefined && (missing1 = 'lastSync'))
 ) {errors.push(
 {
 instancePath: instancePath + '/app',
@@ -619,6 +621,29 @@ message: 'must be string'
 var valid1 = _errs25 === errors
 } else {
 var valid1 = true
+}
+if (valid1) {
+if (data0.lastSync !== undefined) {
+let data13 = data0.lastSync
+const _errs27 = errors
+if (
+!(
+typeof data13 == 'number' &&
+isFinite(data13)
+)
+) {errors.push(
+{
+instancePath: instancePath + '/app/lastSync',
+schemaPath: '#/properties/app/properties/lastSync/type',
+keyword: 'type',
+params: { type: 'number' },
+ message: "Must_be_a_number"}
+);
+}
+var valid1 = _errs27 === errors
+} else {
+var valid1 = true
+}
 }
 }
 }

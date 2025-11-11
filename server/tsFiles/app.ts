@@ -11,4 +11,5 @@ export type app = {
   enableNarrator: boolean
   groups: string
   id: string
+  lastSync: number
 }

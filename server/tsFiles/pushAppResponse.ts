@@ -12,5 +12,6 @@ export type pushAppResponse = {
     enableNarrator: boolean
     groups: string
     id: string
+    lastSync: number
   }
 }

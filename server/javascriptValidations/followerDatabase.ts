@@ -8,14 +8,14 @@ default: '00000000-0000-0000-0000-000000000000',
 format: 'uuid',
 type: 'string'},
 id: {
-default: '019a73cd-a2ef-751c-8fbf-d858f77eba66',
+default: '019a7424-d933-71e8-89c8-11a4e6894859',
 format: 'uuid',
 type: 'string'},
 databaseId: {
 default: '00000000-0000-0000-0000-000000000000',
 format: 'uuid',
 type: 'string'},
-lastModified: { default: 1762879447791, type: 'number' },
+lastModified: { default: 1762885163315, type: 'number' },
 version: { default: 0, minimum: 0, type: 'integer' }
 },
 required: ['followerRequestId', 'id', 'databaseId', 'lastModified', 'version']

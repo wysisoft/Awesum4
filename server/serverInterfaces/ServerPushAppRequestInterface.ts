@@ -23,5 +23,6 @@ export interface App {
   enableNarrator: boolean;
   groups: string;
   id: string;
+  lastSync: number;
   
 }
