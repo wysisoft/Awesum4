@@ -1,0 +1,73 @@
+html,
+body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+h1 {
+    font-size: 5svmin;
+    text-align: center;
+    font-weight: 500;
+}
+
+h2 {
+    font-size: 3svmin;
+    font-weight: 400;
+}
+
+#app {
+    height: 100svmin;
+    width: 100svmin;
+    background: #ffffbe;
+    border: 0.5svmin solid black;
+    /*bounces around if I don't have this*/
+    box-sizing: border-box;
+}
+
+.pageView {
+    display: flex;
+    flex-direction: column;
+    height: 90.1svmin;
+    background-blend-mode: lighten;
+    background-size: contain;
+    padding-left: 1svmin;
+    overflow: hidden;
+}
+
+.content{
+    overflow-y: auto;
+    overflow-x: hidden;
+    flex:1;
+}
+
+.nameViewForm{
+    width:60svmin;
+    margin:auto;
+}
+
+.multiselect__tags {
+    height: 5.5svmin;
+    border-radius: 0svmin 1svmin 1svmin 0svmin;
+    padding:0 0 0 2svmin !important;
+  }
+
+  .multiselect__tag {
+    padding-top:.5vmin;
+    font-size:2.3svmin;
+    margin-top:.6svmin;
+  }
+
+.multiselect__placeholder{
+  font-size: 2svmin;
+  padding-top:.9svmin;
+}
+
+.multiselect__content-wrapper{
+  font-size: 2svmin;
+}
+

@@ -1,0 +1,1 @@
+{"$id":"message","type":"object","properties":{"level":{"minimum":0,"maximum":8,"type":"integer"},"message":{"minLength":1,"maxLength":100,"type":"string"},"id":{"format":"uuid","type":"string"}},"required":["level","message","id"]}

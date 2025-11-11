@@ -1,0 +1,1 @@
+{"$id":"unfollowFollowerRequest","type":"object","properties":{"followerRequestId":{"format":"uuid","type":"string"}},"required":["followerRequestId"]}

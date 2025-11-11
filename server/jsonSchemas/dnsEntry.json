@@ -1,0 +1,1 @@
+{"$id":"dnsEntry","type":"object","properties":{"timestamp":{"type":"number"},"domain":{"type":"string"},"routerId":{"default":"019a73cd-a2ef-751c-8fbf-ef4c4fc6fa39","format":"uuid","type":"string"},"id":{"default":"019a73cd-a2ef-751c-8fbf-f05aa091983a","format":"uuid","type":"string"}},"required":["timestamp","domain","routerId","id"]}

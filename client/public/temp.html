@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Builder Game</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            margin: 0;
+            padding: 2.6svmin;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .drag-targets {
+            display: flex;
+            flex-direction: row;
+            height: 26svmin;
+            gap: 2.6svmin;
+            margin-bottom: 3.9svmin;
+            width: 100%;
+        }
+        
+        .target {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(1.3svmin);
+            border-radius: 2svmin;
+            border: 0.4svmin dashed rgba(255, 255, 255, 0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            position: relative;
+            min-height: 19.5svmin;
+        }
+        
+        .target.drag-over {
+            border-color: #4CAF50;
+            background: rgba(76, 175, 80, 0.2);
+            transform: scale(1.02);
+        }
+        
+        .target.word-complete {
+            border-color: #FFD700;
+            background: rgba(255, 215, 0, 0.3);
+            animation: wordCompleteFlash 1s ease-in-out;
+        }
+        
+        .target h2 {
+            color: white;
+            margin: 0 0 2svmin 0;
+            font-size: 2svmin;
+            text-shadow: 0.26svmin 0.26svmin 0.52svmin rgba(0, 0, 0, 0.3);
+        }
+        
+        .target-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1svmin;
+            justify-content: center;
+            align-items: center;
+            padding: 1.3svmin;
+            width: 100%;
+            height: 100%;
+        }
+        
+        #left-target .target-content {
+            justify-content: flex-end;
+        }
+        
+        #right-target .target-content {
+            justify-content: flex-start;
+        }
+        
+        .word-display {
+            position: absolute;
+            top: 30%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 9.1svmin;
+            font-weight: bold;
+            color: #FFD700;
+            text-shadow: 0.39svmin 0.39svmin 0.78svmin rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 10;
+        }
+        
+        .digraph-columns {
+            display: flex;
+            flex-direction: row;
+            gap: 2.6svmin;
+            flex: 1;
+            width: 100%;
+        }
+        
+        .column {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(1.3svmin);
+            border-radius: 2svmin;
+            border: 0.13svmin solid rgba(255, 255, 255, 0.2);
+            padding: 2.6svmin;
+        }
+        
+        .column h3 {
+            color: white;
+            text-align: center;
+            margin: 0 0 2.6svmin 0;
+            font-size: 1.7svmin;
+            text-shadow: 0.26svmin 0.26svmin 0.52svmin rgba(0, 0, 0, 0.3);
+        }
+        
+        .digraph-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(10.4svmin, 1fr));
+            gap: 1.3svmin;
+        }
+        
+        .digraph {
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            padding: 2svmin 1.3svmin;
+            border-radius: 1.3svmin;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.4svmin;
+            cursor: grab;
+            transition: all 0.3s ease;
+            box-shadow: 0 0.52svmin 1svmin rgba(0, 0, 0, 0.2);
+            user-select: none;
+        }
+        
+        .digraph:hover {
+            transform: translateY(-0.26svmin);
+            box-shadow: 0 0.78svmin 1.6svmin rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 1);
+        }
+        
+        .digraph:active {
+            cursor: grabbing;
+        }
+        
+        .digraph.dragging {
+            opacity: 0.5;
+            transform: rotate(5deg);
+        }
+        
+        .digraph.in-target {
+            background: rgba(76, 175, 80, 0.9);
+            color: white;
+            cursor: pointer;
+            font-size: 3.3svmin;
+            padding: 2.6svmin 3.3svmin;
+            min-width: 10.4svmin;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .digraph.in-target:hover {
+            background: rgba(76, 175, 80, 1);
+            transform: scale(1.05);
+        }
+        
+        .digraph.fade-out {
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.5s ease-out;
+        }
+        
+        @keyframes wordCompleteFlash {
+            0%, 100% { 
+                border-color: #FFD700;
+                background: rgba(255, 215, 0, 0.3);
+            }
+            50% { 
+                border-color: #FFA500;
+                background: rgba(255, 165, 0, 0.5);
+                box-shadow: 0 0 3.9svmin rgba(255, 215, 0, 0.6);
+            }
+        }
+        
+        @keyframes wordShow {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.5);
+            }
+            50% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1.2);
+            }
+            100% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+        
+        
+            body {
+                padding: 1.3svmin;
+            }
+            
+            .drag-targets {
+                height: 20.8svmin;
+                gap: 1.3svmin;
+            }
+            
+            .target {
+                min-height: 15.6svmin;
+            }
+            
+            .digraph-columns {
+                gap: 1.3svmin;
+            }
+            
+            .digraph-grid {
+                grid-template-columns: repeat(auto-fill, minmax(7.8svmin, 1fr));
+                gap: 1svmin;
+            }
+            
+            .digraph {
+                padding: 1.3svmin 0.65svmin;
+                font-size: 1.3svmin;
+            }
+            
+            .digraph.in-target {
+                font-size: 2.6svmin;
+                padding: 2svmin 2.6svmin;
+            }
+            
+            .word-display {
+                font-size: 3.9svmin;
+            }
+        
+    </style>
+</head>
+<body>
+    <!-- Drag Targets -->
+    <div class="word-display" id="word-display"></div>
+    <div class="drag-targets">
+        <div class="target" id="left-target">
+            <h2>Start Letter</h2>
+            <div class="target-content" id="left-content"></div>
+            
+        </div>
+        <div class="target" id="right-target">
+            <h2>Word Ending</h2>
+            <div class="target-content" id="right-content"></div>
+        </div>
+    </div>
+    
+    <!-- Digraph Columns -->
+    <div class="digraph-columns">
+        <div class="column">
+            <h3>Letters</h3>
+            <div class="digraph-grid" id="left-column">
+                <div class="digraph" draggable="true" data-side="left" v-for="digraph in leftDigraphs">{{ digraph }}</div>
+                <div class="digraph" draggable="true" data-side="left" v-for="digraph in leftDigraphs">{{ digraph }}</div>
+                <div class="digraph" draggable="true" data-side="left" v-for="digraph in leftDigraphs">{{ digraph }}</div>
+                <div class="digraph" draggable="true" data-side="left">H</div>
+                <div class="digraph" draggable="true" data-side="left">P</div>
+                <div class="digraph" draggable="true" data-side="left">T</div>
+                <div class="digraph" draggable="true" data-side="left">S</div>
+                <div class="digraph" draggable="true" data-side="left">L</div>
+            </div>
+        </div>
+        
+        <div class="column">
+            <h3>Word Endings</h3>
+            <div class="digraph-grid" id="right-column">
+                <div class="digraph" draggable="true" data-side="right">an</div>
+                <div class="digraph" draggable="true" data-side="right">at</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let draggedElement = null;
+        let touchStartPos = { x: 0, y: 0 };
+        let isDragging = false;
+        let dragClone = null;
+        
+        // Valid words that can be formed
+        const validWords = ['CAT', 'BAT', 'CAN', 'BAN', 'MAT', 'MAN', 'RAT', 'RAN', 'FAT', 'FAN', 'HAT', 'PAT', 'PAN', 'TAT', 'TAN', 'SAT', 'SAN', 'LAT', 'LAN'];
+        const leftDigraphs = ['C', 'B', 'M', 'R', 'F', 'H', 'P', 'T', 'S', 'L'];
+        const rightDigraphs = ['AN', 'AT'];
+
+        // Add drag event listeners to all digraphs
+        document.querySelectorAll('.digraph').forEach(digraph => {
+            // Mouse events
+            digraph.addEventListener('dragstart', handleDragStart);
+            digraph.addEventListener('dragend', handleDragEnd);
+            
+            // Touch events
+            digraph.addEventListener('touchstart', handleTouchStart, { passive: false });
+            digraph.addEventListener('touchmove', handleTouchMove, { passive: false });
+            digraph.addEventListener('touchend', handleTouchEnd);
+        });
+        
+        // Add drop event listeners to targets
+        document.querySelectorAll('.target').forEach(target => {
+            target.addEventListener('dragover', handleDragOver);
+            target.addEventListener('drop', handleDrop);
+            target.addEventListener('dragenter', handleDragEnter);
+            target.addEventListener('dragleave', handleDragLeave);
+        });
+        
+        // Also allow dropping back to original columns
+        document.querySelectorAll('.digraph-grid').forEach(grid => {
+            grid.addEventListener('dragover', handleDragOver);
+            grid.addEventListener('drop', handleDropToColumn);
+        });
+        
+        // Touch event handlers
+        function handleTouchStart(e) {
+            e.preventDefault();
+            draggedElement = this;
+            this.classList.add('dragging');
+            
+            const touch = e.touches[0];
+            touchStartPos = { x: touch.clientX, y: touch.clientY };
+            
+            // Create visual clone for dragging
+            dragClone = this.cloneNode(true);
+            dragClone.style.position = 'fixed';
+            dragClone.style.zIndex = '1000';
+            dragClone.style.pointerEvents = 'none';
+            dragClone.style.transform = 'rotate(5deg) scale(1.1)';
+            dragClone.style.opacity = '0.8';
+            dragClone.style.left = touch.clientX - 40 + 'px';
+            dragClone.style.top = touch.clientY - 20 + 'px';
+            document.body.appendChild(dragClone);
+            
+            isDragging = true;
+        }
+        
+        function handleTouchMove(e) {
+            if (!isDragging || !dragClone) return;
+            e.preventDefault();
+            
+            const touch = e.touches[0];
+            dragClone.style.left = touch.clientX - 40 + 'px';
+            dragClone.style.top = touch.clientY - 20 + 'px';
+            
+            // Find element under touch point
+            const elementBelow = document.elementFromPoint(touch.clientX, touch.clientY);
+            const target = elementBelow?.closest('.target');
+            
+            // Visual feedback
+            document.querySelectorAll('.target').forEach(t => t.classList.remove('drag-over'));
+            if (target) {
+                target.classList.add('drag-over');
+            }
+        }
+        
+        function handleTouchEnd(e) {
+            if (!isDragging) return;
+            
+            const touch = e.changedTouches[0];
+            const elementBelow = document.elementFromPoint(touch.clientX, touch.clientY);
+            const target = elementBelow?.closest('.target');
+            const grid = elementBelow?.closest('.digraph-grid');
+            
+            // Clean up
+            if (dragClone) {
+                document.body.removeChild(dragClone);
+                dragClone = null;
+            }
+            
+            document.querySelectorAll('.target').forEach(t => t.classList.remove('drag-over'));
+            
+            if (target) {
+                handleDropLogic(target);
+            } else if (grid && draggedElement?.classList.contains('in-target')) {
+                handleDropToColumnLogic(grid);
+            }
+            
+            if (draggedElement) {
+                draggedElement.classList.remove('dragging');
+                draggedElement = null;
+            }
+            isDragging = false;
+        }
+        
+        function handleDragStart(e) {
+            draggedElement = this;
+            this.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+        }
+        
+        function handleDragEnd(e) {
+            this.classList.remove('dragging');
+            draggedElement = null;
+        }
+        
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+        }
+        
+        function handleDragEnter(e) {
+            if (e.target.classList.contains('target') || e.target.closest('.target')) {
+                const target = e.target.classList.contains('target') ? e.target : e.target.closest('.target');
+                target.classList.add('drag-over');
+            }
+        }
+        
+        function handleDragLeave(e) {
+            if (e.target.classList.contains('target') && !e.target.contains(e.relatedTarget)) {
+                e.target.classList.remove('drag-over');
+            }
+        }
+        
+        function handleDrop(e) {
+            e.preventDefault();
+            const target = e.target.classList.contains('target') ? e.target : e.target.closest('.target');
+            target.classList.remove('drag-over');
+            handleDropLogic(target);
+        }
+        
+        function handleDropLogic(target) {
+            if (draggedElement) {
+                const draggedSide = draggedElement.dataset.side;
+                const targetSide = target.id.includes('left') ? 'left' : 'right';
+                
+                // Check if the digraph belongs to the correct side
+                if (draggedSide === targetSide) {
+                    const targetContent = target.querySelector('.target-content');
+                    
+                    // If there's already a digraph in the target, return it to its original column
+                    const existingDigraph = targetContent.querySelector('.digraph');
+                    if (existingDigraph) {
+                        returnToOriginal.call(existingDigraph);
+                    }
+                    
+                    // Add the new digraph to the target
+                    targetContent.appendChild(draggedElement);
+                    draggedElement.classList.add('in-target');
+                    
+                    // Add click listener to return to original position
+                    draggedElement.addEventListener('click', returnToOriginal);
+                    
+                    // Check if a word is formed
+                    checkForWordCompletion();
+                } else {
+                    // Visual feedback for wrong drop
+                    target.style.background = 'rgba(244, 67, 54, 0.3)';
+                    target.style.borderColor = '#f44336';
+                    setTimeout(() => {
+                        target.style.background = 'rgba(255, 255, 255, 0.1)';
+                        target.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+                    }, 500);
+                }
+            }
+        }
+        
+        function handleDropToColumn(e) {
+            e.preventDefault();
+            const grid = e.target.classList.contains('digraph-grid') ? e.target : e.target.closest('.digraph-grid');
+            handleDropToColumnLogic(grid);
+        }
+        
+        function handleDropToColumnLogic(grid) {
+            if (draggedElement && draggedElement.classList.contains('in-target')) {
+                const draggedSide = draggedElement.dataset.side;
+                
+                // Check if dropping to correct original column
+                if ((draggedSide === 'left' && grid.id === 'left-column') || 
+                    (draggedSide === 'right' && grid.id === 'right-column')) {
+                    grid.appendChild(draggedElement);
+                    draggedElement.classList.remove('in-target');
+                    draggedElement.removeEventListener('click', returnToOriginal);
+                }
+            }
+        }
+        
+        function returnToOriginal() {
+            const side = this.dataset.side;
+            const originalColumn = document.getElementById(side + '-column');
+            originalColumn.appendChild(this);
+            this.classList.remove('in-target');
+            this.removeEventListener('click', returnToOriginal);
+        }
+        
+        function checkForWordCompletion() {
+            const leftDigraph = document.querySelector('#left-content .digraph');
+            const rightDigraph = document.querySelector('#right-content .digraph');
+            
+            if (leftDigraph && rightDigraph) {
+                const letter = leftDigraph.textContent;
+                const ending = rightDigraph.textContent;
+                const word = letter + ending;
+                
+                if (validWords.includes(word)) {
+                    // Word completed!
+                    playWordCompletionAnimation(word);
+                }
+            }
+        }
+        
+        function playWordCompletionAnimation(word) {
+            const leftTarget = document.getElementById('left-target');
+            const rightTarget = document.getElementById('right-target');
+            const wordDisplay = document.getElementById('word-display');
+            const leftDigraph = document.querySelector('#left-content .digraph');
+            const rightDigraph = document.querySelector('#right-content .digraph');
+            
+            // Show the word
+            wordDisplay.textContent = word.toUpperCase();
+            wordDisplay.style.animation = 'wordShow 1s ease-out forwards';
+            wordDisplay.style.opacity = '1';
+            
+            // Flash the targets
+            leftTarget.classList.add('word-complete');
+            rightTarget.classList.add('word-complete');
+            
+            // After animation, fade out digraphs and reset
+            setTimeout(() => {
+                if (leftDigraph) {
+                    leftDigraph.classList.add('fade-out');
+                    setTimeout(() => {
+                        returnToOriginal.call(leftDigraph);
+                        leftDigraph.classList.remove('fade-out');
+                    }, 500);
+                }
+                
+                if (rightDigraph) {
+                    rightDigraph.classList.add('fade-out');
+                    setTimeout(() => {
+                        returnToOriginal.call(rightDigraph);
+                        rightDigraph.classList.remove('fade-out');
+                    }, 500);
+                }
+                
+                // Reset word display and target states
+                setTimeout(() => {
+                    wordDisplay.style.opacity = '0';
+                    wordDisplay.style.animation = '';
+                    leftTarget.classList.remove('word-complete');
+                    rightTarget.classList.remove('word-complete');
+                }, 600);
+            }, 1500);
+        }
+    </script>
+</body>
+</html>

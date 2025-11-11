@@ -1,0 +1,276 @@
+#set default to lightdm
+sudo apt install lightdm
+
+install chrome
+install vscode
+install cursor
+
+sudo code --no-sandbox --user-data-dir ~/sudoVSCodeDataDir /etc/hosts
+add 127.0.0.1 awesum.app
+add 127.0.0.1 dev.awesum.app
+
+
+sudo apt install git
+sudo apt-get install tigervnc-scraping-server
+sudo snap install novnc
+sudo apt install net-tools
+
+sudo snap install --classic certbot
+sudo ln -s /snap/bin/certbot /usr/bin/certbot
+
+sudo apt install nginx
+sudo code --no-sandbox --user-data-dir ~/sudoVSCodeDataDir  /etc/nginx/sites-available/awesum.app
+
+server {
+    server_name awesum.app;
+
+    # --- Proxy /vnc/ to local service ---
+    location /vnc/ {
+        proxy_pass http://localhost:6080/;
+
+        # Preserve host and client info
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        # --- WebSocket support ---
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+
+        # Optional timeouts
+        proxy_read_timeout 86400;
+        proxy_send_timeout 86400;
+    }
+
+    # --- Default route: everything else to localhost:8080 ---
+    location / {
+        proxy_pass http://localhost:8080/;
+
+        # Preserve headers
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        # --- WebSocket support for root and subpaths ---
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+
+        proxy_read_timeout 86400;
+        proxy_send_timeout 86400;
+    }
+}
+
+sudo ln -s /etc/nginx/sites-available/awesum.app /etc/nginx/sites-enabled/
+sudo certbot --nginx
+sudo code --no-sandbox --user-data-dir ~/sudoVSCodeDataDir  /etc/nginx/sites-available/dev.awesum.app
+
+server {
+    server_name dev.awesum.app;
+
+    # --- Default route: everything else to localhost:8080 ---
+    location /api/ {
+        proxy_pass http://localhost:8081/api/;
+
+        # Preserve headers
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        # --- WebSocket support for root and subpaths ---
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+
+        proxy_read_timeout 86400;
+        proxy_send_timeout 86400;
+    }
+
+    # --- Default route: everything else to localhost:8080 ---
+    location / {
+        proxy_pass http://localhost:5173/;
+
+        # Preserve headers
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        # --- WebSocket support for root and subpaths ---
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+
+        proxy_read_timeout 86400;
+        proxy_send_timeout 86400;
+    }
+}
+
+sudo ln -s /etc/nginx/sites-available/dev.awesum.app /etc/nginx/sites-enabled/
+sudo certbot --nginx
+sudo code --no-sandbox --user-data-dir ~/sudoVSCodeDataDir  /etc/nginx/sites-available/5174
+
+server {
+    listen 5174;
+    server_name dev.awesum.app;
+    
+    ssl_certificate /etc/letsencrypt/live/dev.awesum.app/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/dev.awesum.app/privkey.pem; # managed by Certbot
+
+    # --- Proxy all HTTP + WebSocket traffic ---
+    location / {
+        proxy_pass http://localhost:5173/;
+
+        # Pass real client and protocol info
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        # --- WebSocket support for root and subpaths ---
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        
+
+        # Optional timeouts (WebSocket safe)
+        proxy_read_timeout 86400;
+        proxy_send_timeout 86400;
+    }
+}
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+you need to manually copy the certbot config from dev.awesum.app into 5174, certbot will not act on 5174
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+sudo ln -s /etc/nginx/sites-available/5174 /etc/nginx/sites-enabled/
+
+sudo systemctl reload nginx
+
+to set a password:
+sudo x0vncserver 
+
+create /usr/local/bin/x0vnc.sh
+
+#! /bin/bash
+
+# Export an environment variable of the Display Manager
+export XAUTHORITY="/var/run/lightdm/root/:0"
+
+# Start VNC server for :0 display in background
+## Set path to binary file
+VNC_BIN=/usr/bin/x0vncserver
+
+## Set parameters
+## WARNING: This use of SecurityTypes is insecure.
+##          Anyone can connect to the VNC server without any authentication.
+PARAMS="-display :0 -fg -rfbauth /root/.vnc/passwd -SecurityTypes VncAuth"
+
+## Launch VNC server
+($VNC_BIN $PARAMS)
+
+# Provide dirty exit code so that systemd
+# will restart the server when a user logs out
+
+exit 1
+
+create /etc/systemd/system/x0vncserver.service
+
+[Unit]
+Description=Remote desktop service (VNC) for :0 display
+
+# Require start of
+Requires=display-manager.service
+
+# Wait for
+After=network-online.target
+After=display-manager.service
+
+[Service]
+# Set environment
+Environment=HOME=/root
+
+# Start command
+ExecStart=/usr/local/bin/x0vnc.sh
+
+Type=simple
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+
+
+sudo systemctl enable x0vncserver.service
+
+copy the novnc folder from /snap/novnc to /home/a and update rfb.js
+
+create file /etc/systemd/system/novnc.service
+
+[Unit]
+Description=noVNC WebSocket Proxy
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/home/a/novnc/141/novnc_proxy --vnc localhost:5900 --web-auth --auth-plugin BasicHTTPAuth --auth-source vnc:This4NowWelcome1
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+
+sudo systemctl enable novnc.service
+
+sudo apt install curl
+
+# Download and install nvm:
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+# in lieu of restarting the shell
+\. "$HOME/.nvm/nvm.sh"
+# Download and install Node.js:
+nvm install 25
+# Verify the Node.js version:
+node -v # Should print "v25.1.0".
+# Verify npm version:
+npm -v # Should print "11.6.2".
+
+npm i bun -g
+cd /home/a/Awesum2/bun
+npm i
+
+sudo apt install postgresql
+
+sudo code --no-sandbox --user-data-dir ~/sudoVSCodeDataDir /etc/environment
+DATABASE_URL="postgresql://postgres:This4Now!@localhost:5432/awesum"
+
+
+
+# Install the public key for the repository (if not done previously):
+curl -fsS https://www.pgadmin.org/static/packages_pgadmin_org.pub | sudo gpg --dearmor -o /usr/share/keyrings/packages-pgadmin-org.gpg
+
+# Create the repository configuration file:
+sudo sh -c 'echo "deb [signed-by=/usr/share/keyrings/packages-pgadmin-org.gpg] https://ftp.postgresql.org/pub/pgadmin/pgadmin4/apt/$(lsb_release -cs) pgadmin4 main" > /etc/apt/sources.list.d/pgadmin4.list && apt update'
+
+# Install for desktop mode only:
+sudo apt install pgadmin4-desktop
+
+sudo -u postgres psql
+\password postgres
+
+cd /home/a/Awesum2/Awesum
+npm i
+npm run dev
+
+git config --global user.email "wildert@gmail.com"
+git config --global user.name "Todd Wilder"
+
+create .env file
+
+GOOGLE_CLIENT_ID = "270679439922-k1bkmqcja55a7rpq2v6732tenk62hshh.apps.googleusercontent.com"
+GOOGLE_CLIENT_SECRET = "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"
+GOOGLE_CALLBACK_URL="https://awesum.app/api/callback-google"

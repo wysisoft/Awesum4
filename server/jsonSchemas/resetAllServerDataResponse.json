@@ -1,0 +1,1 @@
+{"$id":"resetAllServerDataResponse","type":"object","properties":{"appFound":{"type":"boolean"},"appDeleted":{"type":"boolean"}},"required":["appFound","appDeleted"]}

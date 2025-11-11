@@ -1,0 +1,1 @@
+{"$id":"deletion","type":"object","properties":{"id":{"format":"uuid","type":"string"},"level":{"minimum":0,"maximum":8,"type":"integer"}},"required":["id","level"]}

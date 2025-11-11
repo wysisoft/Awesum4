@@ -1,0 +1,1 @@
+{"$id":"media","type":"object","properties":{"id":{"default":"019a73cd-a2ef-751c-8fbf-e0c3f7fe8316","format":"uuid","type":"string"},"size":{"minimum":0,"type":"integer"},"data":{"maxLength":8000,"type":"string"},"appId":{"format":"uuid","type":"string"},"lastModified":{"type":"number"}},"required":["id","size","data","appId","lastModified"]}
