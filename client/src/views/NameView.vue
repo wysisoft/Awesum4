@@ -32,7 +32,7 @@ export default {
       this.payload.name = awesum.ownerApp.name;
       this.payload.uniqueName = awesum.ownerApp.uniqueName;
     }
-    else{
+    else {
       awesum.errorMessage = "No app found for this email - You may need to reset your client data";
       awesum.router.push({ name: I18nGlobal.t(resources.Error.key) });
     }
@@ -52,7 +52,7 @@ export default {
         await (this.$refs.uniqueName as any).validate();
         return;
       }
-      
+
       var jsonPayload = [{ app: this.payload }] as ServerSyncRequestInterface[];
       //parse the payload and catch all the ZODErrors
       var errors = await validateSyncRequest(jsonPayload[0]);
@@ -60,29 +60,10 @@ export default {
         return;
       }
 
-      
-      var response = await fetch(window.location.origin + "/api/sync", {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(jsonPayload),
-        credentials: "include",
-      });
+      var response = await awesum.sync(jsonPayload);      
 
-      if (response.ok) {
-        var appResponse = await response.json() as ServerSyncResponseInterface[];
+      awesum.router.push({ name: I18nGlobal.t(resources.Home.key) });
 
-        await awesum.putOwnerAppInsideDatabase(jsonPayload[0].app as ServerAppInterface);
-
-        awesum.router.push({ name: I18nGlobal.t(resources.Home.key) });
-      }
-      else {
-        awesum.errorMessage = await response.text();
-        awesum.router.push({
-          name: I18nGlobal.t(resources.Error.key)
-        });
-      }
     }
   },
 };

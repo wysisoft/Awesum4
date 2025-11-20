@@ -13,6 +13,7 @@ export interface ServerFollowerDatabaseCompletionInterface {
   parentItemId: string;
   itemLevel: number;
   lastModified: number;
+  touched: boolean;
   version: number;
   
 }

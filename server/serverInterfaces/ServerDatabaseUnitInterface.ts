@@ -9,6 +9,7 @@ export interface ServerDatabaseUnitInterface {
   name: string;
   order: number;
   lastModified: number;
+  touched: boolean;
   version: number;
   id: string;
   appId: string;

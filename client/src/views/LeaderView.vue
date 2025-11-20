@@ -3,6 +3,7 @@ import { reactive, ref } from 'vue';
 import { resources } from '@/resources/Resources';
 import { awesum } from '@/awesum';
 import { I18nGlobal } from '@/i18nGlobal';
+import { ItemLevel, syncAction } from '../../../server/typebox';
 
 import DataTable from 'datatables.net-vue3';
 import DataTablesCore from 'datatables.net';
@@ -23,23 +24,26 @@ export default {
   },
   methods: {
     async approve(follower: ServerFollowerRequestInterface) {
-      follower.status = followerRequestStatus.Approved;
 
-      var response = await fetch(window.location.origin + "/api/approveLeader?leaderEmail=" + follower.leaderEmail, {
-        method: 'GET',
-        credentials: "include",
+    
+
+      await awesum.sync([
+        {
+          id: follower.id,
+          level: ItemLevel.followerRequest,
+          action: syncAction.modify,
+          values: {
+            status: followerRequestStatus.Approved,
+            lastModified: follower.lastModified,
+            version: follower.version
+          } as Partial<ServerFollowerRequestInterface>
+          
+        },
+      ]);
+
+      this.$router.push({
+        path: "/i/LeadersAndFollowers?order=[[%221%22,%22desc%22]]&activeView=leaders"
       });
-
-      if (response.ok) {
-        this.$awesum.router.push({
-          path: "/i/Settings/LeadersAndFollowers",query: {
-            activeView: "leaders",
-            order:'[[2,"asc"]]'
-          }
-        });
-      }
-
-
     },
     async reject(follower: ServerFollowerRequestInterface) {
       var response = await fetch(window.location.origin + "/api/rejectLeader?leaderEmail=" + follower.leaderEmail, {
@@ -62,8 +66,10 @@ export default {
       aria-labelledby="TODD">{{
         I18nGlobal.t($resources.Leader.key) + " " + leader.leaderName + "(" + leader.leaderEmail + ")" + " wants you to follow them."
       }}</span>
-      <div style="font-size: 2svmin;text-align: center;">Only approve a leader's request for you to follow them if you are know the leader and are anticipating this request.</div>
-    <div class="content" style="display: flex;height: 8svmin;flex-direction: row;flex-wrap: nowrap;align-content: flex-start;justify-content: center;align-items: flex-start;">
+    <div style="font-size: 2svmin;text-align: center;">Only approve a leader's request for you to follow them if you are
+      know the leader and are anticipating this request.</div>
+    <div class="content"
+      style="display: flex;height: 8svmin;flex-direction: row;flex-wrap: nowrap;align-content: flex-start;justify-content: center;align-items: flex-start;">
 
 
       <button class="btn btn-primary" v-on:click="approve(leader)">Approve</button>

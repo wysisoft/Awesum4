@@ -4,4 +4,5 @@ export type media = {
   data: string
   appId: string
   lastModified: number
+  touched: boolean
 }

@@ -1,9 +1,13 @@
 <script lang="ts">
+
+
 import { useFullscreen } from '@vueuse/core'
 import Breadcrumb from '@/components/Breadcrumb.vue';
 import { I18nGlobal } from '@/i18nGlobal';
 import { resources } from '@/resources/Resources';
 import { ref } from 'vue';
+import { useToast } from "vue-toastification";
+import { awesum } from '@/awesum';
 
 function recenter() {
   const w = document.documentElement.scrollWidth;
@@ -37,7 +41,13 @@ window.addEventListener("orientationchange", () => {
 
 export default {
   setup() {
+    const toast = useToast();
+    awesum.toast = toast;
     const { isFullscreen, toggle } = useFullscreen()
+
+
+
+    
 
     let currentElement = ref(null);
     let currentElementDisplay = ref('');
@@ -57,11 +67,15 @@ export default {
   beforeCreate() {
 
   },
+  mounted() {
+
+  },
   methods: {
+    
     areImagesLoading(parentElement: HTMLElement): boolean {
       // Get all <img> elements inside the parent element
       const images = parentElement.getElementsByTagName('img');
-      debugger;
+
       if (images.length == 0)
         return false
       // Loop through each image to check its loading status
@@ -78,6 +92,9 @@ export default {
       return false;
     },
     beforeEnter(el: any) {
+      if (!this.$router.options.history.state.back) {
+        return;
+      }
       // Called before the new component enters
       this.currentElementDisplay = el.style.display;
       el.style.display = 'none';
@@ -113,7 +130,7 @@ export default {
           (this.currentElement! as HTMLElement).style.display = this.currentElementDisplay;
           done();
         }
-        else {  }
+        else { }
       }, 50);
       // Example: fade out manually
       // el.style.transition = "opacity 0.2s ease"
@@ -139,8 +156,7 @@ export default {
 </script>
 
 <template>
-  <div class="appDiv">
-    <div style="position:absolute;left:40svmin;top:0vmin;">{{ $awesum.debugText }}</div>
+  <div class="appDiv">       
     <div class="appViewHeaderAndBreadcrumb">
       <div class="appViewHeader">
         <router-link custom :to="{ name: $t($resources.Home.key) }" v-slot="{ href }">
@@ -157,8 +173,7 @@ export default {
           </button>
         </router-link>
 
-        <router-link custom
-          :to="{ path: '/' + $t($resources.Settings.key)  + $router.currentRoute.value.fullPath }"
+        <router-link custom :to="{ path: '/' + $t($resources.Settings.key) + $router.currentRoute.value.fullPath }"
           v-slot="{ href }" v-if="showEdit()">
           <button :disabled="!$awesum.currentApp || !$awesum.currentApp.uniqueName" @click="$router.push(href)"
             class="btn btn-link">
@@ -178,11 +193,17 @@ export default {
           </button>
         </router-link>
 
-        <button v-if="$awesum.serverEmail && !$awesum.noInternet" style="cursor: pointer;"
-          :disabled="!$awesum.serverEmail" @click="$awesum.refresh()" class="btn btn-link">
-          <ChRefresh />
-          <span>{{ $t($resources.Sync.key) }}</span>
-        </button>
+        <router-link v-if="$awesum.serverEmail && !$awesum.noInternet" custom :to="{ name: $t($resources.Sync.key) }"
+          v-slot="{ href }">
+          <button class="btn btn-link" @click="$router.push(href)">
+            <ChRefresh />
+            <span>{{ $t($resources.Sync.key) }}</span>
+          </button>
+        </router-link>
+
+        <div v-if="$awesum.touchedObjects.size > 0">
+          <span>{{ $awesum.touchedObjects.size }} </span>
+        </div>
 
         <button class="btn btn-link" @click="toggleFullScreen" role="link">
           <faCompress v-if="isFullscreen" />
@@ -205,15 +226,15 @@ export default {
       </div>
       <Breadcrumb />
     </div>
-    
 
-<router-view v-slot="{ Component }" >
-  <transition :css="false" mode="in-out" @before-enter="beforeEnter" @enter="enter" @after-enter="afterEnter"
-      @before-leave="beforeLeave" @leave="leave" @after-leave="afterLeave">
-    <component :is="Component" :key="$route.fullPath + $awesum.refreshNumber" />
-  </transition>
-</router-view>
-    
+
+    <router-view v-slot="{ Component }">
+      <transition :css="false" mode="in-out" @before-enter="beforeEnter" @enter="enter" @after-enter="afterEnter"
+        @before-leave="beforeLeave" @leave="leave" @after-leave="afterLeave">
+        <component :is="Component" :key="$route.fullPath + $awesum.refreshNumber" />
+      </transition>
+    </router-view>
+
     <PWABadge />
   </div>
 </template>
@@ -282,4 +303,6 @@ export default {
   margin-top: .25svmin;
   margin-bottom: .25svmin;
 }
+
+
 </style>

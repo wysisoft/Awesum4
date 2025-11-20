@@ -2,10 +2,10 @@
 //@bun
 
 
-import { Kysely, PostgresDialect,HandleEmptyInListsPlugin,type HandleEmptyInListsOptions,pushValueIntoList } from 'kysely';
-import { type AwesumApp, type AwesumFollowerRequest,type AwesumFollowerDatabase, type DB, type AwesumFollowerDatabaseCompletion, type AwesumDatabaseUnit, type AwesumDatabaseItem, type AwesumRouter, type AwesumDatabase, type AwesumDnsEntry } from './db/db';
+import { Kysely, PostgresDialect, HandleEmptyInListsPlugin, type HandleEmptyInListsOptions, pushValueIntoList } from 'kysely';
+import { type AwesumApp, type AwesumFollowerRequest, type AwesumFollowerDatabase, type DB, type AwesumFollowerDatabaseCompletion, type AwesumDatabaseUnit, type AwesumDatabaseItem, type AwesumRouter, type AwesumDatabase, type AwesumDnsEntry } from './db/db';
 import { Pool } from 'pg';
-
+import { constants } from "./constants"
 
 // Define a custom logger (you can use any logging library you prefer)
 const logger = {
@@ -37,9 +37,9 @@ const db = new Kysely<DB>({
 
 import { google } from 'googleapis';
 import { v7 as uuidv7, validate } from 'uuid';
-import  express from "express";
+import express from "express";
 import cookieSession from "cookie-session";
-import  passport from "passport";
+import passport, { session } from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import http from "node:http";
 import fs from "node:fs";
@@ -52,7 +52,7 @@ import * as middleware from "i18next-http-middleware";
 import type { ServerDatabaseUnitInterface } from "./serverInterfaces/ServerDatabaseUnitInterface";
 
 import type { ServerResetAllServerDataResponseInterface } from "./serverInterfaces/ServerResetAllServerDataResponseInterface";
-import { followerRequestStatus, ItemLevel, ServerMessageType, syncResultType } from "./typebox";
+import { followerRequestStatus, ItemLevel, ServerMessageType, syncAction, syncResultType } from "./typebox";
 import type { ServerUpdateRouterTimesAndDurationsRequestInterface } from "./serverInterfaces/ServerUpdateRouterTimesAndDurationsRequestInterface";
 import type { ServerUpdateRouterStatusRequestInterface } from "./serverInterfaces/ServerUpdateRouterStatusRequestInterface";
 
@@ -71,17 +71,20 @@ import type { ServerDnsEntryInterface } from "./serverInterfaces/ServerDnsEntryI
 
 
 
-const routerRows = 
+const routerRows =
   await db.selectFrom('awesum.Router as r')
-  .innerJoin('awesum.App as a', 'r.appId', 'a.id')
-  .select((eb) => [
-    'a.email',
-    eb.fn('upper', ['r.routerMac']).as('routerMac'),
-    'r.ipAddress',
-  'r.id as routerId',
-  ])
-  .execute()
+    .innerJoin('awesum.App as a', 'r.appId', 'a.id')
+    .select((eb) => [
+      'a.email',
+      eb.fn('upper', ['r.routerMac']).as('routerMac'),
+      'r.ipAddress',
+      'r.id as routerId',
+    ])
+    .execute()
 
+//all cached objects, these need to be maintained in memory and synced to the database
+
+const socketConnections = new Map<string, WebSocket[]>();
 //convert results to a map of routerMac to email, allowing for multiple emails per routerMac
 const routerMacToEmailMap = new Map<string, { email: string, ipAddress: string, routerId: string }>();
 for (const result of routerRows) {
@@ -130,7 +133,7 @@ function onSocketError(err: any) {
 var app = express();
 app.set('trust proxy', true);
 
-const socketConnections = new Map<string, WebSocket[]>();
+
 
 app.use(
   middleware.handle(i18next, {}),
@@ -180,8 +183,7 @@ interface AuthenticatedSession {
   };
 }
 
-
-app.use(cookieSession({
+const sessionParser = cookieSession({
   name: 'sid',
   // Remove the keys array to disable encryption
   // keys: [process.env.SESSION_SECRET!],
@@ -192,7 +194,9 @@ app.use(cookieSession({
   secure: false, // Change to false for development (allows HTTP)
   // Add these options to make cookies more readable
   signed: false, // Disable signing/encryption
-}));
+})
+
+app.use(sessionParser);
 
 
 
@@ -392,6 +396,7 @@ const sslOptions = {
 // Create HTTPS server
 const server = http.createServer(app);
 
+
 // Create HTTP server
 const httpServer = http.createServer(app);
 
@@ -448,11 +453,11 @@ app.get(
 
 
     const foundApp = await db.selectFrom('awesum.App as a')
-    .where(({ eb }) => 
-      eb(eb.fn('lower', ['a.email']),'=',email.toLowerCase()))
-    .selectAll()
-    .executeTakeFirst();
-    
+      .where(({ eb }) =>
+        eb(eb.fn('lower', ['a.email']), '=', email.toLowerCase()))
+      .selectAll()
+      .executeTakeFirst();
+
 
     if (!foundApp) {
       res.status(400).json({
@@ -516,6 +521,7 @@ function sendAndAwaitResponse(socket: WebSocket, message: any, matcher: (data: a
 
 
 app.post("/api/sync", express.json({ limit: '1mb' }), async (req: express.Request, res: express.Response) => {
+
   if (!(req as any).user) {
     res.status(401).json({
       error: req.t!(resources.Authentication_Is_Required.key),
@@ -530,40 +536,64 @@ app.post("/api/sync", express.json({ limit: '1mb' }), async (req: express.Reques
     const syncRequestArray = req.body as ServerSyncRequestInterface[];
     const syncResponseArray: ServerSyncResponseInterface[] = [];
 
-    let foundFollowerRequests: { [key: string]:AwesumFollowerRequest } = {};
+
 
     let foundLeaderAppId = await getAppIdFromEmail(userEmail);
-    if (!foundLeaderAppId) {
 
-      var clientApps = syncRequestArray.filter(item => item.app 
-        && item.app.email == userEmail);
-      var clientApp = clientApps.length > 0 ? clientApps[0].app : null;
-      if (clientApp) {
 
-        var validationErrors = await validateApp(clientApp);
-        if (validationErrors.length > 0) {
-          syncResponseArray.push({ message: { id: clientApp.id, level: ItemLevel.app, message: "App not found" }})
-          res.status(500).json(syncResponseArray);
-          return;
-        }
-        else {
-          //await models.APP.create(clientApp);
-          await db.insertInto('awesum.App').values(clientApp as AwesumApp).execute();
-          foundLeaderAppId = clientApp.id;
-        }
-      }
-      else {
-        res.status(200).json(syncResponseArray);
-        return;
-      }
-    }
+    // if (!foundLeaderAppId) {
 
-    if (syncRequestArray.length == 1 && syncRequestArray[0].deletion && syncRequestArray[0].deletion.level == ItemLevel.app && 
-      syncRequestArray[0].deletion.id == foundLeaderAppId) {
-    
-        await DeleteApp(foundLeaderAppId, syncResponseArray, res);
-        return;
-    }
+    //   if (syncRequestArray.length == 0) {
+    //     res.status(200).json(syncResponseArray);
+    //     return;
+    //   }
+
+    //   if (syncRequestArray.length == 1
+    //     && syncRequestArray[0].app
+    //     && syncRequestArray[0].app.email == userEmail) {
+
+    //     var validationErrors = await validateApp(syncRequestArray[0].app);
+    //     if (validationErrors.length > 0) {
+    //       syncResponseArray.push({ message: "App not found" });
+    //       res.status(500).json(syncResponseArray);
+    //       return;
+    //     }
+    //     else {
+    //       syncRequestArray[0].app.lastSync = new Date().getTime();
+    //       await db.insertInto('awesum.App').values(syncRequestArray[0].app as AwesumApp).execute();
+    //       syncResponseArray.push(
+    //         {
+    //           id: syncRequestArray[0].app.id,
+    //           level: ItemLevel.app,
+    //           action: syncAction.add,
+    //           result: syncResultType.added,
+    //           app: syncRequestArray[0].app,
+    //         });
+    //       res.status(200).json(syncResponseArray);
+    //       return;
+    //     }
+    //   }
+    //   else {
+    //     syncResponseArray.push({ message: "App not found" })
+    //     res.status(500).json(syncResponseArray);
+    //     return;
+    //   }
+    // }
+
+    let foundFollowerRequests: { [key: string]: AwesumFollowerRequest } = {};
+    let foundFollowerCompletions: { [key: string]: AwesumFollowerDatabaseCompletion } = {};
+    let foundFollowerDatabases: { [key: string]: AwesumFollowerDatabase } = {};
+    let followerLeaderAppIds: Set<string> = new Set();
+    let followerRequestIds: Set<string> = new Set();
+    let followerDatabaseIds: Set<string> = new Set();
+    let foundApps: { [key: string]: AwesumApp } = {}
+
+    let foundDatabaseUnit: { [key: string]: AwesumDatabaseUnit } = {};
+    let foundDatabaseItem: { [key: string]: AwesumDatabaseItem } = {};
+    let foundRouters: { [key: string]: AwesumRouter } = {};
+    let foundDatabases: { [key: string]: AwesumDatabase } = {};
+    let foundDatabaseIds: Set<string> = new Set();
+
 
 
     // Helper functions
@@ -576,11 +606,11 @@ app.post("/api/sync", express.json({ limit: '1mb' }), async (req: express.Reques
       //     ],
       //   }
       // });
-    const followersQuery = await db.selectFrom('awesum.FollowerRequest as fr')
-      .where(({ eb }) => 
-        eb('leaderAppId','=',foundLeaderAppId).or
-        ('followerAppId','=',foundLeaderAppId))
-      .selectAll()
+      const followersQuery = await db.selectFrom('awesum.FollowerRequest as fr')
+        .where(({ eb }) =>
+          eb('leaderAppId', '=', foundLeaderAppId).or
+            ('followerAppId', '=', foundLeaderAppId))
+        .selectAll()
 
       function interpolateQuery(query: any): string {
         let sql = query.sql
@@ -593,13 +623,13 @@ app.post("/api/sync", express.json({ limit: '1mb' }), async (req: express.Reques
       }
 
       const compiled = followersQuery.compile()
-const sqlWithParams = interpolateQuery(compiled)
+      const sqlWithParams = interpolateQuery(compiled)
 
-console.log(sqlWithParams) // Logs SQL with embedded parameters
+      console.log(sqlWithParams) // Logs SQL with embedded parameters
 
       const followers = await followersQuery.execute();
 
-console.log("1")
+      console.log("1")
 
       foundFollowerRequests = {};
       followers.forEach((follower) => {
@@ -610,76 +640,37 @@ console.log("1")
     // Process server items to send to client
     await populateFoundFollowers();
 
-    if (syncRequestArray.length == 1 && syncRequestArray[0].followerRequest) {
 
-      let followerRequest = syncRequestArray[0].followerRequest;
-      if (followerRequest.leaderAppId != foundLeaderAppId) {
-        res.status(400).json({
-          error: req.t!(resources.Unknown_leader_app.key),
-        });
-        return;
-      }
 
-      var validationErrors = await validateFollowerRequest(followerRequest);
-      if (validationErrors.length == 0) {
-        // var foundFollower = await models.APP.findOne({ where: 
-        //   { email: followerRequest.followerEmail } });
-        const foundFollower = await db.selectFrom('awesum.App as a')
-        .where(({ eb }) => 
-          eb('email','=',followerRequest.followerEmail))
-        .selectAll()
-        .executeTakeFirst();
+    // if (syncRequestArray.length == 1 &&
+    //   syncRequestArray[0].action == syncAction.add &&
+    //   syncRequestArray[0].followerRequest) {
 
-        if (foundFollower) {
-          followerRequest.followerAppId = foundFollower.id;
-          followerRequest.followerName = foundFollower.name;
-          //await models.FOLLOWER_REQUEST.create(followerRequest);
-          await db.insertInto('awesum.FollowerRequest').values(followerRequest as AwesumFollowerRequest).execute();
-          syncResponseArray.push({ followerRequest: followerRequest })
-          console.log("Sending message to follower:", followerRequest.followerEmail);
-          const wses = socketConnections.get(followerRequest.followerEmail);
-          if (wses) {
-            for (const ws of wses) {
-              if (!(ws as any).macAddress) {
-                ws.send(JSON.stringify({ type: ServerMessageType.addFollowerRequest, data: followerRequest }));
-              }
-            }
-          }
-        }
-        else {
-          syncResponseArray.push({ message: { id: followerRequest.id, level: ItemLevel.followerRequest, message: "App not found" }})
-        }
-      }
-      else {
-        for (const element of validationErrors) {
-          syncResponseArray.push({ message: { id: followerRequest.id, level: ItemLevel.followerRequest, message: element.message! }})
-        }
-      }
-    }
-    if (syncRequestArray.length == 1 && syncRequestArray[0].followerDatabase) {
-      var followerDatabase = syncRequestArray[0].followerDatabase;
-      var followerRequest = foundFollowerRequests[followerDatabase.followerRequestId];
-      if (followerRequest.leaderAppId != foundLeaderAppId) {
-        syncResponseArray.push({ message: { id: followerDatabase.id, level: ItemLevel.followerDatabase, message: "Follower request rejected" }})
-        res.status(200).json(syncResponseArray);
-        return;
-      }
-      if (followerRequest.followerAppId != foundLeaderAppId) {
-        //await models.FOLLOWER_DATABASE.create(followerDatabase);
-        await db.insertInto('awesum.FollowerDatabase').values(followerDatabase as AwesumFollowerDatabase).execute();
-        var followerEmail = foundFollowerRequests[followerDatabase.followerRequestId].followerEmail;
-        const wses = socketConnections.get(followerEmail);
-        if (wses) {
-          for (const ws of wses) {
-            if (!(ws as any).macAddress) {
-              ws.send(JSON.stringify({ type: "Assignment Added", data: followerDatabase }));
-            }
-          }
-        }
-        res.status(200).json(syncResponseArray);
-        return;
-      }
-    }
+
+    // if (syncRequestArray.length == 1 && syncRequestArray[0].followerDatabase) {
+    //   var followerDatabase = syncRequestArray[0].followerDatabase;
+    //   var followerRequest = foundFollowerRequests[followerDatabase.followerRequestId];
+    //   if (followerRequest.leaderAppId != foundLeaderAppId) {
+    //     syncResponseArray.push({ message: "Follower request rejected" })
+    //     res.status(200).json(syncResponseArray);
+    //     return;
+    //   }
+    //   if (followerRequest.followerAppId != foundLeaderAppId) {
+    //     //await models.FOLLOWER_DATABASE.create(followerDatabase);
+    //     await db.insertInto('awesum.FollowerDatabase').values(followerDatabase as AwesumFollowerDatabase).execute();
+    //     var followerEmail = foundFollowerRequests[followerDatabase.followerRequestId].followerEmail;
+    //     const wses = socketConnections.get(followerEmail);
+    //     if (wses) {
+    //       for (const ws of wses) {
+    //         if (!(ws as any).macAddress) {
+    //           ws.send(JSON.stringify({ type: "Assignment Added", data: followerDatabase }));
+    //         }
+    //       }
+    //     }
+    //     res.status(200).json(syncResponseArray);
+    //     return;
+    //   }
+    // }
 
 
     const requestItems: { [key: string]: ServerSyncRequestInterface } = {};
@@ -689,18 +680,7 @@ console.log("1")
 
     // Helper collections
 
-    let foundFollowerCompletions: { [key: string]: AwesumFollowerDatabaseCompletion } = {};
-    let foundFollowerDatabases: { [key: string]: AwesumFollowerDatabase } = {};
-    let followerLeaderAppIds: Set<string> = new Set();
-    let followerRequestIds: Set<string> = new Set();
-    let followerDatabaseIds: Set<string> = new Set();
 
-    let foundApps: { [key: string]: AwesumApp } = {};
-    let foundDatabaseUnit: { [key: string]: AwesumDatabaseUnit } = {};
-    let foundDatabaseItem: { [key: string]: AwesumDatabaseItem } = {};
-    let foundRouters: { [key: string]: AwesumRouter } = {};
-    let foundDatabases: { [key: string]: AwesumDatabase } = {};
-    let foundDatabaseIds: Set<string> = new Set();
 
 
     const populateFoundFollowerCompletions = async () => {
@@ -710,10 +690,10 @@ console.log("1")
       //   },
       // });
       const followerCompletions = await db.selectFrom('awesum.FollowerDatabaseCompletion as fdc')
-      .where(({ eb }) => 
-        eb('followerRequestId','in',Array.from(Object.keys(foundFollowerRequests))))
-      .selectAll()
-      .execute();
+        .where(({ eb }) =>
+          eb('followerRequestId', 'in', Array.from(Object.keys(foundFollowerRequests))))
+        .selectAll()
+        .execute();
       foundFollowerCompletions = {};
       followerCompletions.forEach((completion) => {
         foundFollowerCompletions[completion.id] = completion;
@@ -727,10 +707,10 @@ console.log("1")
       //   },
       // });
       const followerDatabases = await db.selectFrom('awesum.FollowerDatabase as fd')
-      .where(({ eb }) => 
-        eb('followerRequestId','in',Array.from(Object.keys(foundFollowerRequests))))
-      .selectAll()
-      .execute();
+        .where(({ eb }) =>
+          eb('followerRequestId', 'in', Array.from(Object.keys(foundFollowerRequests))))
+        .selectAll()
+        .execute();
       foundFollowerDatabases = {};
       followerDatabases.forEach((database) => {
         foundFollowerDatabases[database.id] = database;
@@ -765,10 +745,10 @@ console.log("1")
         //   },
         // });
         const followerDatabases = await db.selectFrom('awesum.FollowerDatabase as fd')
-        .where(({ eb }) => 
-          eb('followerRequestId','in',Array.from(followerRequestIds)))
-        .selectAll()
-        .execute();
+          .where(({ eb }) =>
+            eb('followerRequestId', 'in', Array.from(followerRequestIds)))
+          .selectAll()
+          .execute();
 
         followerDatabases.forEach((database) => {
           followerDatabaseIds.add(database.databaseId);
@@ -786,11 +766,11 @@ console.log("1")
       //   },
       // });
       const databases = await db.selectFrom('awesum.Database as d')
-      .where(({ eb, or }) => 
-        eb('appId','=',foundLeaderAppId).or(
-        'id','in',Array.from(followerDatabaseIds)))
-      .selectAll()
-      .execute();
+        .where(({ eb, or }) =>
+          eb('appId', '=', foundLeaderAppId).or(
+            'id', 'in', Array.from(followerDatabaseIds)))
+        .selectAll()
+        .execute();
       foundDatabases = {};
       foundDatabaseIds = new Set();
 
@@ -816,7 +796,7 @@ console.log("1")
 
           if (!requestFollower && follower.leaderAppId === foundLeaderAppId
           ) {
-            await db.deleteFrom('awesum.FollowerRequest').where('id','=',follower.id).execute();
+            await db.deleteFrom('awesum.FollowerRequest').where('id', '=', follower.id).execute();
           } else {
             syncResponseArray.push({
               followerRequest: follower,
@@ -854,17 +834,7 @@ console.log("1")
     //     ],
     //   },
     // });
-    const apps = await db.selectFrom('awesum.App as a')
-    .where(({ eb, or }) => 
-      eb('id','=',foundLeaderAppId).or(
-      'id','in',Array.from(followerLeaderAppIds)))
-    .selectAll()
-    .execute();
 
-    foundApps = {};
-    apps.forEach((app) => {
-      foundApps[app.id] = app;
-    });
 
     for (const [key, app] of Object.entries(foundApps)) {
       const requestApp = requestItems[key] && requestItems[key].app
@@ -902,7 +872,7 @@ console.log("1")
           // or the server database is newer than the client database
 
           if (!requestDatabase && database.appId === foundLeaderAppId) {
-            await db.deleteFrom('awesum.Database').where('id','=',database.id).execute();
+            await db.deleteFrom('awesum.Database').where('id', '=', database.id).execute();
           } else {
             syncResponseArray.push({
               database: database,
@@ -926,11 +896,11 @@ console.log("1")
     //   },
     // });
     const databaseUnits = await db.selectFrom('awesum.DatabaseUnit as du')
-    .where(({ eb, or }) => 
-      eb('databaseId','in',Array.from(foundDatabaseIds)).or(
-      'databaseId','in',Array.from(followerRequestIds)))
-    .selectAll()
-    .execute();
+      .where(({ eb, or }) =>
+        eb('databaseId', 'in', Array.from(foundDatabaseIds)).or(
+          'databaseId', 'in', Array.from(followerRequestIds)))
+      .selectAll()
+      .execute();
     foundDatabaseUnit = {};
     databaseUnits.forEach((unit) => {
       foundDatabaseUnit[unit.id] = unit;
@@ -948,7 +918,7 @@ console.log("1")
         requestDatabaseUnit.version < databaseUnit.version
       ) {
         if (!requestDatabaseUnit && databaseUnit.appId === foundLeaderAppId) {
-          await db.deleteFrom('awesum.DatabaseUnit').where('id','=',databaseUnit.id).execute();
+          await db.deleteFrom('awesum.DatabaseUnit').where('id', '=', databaseUnit.id).execute();
         } else {
           syncResponseArray.push({
             databaseUnit: databaseUnit,
@@ -967,11 +937,11 @@ console.log("1")
     //   },
     // });
     const databaseItems = await db.selectFrom('awesum.DatabaseItem as di')
-    .where(({ eb, or }) => 
-      eb('databaseId','in',Array.from(foundDatabaseIds)).or(
-      'databaseId','in',Array.from(followerRequestIds)))
-    .selectAll()
-    .execute();
+      .where(({ eb, or }) =>
+        eb('databaseId', 'in', Array.from(foundDatabaseIds)).or(
+          'databaseId', 'in', Array.from(followerRequestIds)))
+      .selectAll()
+      .execute();
 
     foundDatabaseItem = {};
     databaseItems.forEach((item) => {
@@ -990,7 +960,7 @@ console.log("1")
         requestDatabaseItem.version < databaseItem.version
       ) {
         if (!requestDatabaseItem && databaseItem.appId === foundLeaderAppId) {
-          await db.deleteFrom('awesum.DatabaseItem').where('id','=',databaseItem.id).execute();
+          await db.deleteFrom('awesum.DatabaseItem').where('id', '=', databaseItem.id).execute();
         } else {
           syncResponseArray.push({
             databaseItem: databaseItem,
@@ -999,14 +969,14 @@ console.log("1")
       }
     }
 
-      // const routers = await models.ROUTER.findAll({
-      //   where: {
-      //     appId: { [Op.in]: [foundLeaderAppId, ...Array.from(followerLeaderAppIds)] },
-      //   },
-      // });
-      const routers = await db.selectFrom('awesum.Router as r')
-      .where(({ eb }) => 
-        eb('appId','in',[foundLeaderAppId, ...Array.from(followerLeaderAppIds)]))
+    // const routers = await models.ROUTER.findAll({
+    //   where: {
+    //     appId: { [Op.in]: [foundLeaderAppId, ...Array.from(followerLeaderAppIds)] },
+    //   },
+    // });
+    const routers = await db.selectFrom('awesum.Router as r')
+      .where(({ eb }) =>
+        eb('appId', 'in', [foundLeaderAppId, ...Array.from(followerLeaderAppIds)]))
       .selectAll()
       .execute();
 
@@ -1026,7 +996,7 @@ console.log("1")
         requestRouter.version < router.version
       ) {
         if (!requestRouter && router.appId === foundLeaderAppId) {
-          await db.deleteFrom('awesum.Router').where('id','=',router.id).execute();
+          await db.deleteFrom('awesum.Router').where('id', '=', router.id).execute();
         } else {
           syncResponseArray.push({
             router: router,
@@ -1039,44 +1009,89 @@ console.log("1")
 
     // Process client items to update server
     for (const item of syncRequestArray) {
+
+      if (item.id) {
+        if (item.level == ItemLevel.app
+          && item.action == syncAction.delete
+          && item.id == foundLeaderAppId
+        ) {
+
+          await DeleteApp(foundLeaderAppId, syncResponseArray, res);
+        }
+
+        if (item.level == ItemLevel.followerRequest
+          && item.action == syncAction.modify
+          && foundFollowerRequests[item.id]
+          && item.values
+        ) {
+          const followerRequest = foundFollowerRequests[item.id];
+          
+            for (const key in item.values as any) {
+              followerRequest[key] = (item.values as any)[key];
+            }
+          
+          await db.updateTable('awesum.FollowerRequest').set(followerRequest as AwesumFollowerRequest).where('id', '=', followerRequest.id).execute();
+
+          const wses = socketConnections.get(item.values['status'] == followerRequestStatus.Approved ? followerRequest.leaderEmail : followerRequest.followerEmail);
+          if (wses) {
+            for (const ws of wses) {
+              if (!(ws as any).macAddress) {
+                ws.send(JSON.stringify(syncRequestArray));
+              }
+            }
+          }
+        }
+      }
+
       // Process App
       if (item.app) {
         const app = foundApps[item.app.id];
 
-        if (!app && item.app.id == foundLeaderAppId) {
-          //app is not found, so we need to create it
+        if (!app && (
+          //don't think this is needed
+          item.app.id == foundLeaderAppId
+          //new app being created
+          || item.app.email == userEmail)) {
 
-          if (item.app.email != userEmail || item.app.authenticationType != (req as any).user.provider) {
-            syncResponseArray.push({ message: { id: item.app.id, level: ItemLevel.app, message: "App not found" }})
+          var validationErrors = await validateApp(item.app);
+          if (validationErrors.length > 0) {
+            for (const error of validationErrors) {
+              syncResponseArray.push({
+                id: item.app.id,
+                result: syncResultType.failedValidation,
+                message: error.message
+              });
+            }
           }
           else {
-            var validationErrors = await validateApp(app);
-            if (validationErrors.length > 0) {
-              syncResponseArray.push({ message: { id: item.app.id, level: ItemLevel.app, message: "App not found" }})
-            }
-            else {
-              app.lastSync = new Date().getTime();
-              await db.insertInto('awesum.App').values(app as AwesumApp).execute();
-            }
+            item.app.lastSync = new Date().getTime();
+            await db.insertInto('awesum.App').values(item.app as AwesumApp).execute();
+            syncResponseArray.push(
+              {
+                app: item.app,
+                result: syncResultType.added,
+                action: syncAction.add,
+              });
           }
         }
         else if (!app) {
-          syncResponseArray.push({
-            deletion: {
-              level: ItemLevel.app,
-              id: item.app.id,
-            },
-          });
+          //do nothing here, up to client to delete app
         }
         if (app && (app.lastModified < item.app.lastModified ||
           app.version < item.app.version)) {
-          if (!app) {
-            res.status(400).json(res.locals.t("AppSyncOffRails"));
-            return;
-          } else {
-            Object.assign(app, item.app);
-            await db.updateTable('awesum.App').set(app as AwesumApp).where('id','=',app.id).execute();
-          }
+          item.app.lastSync = new Date().getTime();
+          await db.updateTable('awesum.App').set(item.app as AwesumApp).where('id', '=', app.id).execute();
+          syncResponseArray.push(
+            {
+              id: item.app.id,
+              level: ItemLevel.app,
+              action: syncAction.modify,
+              values: 
+                {
+                  lastSync: new Date().getTime()
+                } as Partial<AwesumApp>
+              
+            });
         }
       }
 
@@ -1094,16 +1109,14 @@ console.log("1")
           }
           else if (!database) {
             databaseIdsToDelete.add(item.database.id);
+
             syncResponseArray.push({
-              deletion: {
-                level: ItemLevel.database,
-                id: item.database.id,
-              },
+              id: item.database.id,
             });
           }
           else {
             Object.assign(database, item.database);
-            await db.updateTable('awesum.Database').set(database as AwesumDatabase).where('id','=',database.id).execute();
+            await db.updateTable('awesum.Database').set(database as AwesumDatabase).where('id', '=', database.id).execute();
           }
         }
       }
@@ -1124,15 +1137,13 @@ console.log("1")
             await db.insertInto('awesum.DatabaseUnit').values(item.databaseUnit as AwesumDatabaseUnit).execute();
           } else if (!databaseUnit) {
             syncResponseArray.push({
-              deletion: {
-                level: ItemLevel.databaseUnit,
-                id: item.databaseUnit.id,
-              },
+              action: syncAction.delete,
+              id: item.databaseUnit.id,
             });
           }
           else {
             Object.assign(databaseUnit, item.databaseUnit);
-            await db.updateTable('awesum.DatabaseUnit').set(databaseUnit as AwesumDatabaseUnit).where('id','=',databaseUnit.id).execute();
+            await db.updateTable('awesum.DatabaseUnit').set(databaseUnit as AwesumDatabaseUnit).where('id', '=', databaseUnit.id).execute();
           }
         }
       }
@@ -1151,15 +1162,16 @@ console.log("1")
             await db.insertInto('awesum.DatabaseItem').values(item.databaseItem as AwesumDatabaseItem).execute();
           } else if (!databaseItem) {
             syncResponseArray.push({
-              deletion: {
-                level: ItemLevel.databaseItem,
-                id: item.databaseItem.id,
-              },
+
+              level: ItemLevel.databaseItem,
+              action: syncAction.delete,
+              id: item.databaseItem.id,
+
             });
           }
           else {
             Object.assign(databaseItem, item.databaseItem);
-            await db.updateTable('awesum.DatabaseItem').set(databaseItem as AwesumDatabaseItem).where('id','=',databaseItem.id).execute();
+            await db.updateTable('awesum.DatabaseItem').set(databaseItem as AwesumDatabaseItem).where('id', '=', databaseItem.id).execute();
           }
         }
       }
@@ -1180,8 +1192,61 @@ console.log("1")
             }
           } else {
             Object.assign(router, item.router);
-            await db.updateTable('awesum.Router').set(router as AwesumRouter).where('id','=',router.id).execute();
+            await db.updateTable('awesum.Router').set(router as AwesumRouter).where('id', '=', router.id).execute();
           }
+        }
+      }
+
+      if (item.followerRequest) {
+        const followerRequest = foundFollowerRequests[item.followerRequest.id];
+        if (!followerRequest) {
+          var validationErrors = await validateFollowerRequest(item.followerRequest);
+          if (validationErrors.length > 0) {
+            for (const error of validationErrors) {
+              syncResponseArray.push({
+                id: item.followerRequest.id,
+                result: syncResultType.failedValidation,
+                message: error.message
+              });
+            }
+          }
+          else {
+            var followerAppId = await getAppIdFromEmail(item.followerRequest.followerEmail);
+            if (!followerAppId) {
+              syncResponseArray.push({
+                id: item.followerRequest.id,
+                result: syncResultType.failedValidation,
+                message: "Follower email not found"
+              });
+              continue;
+            }
+            item.followerRequest.followerAppId = followerAppId;
+            await db.insertInto('awesum.FollowerRequest').values(item.followerRequest as AwesumFollowerRequest).execute();
+
+            const wses = socketConnections.get(item.followerRequest.followerEmail);
+            if (wses) {
+              for (const ws of wses) {
+                if (!(ws as any).macAddress) {
+                  ws.send(JSON.stringify([{
+                    followerRequest: item.followerRequest,
+                    action: syncRequestArray.length == 1 ? syncAction.addAndRedirectToLeader : syncAction.add,
+                  } as ServerSyncResponseInterface
+                  ]));
+                }
+              }
+            }
+
+          }
+        }
+        else if (!followerRequest) {
+          //no idea what to do here
+        }
+        if (followerRequest && (followerRequest.lastModified < item.followerRequest.lastModified ||
+          followerRequest.version < item.followerRequest.version)) {
+
+          await db.updateTable('awesum.FollowerRequest').set(item.followerRequest as AwesumFollowerRequest).where('id', '=', followerRequest.id).execute();
+
+
         }
       }
 
@@ -1286,7 +1351,7 @@ app.get(
       });
     }
     var uniquename = req.query.uniqueName as string;
-    var isUnique = await isNameGloballyUnique((req as any).user.emails[0],uniquename);
+    var isUnique = await isNameGloballyUnique((req as any).user.emails[0], uniquename);
     if (isUnique) {
       res.json(true);
     } else {
@@ -1315,46 +1380,153 @@ app.get("/api/logout", (req: express.Request, res: express.Response) => {
 
 
 //create a new websocket server
-const wss = new WebSocketServer({ server });
+const wss = new WebSocketServer({ noServer: true });
 
-/* // Create a plain WebSocket server for troubleshooting SSL issues
-const plainWss = new WebSocketServer({ port: 8080 });
-
-plainWss.on('upgrade', function (request, socket, head) {
-  socket.on('error', onSocketError);
-
-  socket.on('message'),function(){
-    var v = 0
+// catch the upgrade event for only /ws
+server.on("upgrade", (req, socket, head) => {
+  if (req.url !== "/ws") {
+    socket.destroy();
+    return;
   }
 
-  console.log('Plain WebSocket: Parsing session from request...');
-
-  console.log('Plain WebSocket: Session is parsed!');
-
-  socket.removeListener('error', onSocketError);
-
-  plainWss.handleUpgrade(request, socket, head, function (ws) {
-    plainWss.emit('connection', ws, request);
+  wss.handleUpgrade(req, socket, head, (ws) => {
+    wss.emit("connection", ws, req);
   });
-}); */
 
-wss.on('upgrade', function (request, socket, head) {
-  socket.on('error', onSocketError);
 
-  console.log('Parsing session from request...');
-
-  console.log('Session is parsed!');
-
-  socket.removeListener('error', onSocketError);
-
-  wss.handleUpgrade(request, socket, head, function (ws) {
-    wss.emit('connection', ws, request);
-  });
 });
 
 //handle incoming connections
 wss.on("connection", async (ws: WebSocket, req: express.Request) => {
-  await handleWebSocketConnection(ws, req, "Secure");
+  sessionParser(req as Request, {} as any, async () => {
+
+
+
+    var wsEmail = (req as any).session.passport.user.emails[0];
+
+    try {
+      //get ip address
+      const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
+
+      //get cookie with the name session
+      const sessionCookie = req.headers["cookie"]?.split("; ").find(cookie => cookie.startsWith("mac="));
+      if (sessionCookie) {
+
+        const userBase64Encoded = sessionCookie.split("=")[1];
+        let userBase64Decoded = Buffer.from(userBase64Encoded, 'base64').toString('utf8');
+        //if userBase64Decoded is a mac address, then decode it
+        if (userBase64Decoded.length === 17) {
+          console.log(userBase64Decoded);
+          userBase64Decoded = userBase64Decoded.toLocaleUpperCase();
+          const email = routerMacToEmailMap.get(userBase64Decoded);
+          (ws as any).email = email;
+          if (email) {
+            console.log(email);
+            if (email.ipAddress === "0.0.0.0" || email.ipAddress === ip) {
+              if (!socketConnections.has(email.email)) {
+                socketConnections.set(email.email, []);
+              }
+              //close and splice any existing connections for this email and mac address
+              const wses = socketConnections.get(email.email);
+              if (wses) {
+                for (const ws1 of wses) {
+                  if ((ws1 as any).macAddress == userBase64Decoded) {
+                    console.log("Closing connection for email: " + email.email + " and mac address: " + userBase64Decoded);
+                    ws1.close();
+                    wses.splice(wses.indexOf(ws1), 1);
+                  }
+                }
+              }
+
+              socketConnections.get(email.email)!.push(ws);
+              (ws as any).macAddress = userBase64Decoded;
+
+              // let router = await models.ROUTER.findOne({
+              //   where: Sequelize.where(Sequelize.fn('upper', Sequelize.col('routerMac')), userBase64Decoded),
+              // });
+              const router = await db.selectFrom('awesum.Router as r')
+                .where(({ eb }) =>
+                  eb.fn('upper', ['r.routerMac']), '=', userBase64Decoded)
+                .selectAll()
+                .executeTakeFirst();
+              if (router) {
+                //wait 5 seconds
+                await new Promise(resolve => setTimeout(resolve, 5000));
+                console.log("Sending updateRouterTimesAndDurationsRequest");
+                ws.send(JSON.stringify({
+                  type: "updateRouterTimesAndDurationsRequest",
+                  routerId: router.id,
+                  mondayTimesAndDurations: router.mondayTimesAndDurations,
+                  tuesdayTimesAndDurations: router.tuesdayTimesAndDurations,
+                  wednesdayTimesAndDurations: router.wednesdayTimesAndDurations,
+                  thursdayTimesAndDurations: router.thursdayTimesAndDurations,
+                  fridayTimesAndDurations: router.fridayTimesAndDurations,
+                  saturdayTimesAndDurations: router.saturdayTimesAndDurations,
+                  sundayTimesAndDurations: router.sundayTimesAndDurations,
+                } as ServerUpdateRouterTimesAndDurationsRequestInterface
+                ));
+              }
+            }
+          }
+          else {
+            ws.close();
+            return;
+          }
+        }
+      }
+      else {
+        (ws as any).email = wsEmail;
+        if (!socketConnections.has(wsEmail)) {
+          socketConnections.set(wsEmail, []);
+        }
+        socketConnections.get(wsEmail)!.push(ws);
+      }
+
+      ws.onerror = console.error;
+
+      //handle incoming messages
+      ws.onmessage = async (message: any) => {
+        try {
+          const data = JSON.parse(message.data);
+          if (data.type === "clientConnected") {
+            (ws as any).sessionId = data.sessionId;
+          }
+          else if (data.type == "createDnsEntriesRequest") {
+            var requests = data.addDnsEntriesRequest as Array<ServerDnsEntryInterface>
+            for (let r of requests) {
+              r.id = uuidv7();
+              var errors = validateDnsEntry(r) as unknown as Array<ErrorObject>;
+              if (errors.length > 0) {
+                return;
+              }
+            }
+            await db.insertInto('awesum.DnsEntry').values(requests as AwesumDnsEntry[]).execute();
+          }
+          else if (data.type === "updateTimesAndDurationsResponse") {
+
+          }
+        } catch (error) {
+          console.error("Error processing message:", error);
+        }
+      };
+
+      ws.onclose = function () {
+        //need a way to get the email from the ws
+        const userEmail = (ws as any).email;
+        if (userEmail) {
+          const wses = socketConnections.get(userEmail);
+          if (wses) {
+            wses.splice(wses.indexOf(ws), 1);
+            if (wses.length == 0) {
+              socketConnections.delete(userEmail);
+            }
+          }
+        }
+      };
+    } catch (error) {
+      console.error("Error handling WebSocket connection:", error);
+    }
+  });
 });
 
 async function DeleteApp(foundLeaderAppId: string, syncResponseArray: ServerSyncResponseInterface[], res: express.Response<any, Record<string, any>>) {
@@ -1460,145 +1632,10 @@ async function DeleteApp(foundLeaderAppId: string, syncResponseArray: ServerSync
   // });
   await db.deleteFrom('awesum.App').where('id', '=', foundLeaderAppId).execute();
 
-  syncResponseArray.push({ result: syncResultType.deleted });
-  res.status(200).json(syncResponseArray);
+  syncResponseArray.push({ id: foundLeaderAppId, result: syncResultType.deleted });
 }
 
-/* // Handle plain WebSocket connections for troubleshooting
-plainWss.on("connection", (ws: WebSocket, req: express.Request) =fgtttttttttttttttttn,length;p5> {
-  handleWebSocketConnection(ws, req, "Plain");
-}); */
 
-async function handleWebSocketConnection(ws: WebSocket, req: express.Request, connectionType: string) {
-  try {
-    //get ip address
-    const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
-    console.log(`${connectionType} WebSocket - IP address:`, ip);
-
-    //get cookie with the name session
-    const sessionCookie = req.headers["cookie"]?.split("; ").find(cookie => cookie.startsWith("session="));
-    if (!sessionCookie) {
-      console.log(`${connectionType} WebSocket - No session cookie found, closing connection`);
-      ws.close();
-      return;
-    }
-    const userBase64Encoded = sessionCookie.split("=")[1];
-    let userBase64Decoded = Buffer.from(userBase64Encoded, 'base64').toString('utf8');
-    //if userBase64Decoded is a mac address, then decode it
-    if (userBase64Decoded.length === 17) {
-      console.log(userBase64Decoded);
-      userBase64Decoded = userBase64Decoded.toLocaleUpperCase();
-      const email = routerMacToEmailMap.get(userBase64Decoded);
-      (ws as any).email = email;
-      if (email) {
-        console.log(email);
-        if (email.ipAddress === "0.0.0.0" || email.ipAddress === ip) {
-          if (!socketConnections.has(email.email)) {
-            socketConnections.set(email.email, []);
-          }
-          //close and splice any existing connections for this email and mac address
-          const wses = socketConnections.get(email.email);
-          if (wses) {
-            for (const ws1 of wses) {
-              if ((ws1 as any).macAddress == userBase64Decoded) {
-                console.log("Closing connection for email: " + email.email + " and mac address: " + userBase64Decoded);
-                ws1.close();
-                wses.splice(wses.indexOf(ws1), 1);
-              }
-            }
-          }
-
-          socketConnections.get(email.email)!.push(ws);
-          (ws as any).macAddress = userBase64Decoded;
-
-          // let router = await models.ROUTER.findOne({
-          //   where: Sequelize.where(Sequelize.fn('upper', Sequelize.col('routerMac')), userBase64Decoded),
-          // });
-          const router = await db.selectFrom('awesum.Router as r')
-          .where(({ eb }) => 
-            eb.fn('upper', ['r.routerMac']),'=',userBase64Decoded)
-          .selectAll()
-          .executeTakeFirst();
-          if (router) {
-            //wait 5 seconds
-            await new Promise(resolve => setTimeout(resolve, 5000));
-            console.log("Sending updateRouterTimesAndDurationsRequest");
-            ws.send(JSON.stringify({
-              type: "updateRouterTimesAndDurationsRequest",
-              routerId: router.id,
-              mondayTimesAndDurations: router.mondayTimesAndDurations,
-              tuesdayTimesAndDurations: router.tuesdayTimesAndDurations,
-              wednesdayTimesAndDurations: router.wednesdayTimesAndDurations,
-              thursdayTimesAndDurations: router.thursdayTimesAndDurations,
-              fridayTimesAndDurations: router.fridayTimesAndDurations,
-              saturdayTimesAndDurations: router.saturdayTimesAndDurations,
-              sundayTimesAndDurations: router.sundayTimesAndDurations,
-            } as ServerUpdateRouterTimesAndDurationsRequestInterface
-            ));
-          }
-        }
-      }
-      else {
-        ws.close();
-        return;
-      }
-    }
-    else {
-      const userJson = JSON.parse(userBase64Decoded);
-      const user = userJson.passport.user;
-      const userEmail = user.emails[0];
-      (ws as any).email = userEmail;
-      if (!socketConnections.has(userEmail)) {
-        socketConnections.set(userEmail, []);
-      }
-      socketConnections.get(userEmail)!.push(ws);
-    }
-
-    ws.onerror = console.error;
-
-    //handle incoming messages
-    ws.onmessage = async (message: any) => {
-      try {
-        const data = JSON.parse(message.data);
-        if (data.type === "clientConnected") {
-          (ws as any).sessionId = data.sessionId;
-        }
-        else if (data.type == "createDnsEntriesRequest") {
-          var requests = data.addDnsEntriesRequest as Array<ServerDnsEntryInterface>
-          for (let r of requests) {
-            r.id = uuidv7();
-            var errors = validateDnsEntry(r) as unknown as Array<ErrorObject>;
-            if (errors.length > 0) {
-              return;
-            }
-          }
-          await db.insertInto('awesum.DnsEntry').values(requests as AwesumDnsEntry[]).execute();
-        }
-        else if (data.type === "updateTimesAndDurationsResponse") {
-
-        }
-      } catch (error) {
-        console.error("Error processing message:", error);
-      }
-    };
-
-    ws.onclose = function () {
-      //need a way to get the email from the ws
-      const userEmail = (ws as any).email;
-      if (userEmail) {
-        const wses = socketConnections.get(userEmail);
-        if (wses) {
-          wses.splice(wses.indexOf(ws), 1);
-          if (wses.length == 0) {
-            socketConnections.delete(userEmail);
-          }
-        }
-      }
-    };
-  } catch (error) {
-    console.error("Error handling WebSocket connection:", error);
-  }
-}
 
 console.log(process.env.PORT);
 

@@ -66,6 +66,9 @@
     private _lastModified: number = 0;
     public get lastModified():number { return this._lastModified; }
     public set lastModified(v:number) {if(this._lastModified != v){this._lastModified=v;awesum.setTablePropertyValueById(this.id, 'lastModified',v,this.table)}}
+    private _touched: boolean = false;
+    public get touched():boolean { return this._touched; }
+    public set touched(v:boolean) {if(this._touched != v){this.version++;this.lastModified=new Date().getTime();this._touched=v;awesum.setTablePropertyValueById(this.id, 'touched',v,this.table)}}
     private _status: number = 0;
     public get status():number { return this._status; }
     public set status(v:number) {if(this._status != v){this.version++;this.lastModified=new Date().getTime();this._status=v;awesum.setTablePropertyValueById(this.id, 'status',v,this.table)}}

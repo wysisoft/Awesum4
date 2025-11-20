@@ -1,5 +1,5 @@
 'use strict'
-const schema38 = {
+const schema36 = {
 $id: 'displayNameFromEmailResponse',
 type: 'object',
 properties: { name: { type: 'string' } },

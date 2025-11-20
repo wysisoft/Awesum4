@@ -11,6 +11,13 @@ export enum audioType {
     None
 }
 
+export enum syncAction {
+    add,
+    addAndRedirectToLeader,
+    modify,
+    delete,
+}
+
 export enum syncResultType {
     added,
     modified,
@@ -19,7 +26,8 @@ export enum syncResultType {
     failedValidation,
     versionAndLastModifiedMismatch,
     noChange,
-    error
+    error,
+    redirectToLeader
 }
 
 export enum imageType {
@@ -30,12 +38,12 @@ export enum imageType {
 }
 
 export enum itemType {
-    spelling ,
-    oneByTwoDigraphs ,
-    oneByOneMultiplication ,
-    reading ,
-    writing ,
-oneByOneAddition ,
+    spelling,
+    oneByTwoDigraphs,
+    oneByOneMultiplication,
+    reading,
+    writing,
+    oneByOneAddition,
 }
 
 
@@ -65,6 +73,10 @@ export const databaseItemProperties = {
         formatMessage: "Must_be_a_valid_UUID",
     }),
     lastModified: Type.Number({ typeMessage: "Must_be_a_number" }),
+    touched: Type.Boolean({
+        default: false,
+        typeMessage: "Must_be_a_boolean",
+    }),
     version: Type.Integer({
         minimum: 0,
         minimumMessage: "Must_be_greater_than_or_equal_to_0",
@@ -178,7 +190,7 @@ export const types = [
                 minimumMessage: "Must_be_greater_than_or_equal_to_0",
                 typeMessage: "Must_be_an_integer",
             }),
-            
+
             lastModified: Type.Number({
                 default: new Date().getTime(),
                 typeMessage: "Must_be_a_number",
@@ -233,53 +245,12 @@ export const types = [
                 minLengthMessage: "Must_be_36_characters",
             }),
             lastSync: Type.Number({
+                default: 0,
                 typeMessage: "Must_be_a_number",
             }),
 
         },
         { $id: "app" },
-    ),
-    Type.Object(
-        {
-            id: Type.String({
-                format: "uuid",
-                formatMessage: "Must_be_a_valid_UUID",
-            }),
-            level: Type.Integer({
-                minimum: 0,
-                minimumMessage: "Must_be_greater_than_or_equal_to_0",
-                maximum: Math.max(
-                    ...Object.values(ItemLevel).filter((value) => typeof value === "number"),
-                ),
-                maximumMessage: "Must_be_less_than_or_equal_to_maximum",
-                typeMessage: "Must_be_an_integer",
-            }),
-        },
-        { $id: "deletion" },
-    ),
-    Type.Object(
-        {
-            level: Type.Integer({
-                minimum: 0,
-                minimumMessage: "Must_be_greater_than_or_equal_to_0",
-                maximum: Math.max(
-                    ...Object.values(ItemLevel).filter((value) => typeof value === "number"),
-                ),
-                maximumMessage: "Must_be_less_than_or_equal_to_maximum",
-                typeMessage: "Must_be_an_integer",
-            }),
-            message: Type.String({
-                minLength: 1,
-                minLengthMessage: "Required",
-                maxLength: 100,
-                maxLengthMessage: "Must_be_less_than_100_characters",
-            }),
-            id: Type.String({
-                format: "uuid",
-                formatMessage: "Must_be_a_valid_UUID",
-            }),
-        },
-        { $id: "message" },
     ),
     Type.Object(
         {
@@ -289,7 +260,7 @@ export const types = [
                 maxLength: 100,
                 maxLengthMessage: "Must_be_less_than_100_characters",
             }),
-            
+
             lastModified: Type.Number({
                 default: new Date().getTime(),
                 typeMessage: "Must_be_a_number"
@@ -335,7 +306,7 @@ export const types = [
         },
         { $id: "database" },
     ),
-    
+
     Type.Object(
         {
             name: Type.String({
@@ -349,9 +320,13 @@ export const types = [
                 minimumMessage: "Must_be_greater_than_or_equal_to_0",
                 typeMessage: "Must_be_an_integer",
             }),
-            
+
             lastModified: Type.Number({ typeMessage: "Must_be_a_number" }),
-            
+            touched: Type.Boolean({
+                default: false,
+                typeMessage: "Must_be_a_boolean",
+            }),
+
             version: Type.Integer({
                 minimum: 0,
                 minimumMessage: "Must_be_greater_than_or_equal_to_0",
@@ -470,6 +445,10 @@ export const types = [
                 formatMessage: "Must_be_a_valid_UUID",
             }),
             lastModified: Type.Number({ typeMessage: "Must_be_a_number" }),
+            touched: Type.Boolean({
+                default: false,
+                typeMessage: "Must_be_a_boolean",
+            }),
             version: Type.Integer({
                 minimum: 0,
                 minimumMessage: "Must_be_greater_than_or_equal_to_0",
@@ -493,7 +472,7 @@ export const types = [
     ),
     Type.Object(
         {
-         
+
             leftDigraphs: Type.String({
                 maxLength: 364,
                 maxLengthMessage: "Must_be_less_than_364_characters",
@@ -595,7 +574,7 @@ export const types = [
     ),
     Type.Object(
         {
-          
+
             firstNumber: Type.Integer({
                 minimum: 0,
                 minimumMessage: "Must_be_greater_than_or_equal_to_0",
@@ -674,7 +653,7 @@ export const types = [
     ),
     Type.Object(
         {
-     
+
             letters: Type.String({
                 maxLength: 364,
                 maxLengthMessage: "Must_be_less_than_364_characters",
@@ -787,8 +766,12 @@ export const types = [
                 format: "uuid",
                 formatMessage: "Must_be_a_valid_UUID",
             }),
-            
+
             lastModified: Type.Number({ default: new Date().getTime(), typeMessage: "Must_be_a_number" }),
+            touched: Type.Boolean({
+                default: false,
+                typeMessage: "Must_be_a_boolean",
+            }),
             version: Type.Integer({
                 default: 0,
                 minimum: 0,
@@ -855,8 +838,12 @@ export const types = [
                 default: false,
                 typeMessage: "Must_be_a_boolean",
             }),
-            
+
             lastModified: Type.Number({ default: new Date().getTime(), typeMessage: "Must_be_a_number" }),
+            touched: Type.Boolean({
+                default: false,
+                typeMessage: "Must_be_a_boolean",
+            }),
             version: Type.Integer({
                 default: 0,
                 minimum: 0,
@@ -914,18 +901,22 @@ export const types = [
                 minimumMessage: "Must_be_greater_than_or_equal_to_0",
                 typeMessage: "Must_be_an_integer",
             }),
-            
+
             data: Type.String({
                 maxLength: 8000,
                 maxLengthMessage: "Must_be_less_than_8000_characters",
             }),
-            
+
             appId: Type.String({
                 format: "uuid",
                 formatMessage: "Must_be_a_valid_UUID",
             }),
             lastModified: Type.Number({ typeMessage: "Must_be_a_number" }),
-        
+            touched: Type.Boolean({
+                default: false,
+                typeMessage: "Must_be_a_boolean",
+            }),
+
         },
         { $id: "media" },
     ),
@@ -962,6 +953,10 @@ export const types = [
                 typeMessage: "Must_be_an_integer",
             }),
             lastModified: Type.Number({ typeMessage: "Must_be_a_number" }),
+            touched: Type.Boolean({
+                default: false,
+                typeMessage: "Must_be_a_boolean",
+            }),
             version: Type.Integer({
                 minimum: 0,
                 minimumMessage: "Must_be_greater_than_or_equal_to_0",
@@ -1077,10 +1072,14 @@ export const types = [
                 minimumMessage: "Must_be_greater_than_or_equal_to_0",
                 typeMessage: "Must_be_an_integer",
             }),
-            
+
             lastModified: Type.Number({
                 default: new Date().getTime(),
                 typeMessage: "Must_be_a_number",
+            }),
+            touched: Type.Boolean({
+                default: false,
+                typeMessage: "Must_be_a_boolean",
             }),
             status: Type.Integer({
                 default: routerStatus.disabled,
@@ -1141,6 +1140,35 @@ types.push(
 types.push(
     Type.Object(
         {
+            id: Type.Optional(
+                Type.String({
+                    format: "uuid",
+                    formatMessage: "Must_be_a_valid_UUID",
+                }),
+            ),
+            level: Type.Optional(
+                Type.Integer({
+                    minimum: 0,
+                    maximum: Math.max(
+                        ...Object.values(ItemLevel).filter((value) => typeof value === "number"),
+                    ),
+                    maximumMessage: "Must_be_less_than_or_equal_to_maximum",
+                    typeMessage: "Must_be_an_integer",
+                }),
+            ),
+            values: Type.Optional(
+                Type.Record(Type.String(), Type.Any())
+            ),
+            action: Type.Optional(
+                Type.Integer({
+                    minimum: 0,
+                    maximum: Math.max(
+                        ...Object.values(syncAction).filter((value) => typeof value === "number"),
+                    ),
+                    maximumMessage: "Must_be_less_than_or_equal_to_maximum",
+                    typeMessage: "Must_be_an_integer",
+                }),
+            ),
             app: Type.Optional(
                 types.filter((x) => x.$id == "app")[0],
             ),
@@ -1168,10 +1196,7 @@ types.push(
             media: Type.Optional(
                 types.filter((x) => x.$id == "media")[0],
             ),
-            deletion: Type.Optional(
-                types.filter((x) => x.$id == "deletion")[0],
-            ),
-            
+
         },
         { $id: "syncRequest" },
     ) as any,
@@ -1180,13 +1205,41 @@ types.push(
 types.push(
     Type.Object(
         {
+            id: Type.Optional(
+                Type.String({
+                    format: "uuid",
+                    formatMessage: "Must_be_a_valid_UUID",
+                }),
+            ),
+            level: Type.Optional(
+                Type.Integer({
+                    minimum: 0,
+                    maximum: Math.max(
+                        ...Object.values(ItemLevel).filter((value) => typeof value === "number"),
+                    ),
+                    maximumMessage: "Must_be_less_than_or_equal_to_maximum",
+                    typeMessage: "Must_be_an_integer",
+                }),
+            ),
+            values: Type.Optional(
+                Type.Record(Type.String(), Type.Any())
+            ),
+            action: Type.Optional(
+                Type.Integer({
+                    minimum: 0,
+                    maximum: Math.max(
+                        ...Object.values(syncAction).filter((value) => typeof value === "number"),
+                    ),
+                    maximumMessage: "Must_be_less_than_or_equal_to_maximum",
+                    typeMessage: "Must_be_an_integer",
+                }),
+            ),
             app: Type.Optional(
                 types.filter((x) => x.$id == "app")[0],
             ),
             database: Type.Optional(
                 types.filter((x) => x.$id == "database")[0],
             ),
-           
             databaseUnit: Type.Optional(
                 types.filter((x) => x.$id == "databaseUnit")[0],
             ),
@@ -1208,12 +1261,7 @@ types.push(
             media: Type.Optional(
                 types.filter((x) => x.$id == "media")[0],
             ),
-            deletion: Type.Optional(
-                types.filter((x) => x.$id == "deletion")[0],
-            ),
-            message: Type.Optional(
-                types.filter((x) => x.$id == "message")[0],
-            ),
+            message: Type.Optional(Type.String()),
             result: Type.Optional(Type.Integer({
                 minimum: 0,
                 maximum: Math.max(

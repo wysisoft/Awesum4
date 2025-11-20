@@ -357,7 +357,7 @@ export default
 
 <template>
   <div class="view" ref="view">
-    <div class="input-group mb-3" style="border:.1svmin solid #bfbfbf;border-radius:.7svmin;">
+    <div class="input-group mb-3" >
       <label style="width:16.5svmin;" class="input-group-text" for="inputGroupSelect01">Source</label>
       <select v-model="imageSource" @change="imageSourceChanged()" style="width:25svmin;padding-left:2svmin;"
         class="form-select">
@@ -376,7 +376,7 @@ export default
         style="padding-left:1.9svmin;font-size:2.5svmin;padding-top:1svmin;padding-bottom:1svmin;" />
     </div>
 
-    <div v-if="showImageUrlTextBox" class="input-group mb-3" style="margin-top:1svmin;border:.1svmin solid #bfbfbf;border-radius:.7svmin;">
+    <div v-if="showImageUrlTextBox" class="input-group mb-3" style="margin-top:1svmin;">
       <label class="input-group-text" style="width:16.5svmin;">Web Url</label>
       <input class="form-control" v-model="imageData" placeholder="https://..."
         style="width:71svmin;padding-left:2svmin;font-size:2.5svmin;" />

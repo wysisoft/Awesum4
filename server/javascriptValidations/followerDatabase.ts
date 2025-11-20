@@ -1,5 +1,5 @@
 'use strict'
-const schema21 = {
+const schema19 = {
 $id: 'followerDatabase',
 type: 'object',
 properties: {
@@ -8,17 +8,25 @@ default: '00000000-0000-0000-0000-000000000000',
 format: 'uuid',
 type: 'string'},
 id: {
-default: '019a7424-d933-71e8-89c8-11a4e6894859',
+default: '019a9c3d-99d4-7350-b701-b73d637afe2d',
 format: 'uuid',
 type: 'string'},
 databaseId: {
 default: '00000000-0000-0000-0000-000000000000',
 format: 'uuid',
 type: 'string'},
-lastModified: { default: 1762885163315, type: 'number' },
+lastModified: { default: 1763557874132, type: 'number' },
+touched: { default: false, type: 'boolean' },
 version: { default: 0, minimum: 0, type: 'integer' }
 },
-required: ['followerRequestId', 'id', 'databaseId', 'lastModified', 'version']
+required: [
+'followerRequestId',
+'id',
+'databaseId',
+'lastModified',
+'touched',
+'version'
+]
 }
 const formats2 = /^(?:urn:uuid:)?[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/i
 import type { ErrorObject } from 'ajv'
@@ -38,6 +46,7 @@ if (
 (data.id === undefined && (missing0 = 'id')) ||
 (data.databaseId === undefined && (missing0 = 'databaseId')) ||
 (data.lastModified === undefined && (missing0 = 'lastModified')) ||
+(data.touched === undefined && (missing0 = 'touched')) ||
 (data.version === undefined && (missing0 = 'version'))
 ) {errors.push(
 {
@@ -161,15 +170,31 @@ var valid0 = _errs7 === errors
 var valid0 = true
 }
 if (valid0) {
-if (data.version !== undefined) {
-let data4 = data.version
+if (data.touched !== undefined) {
 const _errs9 = errors
+if (typeof data.touched !== 'boolean') {errors.push(
+{
+instancePath: instancePath + '/touched',
+schemaPath: '#/properties/touched/type',
+keyword: 'type',
+params: { type: 'boolean' },
+ message: "Must_be_a_boolean"}
+);
+}
+var valid0 = _errs9 === errors
+} else {
+var valid0 = true
+}
+if (valid0) {
+if (data.version !== undefined) {
+let data5 = data.version
+const _errs11 = errors
 if (
 !(
-typeof data4 == 'number' &&
-!(data4 % 1) &&
-!isNaN(data4) &&
-isFinite(data4)
+typeof data5 == 'number' &&
+!(data5 % 1) &&
+!isNaN(data5) &&
+isFinite(data5)
 )
 ) {errors.push(
 {
@@ -181,8 +206,8 @@ params: { type: 'integer' },
 );
 }
 if (true) {
-if (typeof data4 == 'number' && isFinite(data4)) {
-if (data4 < 0 || isNaN(data4)) {errors.push(
+if (typeof data5 == 'number' && isFinite(data5)) {
+if (data5 < 0 || isNaN(data5)) {errors.push(
 {
 instancePath: instancePath + '/version',
 schemaPath: '#/properties/version/minimum',
@@ -193,9 +218,10 @@ params: { comparison: '>=', limit: 0 },
 }
 }
 }
-var valid0 = _errs9 === errors
+var valid0 = _errs11 === errors
 } else {
 var valid0 = true
+}
 }
 }
 }

@@ -1,5 +1,5 @@
 'use strict'
-const schema22 = {
+const schema20 = {
 $id: 'followerRequest',
 type: 'object',
 properties: {
@@ -12,7 +12,7 @@ default: '00000000-0000-0000-0000-000000000000',
 format: 'uuid',
 type: 'string'},
 id: {
-default: '019a7424-d933-71e8-89c8-146aac28c141',
+default: '019a9c3d-99d4-7350-b701-bad71815ab5c',
 format: 'uuid',
 type: 'string'},
 followerName: {
@@ -40,7 +40,8 @@ doesEmailExist: true,
 default: 'leader@example.com',
 type: 'string'},
 initiatedByFollower: { default: false, type: 'boolean' },
-lastModified: { default: 1762885163315, type: 'number' },
+lastModified: { default: 1763557874132, type: 'number' },
+touched: { default: false, type: 'boolean' },
 version: { default: 0, minimum: 0, type: 'integer' },
 status: { default: 0, minimum: 0, maximum: 2, type: 'integer' },
 groups: { maxLength: 8000, default: '', type: 'string' },
@@ -56,6 +57,7 @@ required: [
 'leaderEmail',
 'initiatedByFollower',
 'lastModified',
+'touched',
 'version',
 'status',
 'groups',
@@ -87,6 +89,7 @@ if (
 (data.initiatedByFollower === undefined &&
 (missing0 = 'initiatedByFollower')) ||
 (data.lastModified === undefined && (missing0 = 'lastModified')) ||
+(data.touched === undefined && (missing0 = 'touched')) ||
 (data.version === undefined && (missing0 = 'version')) ||
 (data.status === undefined && (missing0 = 'status')) ||
 (data.groups === undefined && (missing0 = 'groups')) ||
@@ -441,15 +444,31 @@ var valid0 = _errs17 === errors
 var valid0 = true
 }
 if (valid0) {
-if (data.version !== undefined) {
-let data9 = data.version
+if (data.touched !== undefined) {
 const _errs19 = errors
+if (typeof data.touched !== 'boolean') {errors.push(
+{
+instancePath: instancePath + '/touched',
+schemaPath: '#/properties/touched/type',
+keyword: 'type',
+params: { type: 'boolean' },
+ message: "Must_be_a_boolean"}
+);
+}
+var valid0 = _errs19 === errors
+} else {
+var valid0 = true
+}
+if (valid0) {
+if (data.version !== undefined) {
+let data10 = data.version
+const _errs21 = errors
 if (
 !(
-typeof data9 == 'number' &&
-!(data9 % 1) &&
-!isNaN(data9) &&
-isFinite(data9)
+typeof data10 == 'number' &&
+!(data10 % 1) &&
+!isNaN(data10) &&
+isFinite(data10)
 )
 ) {errors.push(
 {
@@ -461,8 +480,11 @@ params: { type: 'integer' },
 );
 }
 if (true) {
-if (typeof data9 == 'number' && isFinite(data9)) {
-if (data9 < 0 || isNaN(data9)) {errors.push(
+if (
+typeof data10 == 'number' &&
+isFinite(data10)
+) {
+if (data10 < 0 || isNaN(data10)) {errors.push(
 {
 instancePath: instancePath + '/version',
 schemaPath: '#/properties/version/minimum',
@@ -473,20 +495,20 @@ params: { comparison: '>=', limit: 0 },
 }
 }
 }
-var valid0 = _errs19 === errors
+var valid0 = _errs21 === errors
 } else {
 var valid0 = true
 }
 if (valid0) {
 if (data.status !== undefined) {
-let data10 = data.status
-const _errs21 = errors
+let data11 = data.status
+const _errs23 = errors
 if (
 !(
-typeof data10 == 'number' &&
-!(data10 % 1) &&
-!isNaN(data10) &&
-isFinite(data10)
+typeof data11 == 'number' &&
+!(data11 % 1) &&
+!isNaN(data11) &&
+isFinite(data11)
 )
 ) {errors.push(
 {
@@ -499,19 +521,22 @@ params: { type: 'integer' },
 }
 if (true) {
 if (
-typeof data10 == 'number' &&
-isFinite(data10)
+typeof data11 == 'number' &&
+isFinite(data11)
 ) {
-if (data10 > 2 || isNaN(data10)) {errors.push(
+if (data11 > 2 || isNaN(data11)) {errors.push(
 {
 instancePath: instancePath + '/status',
 schemaPath: '#/properties/status/maximum',
 keyword: 'maximum',
-params: { comparison: '<=', limit: 2 },
+params: {
+comparison: '<=',
+limit: 2
+},
  message: "Must_be_less_than_or_equal_to_maximum"}
 );
 } else {
-if (data10 < 0 || isNaN(data10)) {errors.push(
+if (data11 < 0 || isNaN(data11)) {errors.push(
 {
 instancePath: instancePath + '/status',
 schemaPath: '#/properties/status/minimum',
@@ -526,17 +551,17 @@ limit: 0
 }
 }
 }
-var valid0 = _errs21 === errors
+var valid0 = _errs23 === errors
 } else {
 var valid0 = true
 }
 if (valid0) {
 if (data.groups !== undefined) {
-let data11 = data.groups
-const _errs23 = errors
+let data12 = data.groups
+const _errs25 = errors
 if (true) {
-if (typeof data11 === 'string') {
-if (func4(data11) > 8000) {errors.push(
+if (typeof data12 === 'string') {
+if (func4(data12) > 8000) {errors.push(
 {
 instancePath: instancePath + '/groups',
 schemaPath: '#/properties/groups/maxLength',
@@ -556,20 +581,20 @@ message: 'must be string'
 );
 }
 }
-var valid0 = _errs23 === errors
+var valid0 = _errs25 === errors
 } else {
 var valid0 = true
 }
 if (valid0) {
 if (data.points !== undefined) {
-let data12 = data.points
-const _errs25 = errors
+let data13 = data.points
+const _errs27 = errors
 if (
 !(
-typeof data12 == 'number' &&
-!(data12 % 1) &&
-!isNaN(data12) &&
-isFinite(data12)
+typeof data13 == 'number' &&
+!(data13 % 1) &&
+!isNaN(data13) &&
+isFinite(data13)
 )
 ) {errors.push(
 {
@@ -582,10 +607,10 @@ params: { type: 'integer' },
 }
 if (true) {
 if (
-typeof data12 == 'number' &&
-isFinite(data12)
+typeof data13 == 'number' &&
+isFinite(data13)
 ) {
-if (data12 < 0 || isNaN(data12)) {errors.push(
+if (data13 < 0 || isNaN(data13)) {errors.push(
 {
 instancePath: instancePath + '/points',
 schemaPath: '#/properties/points/minimum',
@@ -599,9 +624,10 @@ limit: 0
 }
 }
 }
-var valid0 = _errs25 === errors
+var valid0 = _errs27 === errors
 } else {
 var valid0 = true
+}
 }
 }
 }

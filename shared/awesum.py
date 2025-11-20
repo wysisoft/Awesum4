@@ -308,7 +308,7 @@ try:
                 if router_mac_decoded:
                     router_mac_encoded = base64.b64encode(router_mac_decoded.encode('utf-8')).decode('utf-8')
                     headers = {
-                        "Cookie": f"session={router_mac_encoded}"
+                        "Cookie": f"mac={router_mac_encoded}"
                     }
                     log(f"Router MAC: {router_mac_decoded}, Encoded: {router_mac_encoded}")
                 else:

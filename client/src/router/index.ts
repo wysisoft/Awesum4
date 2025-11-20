@@ -46,6 +46,7 @@ import Multiplication1x1ItemView from "@/views/Multiplication1x1ItemView.vue";
 import Addition1x1ItemView from "@/views/Addition1x1ItemView.vue";
 import ItemView from "@/views/ItemView.vue";
 import ItemSettingsView from "@/views/ItemSettingsView.vue";
+import SyncView from "@/views/SyncView.vue";
 
 const routes = [
 
@@ -53,6 +54,12 @@ const routes = [
     path: "/",
     name: I18nGlobal.t(resources.Home.key),
     component: HomeOrMainView
+  },
+  {
+    path: "/" + I18nGlobal.t(resources.i.key) + "/" +
+      I18nGlobal.t(resources.Sync.key),
+    name: I18nGlobal.t(resources.Sync.key),
+    component: SyncView,
   },
   {
     path: '/' + I18nGlobal.t(resources.i.key) + '/' + I18nGlobal.t(resources.Error.key),

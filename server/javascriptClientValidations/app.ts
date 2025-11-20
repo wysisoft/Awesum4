@@ -22,7 +22,7 @@ isNameGloballyUnique: true,
 transform: ['trim', 'toLowerCase'],
 type: 'string'},
 version: { default: 0, minimum: 0, type: 'integer' },
-lastModified: { default: 1762885163314, type: 'number' },
+lastModified: { default: 1763557874131, type: 'number' },
 homePageImageType: { default: 0, minimum: 0, maximum: 3, type: 'integer' },
 homePageImage: {
 default: '00000000-0000-0000-0000-000000000001',
@@ -42,11 +42,11 @@ type: 'string'},
 enableNarrator: { default: false, type: 'boolean' },
 groups: { maxLength: 8000, type: 'string' },
 id: {
-default: '019a7424-d933-71e8-89c8-0b9067a0b2b7',
+default: '019a9c3d-99d3-7378-87b0-86b7a93c6fc0',
 format: 'uuid',
 minLength: 36,
 type: 'string'},
-lastSync: { type: 'number' }
+lastSync: { default: 0, type: 'number' }
 },
 required: [
 'email',

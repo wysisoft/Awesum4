@@ -845,8 +845,8 @@ if (process.platform === "win32") {
   );
 } else {
   execSync(
-    `psql -U postgres -h localhost -d awesumDev -p 5432 -f postgresSchemas.sql`,
+    `PGPASSWORD=This4Now! psql -U postgres -h localhost -d awesumDev -p 5432 -f postgresSchemas.sql`,
   );
 }
 
-execSync(`npx kysely-codegen --out-file ./db/db.d.ts --type-mapping='{"numeric":"number"}'`)
+execSync(`DATABASE_URL='postgresql://postgres:This4Now!@localhost:5432/awesumDev' npx kysely-codegen --out-file ./db/db.d.ts --type-mapping='{"numeric":"number"}'`)

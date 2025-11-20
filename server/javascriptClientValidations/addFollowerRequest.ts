@@ -1,5 +1,5 @@
 'use strict'
-const schema27 = {
+const schema25 = {
 $id: 'addFollowerRequest',
 type: 'object',
 properties: {

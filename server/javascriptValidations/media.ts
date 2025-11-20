@@ -1,18 +1,19 @@
 'use strict'
-const schema25 = {
+const schema23 = {
 $id: 'media',
 type: 'object',
 properties: {
 id: {
-default: '019a7424-d933-71e8-89c8-1b3249c6b785',
+default: '019a9c3d-99d4-7350-b701-bc7441b8db7d',
 format: 'uuid',
 type: 'string'},
 size: { minimum: 0, type: 'integer' },
 data: { maxLength: 8000, type: 'string' },
 appId: { format: 'uuid', type: 'string' },
-lastModified: { type: 'number' }
+lastModified: { type: 'number' },
+touched: { default: false, type: 'boolean' }
 },
-required: ['id', 'size', 'data', 'appId', 'lastModified']
+required: ['id', 'size', 'data', 'appId', 'lastModified', 'touched']
 }
 const formats2 = /^(?:urn:uuid:)?[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/i
 import ucs2length from 'ajv/dist/runtime/ucs2length';const func4 = (ucs2length as any).default;
@@ -32,7 +33,8 @@ if (
 (data.size === undefined && (missing0 = 'size')) ||
 (data.data === undefined && (missing0 = 'data')) ||
 (data.appId === undefined && (missing0 = 'appId')) ||
-(data.lastModified === undefined && (missing0 = 'lastModified'))
+(data.lastModified === undefined && (missing0 = 'lastModified')) ||
+(data.touched === undefined && (missing0 = 'touched'))
 ) {errors.push(
 {
 instancePath,
@@ -188,6 +190,23 @@ params: { type: 'number' },
 var valid0 = _errs9 === errors
 } else {
 var valid0 = true
+}
+if (valid0) {
+if (data.touched !== undefined) {
+const _errs11 = errors
+if (typeof data.touched !== 'boolean') {errors.push(
+{
+instancePath: instancePath + '/touched',
+schemaPath: '#/properties/touched/type',
+keyword: 'type',
+params: { type: 'boolean' },
+ message: "Must_be_a_boolean"}
+);
+}
+var valid0 = _errs11 === errors
+} else {
+var valid0 = true
+}
 }
 }
 }

@@ -1,5 +1,5 @@
 'use strict'
-const schema31 = {
+const schema29 = {
 $id: 'oneByOneMathDatabaseItem',
 type: 'object',
 properties: {
@@ -49,6 +49,7 @@ order: { minimum: 0, type: 'integer' },
 unitId: { format: 'uuid', type: 'string' },
 appId: { format: 'uuid', type: 'string' },
 lastModified: { type: 'number' },
+touched: { default: false, type: 'boolean' },
 version: { minimum: 0, type: 'integer' },
 databaseId: { format: 'uuid', type: 'string' },
 id: { format: 'uuid', type: 'string' },
@@ -61,6 +62,7 @@ required: [
 'unitId',
 'appId',
 'lastModified',
+'touched',
 'version',
 'databaseId',
 'id',
@@ -87,6 +89,7 @@ if (
 (data.unitId === undefined && (missing0 = 'unitId')) ||
 (data.appId === undefined && (missing0 = 'appId')) ||
 (data.lastModified === undefined && (missing0 = 'lastModified')) ||
+(data.touched === undefined && (missing0 = 'touched')) ||
 (data.version === undefined && (missing0 = 'version')) ||
 (data.databaseId === undefined && (missing0 = 'databaseId')) ||
 (data.id === undefined && (missing0 = 'id')) ||
@@ -756,15 +759,31 @@ var valid0 = _errs33 === errors
 var valid0 = true
 }
 if (valid0) {
-if (data.version !== undefined) {
-let data17 = data.version
+if (data.touched !== undefined) {
 const _errs35 = errors
+if (typeof data.touched !== 'boolean') {errors.push(
+{
+instancePath: instancePath + '/touched',
+schemaPath: '#/properties/touched/type',
+keyword: 'type',
+params: { type: 'boolean' },
+ message: "Must_be_a_boolean"}
+);
+}
+var valid0 = _errs35 === errors
+} else {
+var valid0 = true
+}
+if (valid0) {
+if (data.version !== undefined) {
+let data18 = data.version
+const _errs37 = errors
 if (
 !(
-typeof data17 == 'number' &&
-!(data17 % 1) &&
-!isNaN(data17) &&
-isFinite(data17)
+typeof data18 == 'number' &&
+!(data18 % 1) &&
+!isNaN(data18) &&
+isFinite(data18)
 )
 ) {errors.push(
 {
@@ -776,8 +795,8 @@ params: { type: 'integer' },
 );
 }
 if (true) {
-if (typeof data17 == 'number' && isFinite(data17)) {
-if (data17 < 0 || isNaN(data17)) {errors.push(
+if (typeof data18 == 'number' && isFinite(data18)) {
+if (data18 < 0 || isNaN(data18)) {errors.push(
 {
 instancePath: instancePath + '/version',
 schemaPath: '#/properties/version/minimum',
@@ -788,18 +807,18 @@ params: { comparison: '>=', limit: 0 },
 }
 }
 }
-var valid0 = _errs35 === errors
+var valid0 = _errs37 === errors
 } else {
 var valid0 = true
 }
 if (valid0) {
 if (data.databaseId !== undefined) {
-let data18 = data.databaseId
-const _errs37 = errors
+let data19 = data.databaseId
+const _errs39 = errors
 if (true) {
 if (true) {
-if (typeof data18 === 'string') {
-if (!formats2.test(data18)) {errors.push(
+if (typeof data19 === 'string') {
+if (!formats2.test(data19)) {errors.push(
 {
 instancePath: instancePath + '/databaseId',
 schemaPath: '#/properties/databaseId/format',
@@ -820,18 +839,18 @@ message: 'must be string'
 }
 }
 }
-var valid0 = _errs37 === errors
+var valid0 = _errs39 === errors
 } else {
 var valid0 = true
 }
 if (valid0) {
 if (data.id !== undefined) {
-let data19 = data.id
-const _errs39 = errors
+let data20 = data.id
+const _errs41 = errors
 if (true) {
 if (true) {
-if (typeof data19 === 'string') {
-if (!formats2.test(data19)) {errors.push(
+if (typeof data20 === 'string') {
+if (!formats2.test(data20)) {errors.push(
 {
 instancePath: instancePath + '/id',
 schemaPath: '#/properties/id/format',
@@ -852,17 +871,17 @@ message: 'must be string'
 }
 }
 }
-var valid0 = _errs39 === errors
+var valid0 = _errs41 === errors
 } else {
 var valid0 = true
 }
 if (valid0) {
 if (data.dataText !== undefined) {
-let data20 = data.dataText
-const _errs41 = errors
+let data21 = data.dataText
+const _errs43 = errors
 if (true) {
-if (typeof data20 === 'string') {
-if (func4(data20) > 8000) {errors.push(
+if (typeof data21 === 'string') {
+if (func4(data21) > 8000) {errors.push(
 {
 instancePath: instancePath + '/dataText',
 schemaPath: '#/properties/dataText/maxLength',
@@ -882,9 +901,10 @@ message: 'must be string'
 );
 }
 }
-var valid0 = _errs41 === errors
+var valid0 = _errs43 === errors
 } else {
 var valid0 = true
+}
 }
 }
 }

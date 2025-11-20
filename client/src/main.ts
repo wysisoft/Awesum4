@@ -1,4 +1,10 @@
+import type { ServerSyncResponseInterface } from "../../server/serverInterfaces/ServerSyncResponseInterface";
 
+import Toast, { POSITION, type PluginOptions } from "vue-toastification";
+
+
+// Import the CSS or use your own!
+import "./../public/vue-toastification.css";
 
 // Initialize global logger first to capture all console output
 import "./globalLogger";
@@ -39,7 +45,26 @@ import { ServerMessageType } from "../../server/typebox";
 //create app early so I can use globalProperties
 const app = createApp(App);
 
+const options: PluginOptions = {
+    position:POSITION.BOTTOM_RIGHT,
+    timeout: 3044,
+    closeOnClick: true,
+    pauseOnFocusLoss: true,
+    pauseOnHover: true,
+    draggable: true,
+    draggablePercent: 0.6,
+    showCloseButtonOnHover: false,
+    hideProgressBar: true,
+    closeButton: "button",
+    icon: true,
+    rtl: false,
+    //container: document.getElementById('toast-container')!
+};
+
+app.use(Toast, options);
+
 app.use(I18nGlobal._t);
+
 app.config.globalProperties.$awesum = awesum;
 app.config.globalProperties.$resources = resources;
 
@@ -110,8 +135,10 @@ if (response.ok) {
         }
 
         //open a websocket connection to the server, sending all cookies
-        const ws = new WebSocket("wss://" + window.location.host);
+        const ws = new WebSocket("wss://" + window.location.host + '/ws');
+
         ws.onopen = () => {
+            console.log("WebSocket opened");
             ws.send(JSON.stringify({
                 data: {
                     "type": "clientConnected",
@@ -120,15 +147,11 @@ if (response.ok) {
             }));
         };
         ws.onmessage = async (event) => {
-            var message = JSON.parse(event.data);
-            if (message.type == ServerMessageType.addFollowerRequest) {
-                var followerRequest = message.data as ServerFollowerRequestInterface;
-                await awesum.AwesumDexieDB.serverFollowerRequests.put(followerRequest);
-                await awesum.refreshServerFollowerRequests();
-                awesum.router.push({ path: "i/settings/leadersAndFollowers/leader/" + encodeURI(followerRequest.leaderEmail) });
-            }
+            var syncItems = JSON.parse(event.data) as ServerSyncResponseInterface[]
+            await awesum.processSyncResponse(syncItems);
         };
         ws.onerror = (event) => {
+            console.error("❌ Error on WebSocket:", event);
         };
     }
     else {

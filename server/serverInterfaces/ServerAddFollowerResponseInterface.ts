@@ -19,6 +19,7 @@ export interface FollowerRequest {
   leaderEmail: string;
   initiatedByFollower: boolean;
   lastModified: number;
+  touched: boolean;
   version: number;
   status: number;
   groups: string;

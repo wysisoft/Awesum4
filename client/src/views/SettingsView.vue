@@ -3,7 +3,7 @@ import { ref } from 'vue';
 import Modal from '../components/Modal.vue';
 import QRCodeVue3 from '../qrcode-vue3';
 import Dexie, { type Table } from "dexie";
-import { ItemLevel } from '../../../server/typebox';
+import { ItemLevel,syncAction } from '../../../server/typebox';
 import { awesum } from '@/awesum.ts';
 export default {
   components: {
@@ -70,19 +70,14 @@ export default {
       window.location.href = '/'
     },
 
-    async resetAllServerData() {
+    async resetAllServerData() {      
 
-      await this.$awesum.AwesumDexieDB.deletions.add({
-        level: ItemLevel.app,
-        id: this.$awesum.ownerApp.id,
-      });
-
-      var response = await awesum.sync([{
-        deletion: {
+      var response = await awesum.sync([
+        {
           level: ItemLevel.app,
-          id: this.$awesum.ownerApp.id,
+          action:syncAction.delete
         },
-      }]);
+      ]);
 
       await this.resetAllBrowserData();
     }
@@ -243,12 +238,12 @@ export default {
 
       <Modal ref="modal" :additionalCss="'max-width:70svmin;'" @hidden="showDeleteServerDataModal = false"
         :shown="showDeleteServerDataModal" :title="$t($resources.Delete_All_Server_Data.key)"
-        :focusedElementId="'resetEverythingValueInput'">
+        :focusedElementId="'resetEverythingValueInput2'">
         <div class="modal-body">
 
           <span>{{ $t($resources.Are_you_sure_you_want_to_totally_delete_everything2.key) }}</span>
           <br />
-          <input type="number" v-model="resetEverythingValue" id="resetEverythingValueInput" />
+          <input type="number" v-model="resetEverythingValue" id="resetEverythingValueInput2" />
 
         </div>
         <div class="modal-footer" style="justify-content:space-between">

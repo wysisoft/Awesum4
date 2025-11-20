@@ -19,6 +19,7 @@ export interface ServerRouterInterface {
   sundayTimesAndDurations: string;
   version: number;
   lastModified: number;
+  touched: boolean;
   status: number;
   
 }

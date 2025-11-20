@@ -6,6 +6,16 @@
  */
 
 export interface ServerSyncResponseInterface {
+  id?: string;
+  level?: number;
+  values?: {
+    /**
+     * This interface was referenced by `undefined`'s JSON-Schema definition
+     * via the `patternProperty` "^(.*)$".
+     */
+    
+  };
+  action?: number;
   app?: App;
   database?: Database;
   databaseUnit?: DatabaseUnit;
@@ -15,8 +25,7 @@ export interface ServerSyncResponseInterface {
   followerDatabaseCompletion?: FollowerDatabaseCompletion;
   router?: Router;
   media?: Media;
-  deletion?: Deletion;
-  message?: Message;
+  message?: string;
   result?: number;
   
 }
@@ -51,6 +60,7 @@ export interface DatabaseUnit {
   name: string;
   order: number;
   lastModified: number;
+  touched: boolean;
   version: number;
   id: string;
   appId: string;
@@ -74,6 +84,7 @@ export interface DatabaseItem {
   unitId: string;
   appId: string;
   lastModified: number;
+  touched: boolean;
   version: number;
   databaseId: string;
   id: string;
@@ -91,6 +102,7 @@ export interface FollowerRequest {
   leaderEmail: string;
   initiatedByFollower: boolean;
   lastModified: number;
+  touched: boolean;
   version: number;
   status: number;
   groups: string;
@@ -102,6 +114,7 @@ export interface FollowerDatabase {
   id: string;
   databaseId: string;
   lastModified: number;
+  touched: boolean;
   version: number;
   
 }
@@ -113,6 +126,7 @@ export interface FollowerDatabaseCompletion {
   parentItemId: string;
   itemLevel: number;
   lastModified: number;
+  touched: boolean;
   version: number;
   
 }
@@ -130,6 +144,7 @@ export interface Router {
   sundayTimesAndDurations: string;
   version: number;
   lastModified: number;
+  touched: boolean;
   status: number;
   
 }
@@ -139,16 +154,6 @@ export interface Media {
   data: string;
   appId: string;
   lastModified: number;
-  
-}
-export interface Deletion {
-  id: string;
-  level: number;
-  
-}
-export interface Message {
-  level: number;
-  message: string;
-  id: string;
+  touched: boolean;
   
 }

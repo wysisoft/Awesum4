@@ -1,5 +1,5 @@
 'use strict'
-const schema30 = {
+const schema28 = {
 $id: 'oneByTwoDigraphsDatabaseItem',
 type: 'object',
 properties: {
@@ -59,6 +59,7 @@ order: { minimum: 0, type: 'integer' },
 unitId: { format: 'uuid', type: 'string' },
 appId: { format: 'uuid', type: 'string' },
 lastModified: { type: 'number' },
+touched: { default: false, type: 'boolean' },
 version: { minimum: 0, type: 'integer' },
 databaseId: { format: 'uuid', type: 'string' },
 id: { format: 'uuid', type: 'string' },
@@ -71,6 +72,7 @@ required: [
 'unitId',
 'appId',
 'lastModified',
+'touched',
 'version',
 'databaseId',
 'id',
@@ -172,12 +174,12 @@ vErrors.push(err5)
 }
 
 }
-if (data.version === undefined) {
+if (data.touched === undefined) {
 const err6 = {
 instancePath,
 schemaPath: '#/required',
 keyword: 'required',
-params: { missingProperty: 'version' },
+params: { missingProperty: 'touched' },
  message: "Required"}
 if (vErrors === null) {
 vErrors = [err6]
@@ -186,12 +188,12 @@ vErrors.push(err6)
 }
 
 }
-if (data.databaseId === undefined) {
+if (data.version === undefined) {
 const err7 = {
 instancePath,
 schemaPath: '#/required',
 keyword: 'required',
-params: { missingProperty: 'databaseId' },
+params: { missingProperty: 'version' },
  message: "Required"}
 if (vErrors === null) {
 vErrors = [err7]
@@ -200,12 +202,12 @@ vErrors.push(err7)
 }
 
 }
-if (data.id === undefined) {
+if (data.databaseId === undefined) {
 const err8 = {
 instancePath,
 schemaPath: '#/required',
 keyword: 'required',
-params: { missingProperty: 'id' },
+params: { missingProperty: 'databaseId' },
  message: "Required"}
 if (vErrors === null) {
 vErrors = [err8]
@@ -214,12 +216,12 @@ vErrors.push(err8)
 }
 
 }
-if (data.dataText === undefined) {
+if (data.id === undefined) {
 const err9 = {
 instancePath,
 schemaPath: '#/required',
 keyword: 'required',
-params: { missingProperty: 'dataText' },
+params: { missingProperty: 'id' },
  message: "Required"}
 if (vErrors === null) {
 vErrors = [err9]
@@ -228,17 +230,13 @@ vErrors.push(err9)
 }
 
 }
-if (data.data !== undefined) {
-let data0 = data.data
-if (data0 && typeof data0 == 'object' && !Array.isArray(data0)) {
-if (data0.leftDigraphs === undefined) {
+if (data.dataText === undefined) {
 const err10 = {
-instancePath: instancePath + '/data',
-schemaPath: '#/properties/data/required',
+instancePath,
+schemaPath: '#/required',
 keyword: 'required',
-params: { missingProperty: 'leftDigraphs' },
-message: "must have required property '" + 'leftDigraphs' + "'"
-}
+params: { missingProperty: 'dataText' },
+ message: "Required"}
 if (vErrors === null) {
 vErrors = [err10]
 } else {
@@ -246,13 +244,16 @@ vErrors.push(err10)
 }
 
 }
-if (data0.rightDigraphs === undefined) {
+if (data.data !== undefined) {
+let data0 = data.data
+if (data0 && typeof data0 == 'object' && !Array.isArray(data0)) {
+if (data0.leftDigraphs === undefined) {
 const err11 = {
 instancePath: instancePath + '/data',
 schemaPath: '#/properties/data/required',
 keyword: 'required',
-params: { missingProperty: 'rightDigraphs' },
-message: "must have required property '" + 'rightDigraphs' + "'"
+params: { missingProperty: 'leftDigraphs' },
+message: "must have required property '" + 'leftDigraphs' + "'"
 }
 if (vErrors === null) {
 vErrors = [err11]
@@ -261,13 +262,13 @@ vErrors.push(err11)
 }
 
 }
-if (data0.image === undefined) {
+if (data0.rightDigraphs === undefined) {
 const err12 = {
 instancePath: instancePath + '/data',
 schemaPath: '#/properties/data/required',
 keyword: 'required',
-params: { missingProperty: 'image' },
-message: "must have required property '" + 'image' + "'"
+params: { missingProperty: 'rightDigraphs' },
+message: "must have required property '" + 'rightDigraphs' + "'"
 }
 if (vErrors === null) {
 vErrors = [err12]
@@ -276,13 +277,13 @@ vErrors.push(err12)
 }
 
 }
-if (data0.sound === undefined) {
+if (data0.image === undefined) {
 const err13 = {
 instancePath: instancePath + '/data',
 schemaPath: '#/properties/data/required',
 keyword: 'required',
-params: { missingProperty: 'sound' },
-message: "must have required property '" + 'sound' + "'"
+params: { missingProperty: 'image' },
+message: "must have required property '" + 'image' + "'"
 }
 if (vErrors === null) {
 vErrors = [err13]
@@ -291,13 +292,13 @@ vErrors.push(err13)
 }
 
 }
-if (data0.text === undefined) {
+if (data0.sound === undefined) {
 const err14 = {
 instancePath: instancePath + '/data',
 schemaPath: '#/properties/data/required',
 keyword: 'required',
-params: { missingProperty: 'text' },
-message: "must have required property '" + 'text' + "'"
+params: { missingProperty: 'sound' },
+message: "must have required property '" + 'sound' + "'"
 }
 if (vErrors === null) {
 vErrors = [err14]
@@ -306,13 +307,13 @@ vErrors.push(err14)
 }
 
 }
-if (data0.imageType === undefined) {
+if (data0.text === undefined) {
 const err15 = {
 instancePath: instancePath + '/data',
 schemaPath: '#/properties/data/required',
 keyword: 'required',
-params: { missingProperty: 'imageType' },
-message: "must have required property '" + 'imageType' + "'"
+params: { missingProperty: 'text' },
+message: "must have required property '" + 'text' + "'"
 }
 if (vErrors === null) {
 vErrors = [err15]
@@ -321,13 +322,13 @@ vErrors.push(err15)
 }
 
 }
-if (data0.visualHint === undefined) {
+if (data0.imageType === undefined) {
 const err16 = {
 instancePath: instancePath + '/data',
 schemaPath: '#/properties/data/required',
 keyword: 'required',
-params: { missingProperty: 'visualHint' },
-message: "must have required property '" + 'visualHint' + "'"
+params: { missingProperty: 'imageType' },
+message: "must have required property '" + 'imageType' + "'"
 }
 if (vErrors === null) {
 vErrors = [err16]
@@ -336,13 +337,13 @@ vErrors.push(err16)
 }
 
 }
-if (data0.audioType === undefined) {
+if (data0.visualHint === undefined) {
 const err17 = {
 instancePath: instancePath + '/data',
 schemaPath: '#/properties/data/required',
 keyword: 'required',
-params: { missingProperty: 'audioType' },
-message: "must have required property '" + 'audioType' + "'"
+params: { missingProperty: 'visualHint' },
+message: "must have required property '" + 'visualHint' + "'"
 }
 if (vErrors === null) {
 vErrors = [err17]
@@ -351,13 +352,13 @@ vErrors.push(err17)
 }
 
 }
-if (data0.successSound === undefined) {
+if (data0.audioType === undefined) {
 const err18 = {
 instancePath: instancePath + '/data',
 schemaPath: '#/properties/data/required',
 keyword: 'required',
-params: { missingProperty: 'successSound' },
-message: "must have required property '" + 'successSound' + "'"
+params: { missingProperty: 'audioType' },
+message: "must have required property '" + 'audioType' + "'"
 }
 if (vErrors === null) {
 vErrors = [err18]
@@ -366,13 +367,13 @@ vErrors.push(err18)
 }
 
 }
-if (data0.successSoundType === undefined) {
+if (data0.successSound === undefined) {
 const err19 = {
 instancePath: instancePath + '/data',
 schemaPath: '#/properties/data/required',
 keyword: 'required',
-params: { missingProperty: 'successSoundType' },
-message: "must have required property '" + 'successSoundType' + "'"
+params: { missingProperty: 'successSound' },
+message: "must have required property '" + 'successSound' + "'"
 }
 if (vErrors === null) {
 vErrors = [err19]
@@ -381,13 +382,13 @@ vErrors.push(err19)
 }
 
 }
-if (data0.successImage === undefined) {
+if (data0.successSoundType === undefined) {
 const err20 = {
 instancePath: instancePath + '/data',
 schemaPath: '#/properties/data/required',
 keyword: 'required',
-params: { missingProperty: 'successImage' },
-message: "must have required property '" + 'successImage' + "'"
+params: { missingProperty: 'successSoundType' },
+message: "must have required property '" + 'successSoundType' + "'"
 }
 if (vErrors === null) {
 vErrors = [err20]
@@ -396,13 +397,13 @@ vErrors.push(err20)
 }
 
 }
-if (data0.successImageType === undefined) {
+if (data0.successImage === undefined) {
 const err21 = {
 instancePath: instancePath + '/data',
 schemaPath: '#/properties/data/required',
 keyword: 'required',
-params: { missingProperty: 'successImageType' },
-message: "must have required property '" + 'successImageType' + "'"
+params: { missingProperty: 'successImage' },
+message: "must have required property '" + 'successImage' + "'"
 }
 if (vErrors === null) {
 vErrors = [err21]
@@ -411,13 +412,13 @@ vErrors.push(err21)
 }
 
 }
-if (data0.successAnimations === undefined) {
+if (data0.successImageType === undefined) {
 const err22 = {
 instancePath: instancePath + '/data',
 schemaPath: '#/properties/data/required',
 keyword: 'required',
-params: { missingProperty: 'successAnimations' },
-message: "must have required property '" + 'successAnimations' + "'"
+params: { missingProperty: 'successImageType' },
+message: "must have required property '" + 'successImageType' + "'"
 }
 if (vErrors === null) {
 vErrors = [err22]
@@ -426,13 +427,13 @@ vErrors.push(err22)
 }
 
 }
-if (data0.successImageTime === undefined) {
+if (data0.successAnimations === undefined) {
 const err23 = {
 instancePath: instancePath + '/data',
 schemaPath: '#/properties/data/required',
 keyword: 'required',
-params: { missingProperty: 'successImageTime' },
-message: "must have required property '" + 'successImageTime' + "'"
+params: { missingProperty: 'successAnimations' },
+message: "must have required property '" + 'successAnimations' + "'"
 }
 if (vErrors === null) {
 vErrors = [err23]
@@ -441,16 +442,14 @@ vErrors.push(err23)
 }
 
 }
-if (data0.leftDigraphs !== undefined) {
-let data1 = data0.leftDigraphs
-if (typeof data1 === 'string') {
-if (func4(data1) > 364) {
+if (data0.successImageTime === undefined) {
 const err24 = {
-instancePath: instancePath + '/data/leftDigraphs',
-schemaPath: '#/properties/data/properties/leftDigraphs/maxLength',
-keyword: 'maxLength',
-params: { limit: 364 },
- message: "Must_be_less_than_364_characters"}
+instancePath: instancePath + '/data',
+schemaPath: '#/properties/data/required',
+keyword: 'required',
+params: { missingProperty: 'successImageTime' },
+message: "must have required property '" + 'successImageTime' + "'"
+}
 if (vErrors === null) {
 vErrors = [err24]
 } else {
@@ -458,8 +457,25 @@ vErrors.push(err24)
 }
 
 }
-} else {
+if (data0.leftDigraphs !== undefined) {
+let data1 = data0.leftDigraphs
+if (typeof data1 === 'string') {
+if (func4(data1) > 364) {
 const err25 = {
+instancePath: instancePath + '/data/leftDigraphs',
+schemaPath: '#/properties/data/properties/leftDigraphs/maxLength',
+keyword: 'maxLength',
+params: { limit: 364 },
+ message: "Must_be_less_than_364_characters"}
+if (vErrors === null) {
+vErrors = [err25]
+} else {
+vErrors.push(err25)
+}
+
+}
+} else {
+const err26 = {
 instancePath: instancePath + '/data/leftDigraphs',
 schemaPath: '#/properties/data/properties/leftDigraphs/type',
 keyword: 'type',
@@ -467,9 +483,9 @@ params: { type: 'string' },
 message: 'must be string'
 }
 if (vErrors === null) {
-vErrors = [err25]
+vErrors = [err26]
 } else {
-vErrors.push(err25)
+vErrors.push(err26)
 }
 
 }
@@ -478,21 +494,21 @@ if (data0.rightDigraphs !== undefined) {
 let data2 = data0.rightDigraphs
 if (typeof data2 === 'string') {
 if (func4(data2) > 364) {
-const err26 = {
+const err27 = {
 instancePath: instancePath + '/data/rightDigraphs',
 schemaPath: '#/properties/data/properties/rightDigraphs/maxLength',
 keyword: 'maxLength',
 params: { limit: 364 },
  message: "Must_be_less_than_364_characters"}
 if (vErrors === null) {
-vErrors = [err26]
+vErrors = [err27]
 } else {
-vErrors.push(err26)
+vErrors.push(err27)
 }
 
 }
 } else {
-const err27 = {
+const err28 = {
 instancePath: instancePath + '/data/rightDigraphs',
 schemaPath: '#/properties/data/properties/rightDigraphs/type',
 keyword: 'type',
@@ -500,9 +516,9 @@ params: { type: 'string' },
 message: 'must be string'
 }
 if (vErrors === null) {
-vErrors = [err27]
+vErrors = [err28]
 } else {
-vErrors.push(err27)
+vErrors.push(err28)
 }
 
 }
@@ -511,21 +527,21 @@ if (data0.image !== undefined) {
 let data3 = data0.image
 if (typeof data3 === 'string') {
 if (!formats2.test(data3)) {
-const err28 = {
+const err29 = {
 instancePath: instancePath + '/data/image',
 schemaPath: '#/properties/data/properties/image/format',
 keyword: 'format',
 params: { format: 'uuid' },
  message: "Must_be_a_valid_UUID"}
 if (vErrors === null) {
-vErrors = [err28]
+vErrors = [err29]
 } else {
-vErrors.push(err28)
+vErrors.push(err29)
 }
 
 }
 } else {
-const err29 = {
+const err30 = {
 instancePath: instancePath + '/data/image',
 schemaPath: '#/properties/data/properties/image/type',
 keyword: 'type',
@@ -533,9 +549,9 @@ params: { type: 'string' },
 message: 'must be string'
 }
 if (vErrors === null) {
-vErrors = [err29]
+vErrors = [err30]
 } else {
-vErrors.push(err29)
+vErrors.push(err30)
 }
 
 }
@@ -544,21 +560,21 @@ if (data0.sound !== undefined) {
 let data4 = data0.sound
 if (typeof data4 === 'string') {
 if (!formats2.test(data4)) {
-const err30 = {
+const err31 = {
 instancePath: instancePath + '/data/sound',
 schemaPath: '#/properties/data/properties/sound/format',
 keyword: 'format',
 params: { format: 'uuid' },
  message: "Must_be_a_valid_UUID"}
 if (vErrors === null) {
-vErrors = [err30]
+vErrors = [err31]
 } else {
-vErrors.push(err30)
+vErrors.push(err31)
 }
 
 }
 } else {
-const err31 = {
+const err32 = {
 instancePath: instancePath + '/data/sound',
 schemaPath: '#/properties/data/properties/sound/type',
 keyword: 'type',
@@ -566,9 +582,9 @@ params: { type: 'string' },
 message: 'must be string'
 }
 if (vErrors === null) {
-vErrors = [err31]
+vErrors = [err32]
 } else {
-vErrors.push(err31)
+vErrors.push(err32)
 }
 
 }
@@ -577,26 +593,12 @@ if (data0.text !== undefined) {
 let data5 = data0.text
 if (typeof data5 === 'string') {
 if (func4(data5) > 14) {
-const err32 = {
+const err33 = {
 instancePath: instancePath + '/data/text',
 schemaPath: '#/properties/data/properties/text/maxLength',
 keyword: 'maxLength',
 params: { limit: 14 },
  message: "Must_be_less_than_14_characters"}
-if (vErrors === null) {
-vErrors = [err32]
-} else {
-vErrors.push(err32)
-}
-
-}
-if (func4(data5) < 1) {
-const err33 = {
-instancePath: instancePath + '/data/text',
-schemaPath: '#/properties/data/properties/text/minLength',
-keyword: 'minLength',
-params: { limit: 1 },
- message: "Required"}
 if (vErrors === null) {
 vErrors = [err33]
 } else {
@@ -604,8 +606,22 @@ vErrors.push(err33)
 }
 
 }
-} else {
+if (func4(data5) < 1) {
 const err34 = {
+instancePath: instancePath + '/data/text',
+schemaPath: '#/properties/data/properties/text/minLength',
+keyword: 'minLength',
+params: { limit: 1 },
+ message: "Required"}
+if (vErrors === null) {
+vErrors = [err34]
+} else {
+vErrors.push(err34)
+}
+
+}
+} else {
+const err35 = {
 instancePath: instancePath + '/data/text',
 schemaPath: '#/properties/data/properties/text/type',
 keyword: 'type',
@@ -613,9 +629,9 @@ params: { type: 'string' },
 message: 'must be string'
 }
 if (vErrors === null) {
-vErrors = [err34]
+vErrors = [err35]
 } else {
-vErrors.push(err34)
+vErrors.push(err35)
 }
 
 }
@@ -630,27 +646,12 @@ typeof data6 == 'number' &&
 isFinite(data6)
 )
 ) {
-const err35 = {
+const err36 = {
 instancePath: instancePath + '/data/imageType',
 schemaPath: '#/properties/data/properties/imageType/type',
 keyword: 'type',
 params: { type: 'integer' },
  message: "Must_be_an_integer"}
-if (vErrors === null) {
-vErrors = [err35]
-} else {
-vErrors.push(err35)
-}
-
-}
-if (typeof data6 == 'number' && isFinite(data6)) {
-if (data6 > 3 || isNaN(data6)) {
-const err36 = {
-instancePath: instancePath + '/data/imageType',
-schemaPath: '#/properties/data/properties/imageType/maximum',
-keyword: 'maximum',
-params: { comparison: '<=', limit: 3 },
- message: "Must_be_less_than_or_equal_to_maximum"}
 if (vErrors === null) {
 vErrors = [err36]
 } else {
@@ -658,17 +659,32 @@ vErrors.push(err36)
 }
 
 }
-if (data6 < 0 || isNaN(data6)) {
+if (typeof data6 == 'number' && isFinite(data6)) {
+if (data6 > 3 || isNaN(data6)) {
 const err37 = {
+instancePath: instancePath + '/data/imageType',
+schemaPath: '#/properties/data/properties/imageType/maximum',
+keyword: 'maximum',
+params: { comparison: '<=', limit: 3 },
+ message: "Must_be_less_than_or_equal_to_maximum"}
+if (vErrors === null) {
+vErrors = [err37]
+} else {
+vErrors.push(err37)
+}
+
+}
+if (data6 < 0 || isNaN(data6)) {
+const err38 = {
 instancePath: instancePath + '/data/imageType',
 schemaPath: '#/properties/data/properties/imageType/minimum',
 keyword: 'minimum',
 params: { comparison: '>=', limit: 0 },
  message: "Must_be_greater_than_or_equal_to_0"}
 if (vErrors === null) {
-vErrors = [err37]
+vErrors = [err38]
 } else {
-vErrors.push(err37)
+vErrors.push(err38)
 }
 
 }
@@ -678,26 +694,12 @@ if (data0.visualHint !== undefined) {
 let data7 = data0.visualHint
 if (typeof data7 === 'string') {
 if (func4(data7) > 100) {
-const err38 = {
+const err39 = {
 instancePath: instancePath + '/data/visualHint',
 schemaPath: '#/properties/data/properties/visualHint/maxLength',
 keyword: 'maxLength',
 params: { limit: 100 },
  message: "Must_be_less_than_100_characters"}
-if (vErrors === null) {
-vErrors = [err38]
-} else {
-vErrors.push(err38)
-}
-
-}
-if (func4(data7) < 1) {
-const err39 = {
-instancePath: instancePath + '/data/visualHint',
-schemaPath: '#/properties/data/properties/visualHint/minLength',
-keyword: 'minLength',
-params: { limit: 1 },
- message: "Required"}
 if (vErrors === null) {
 vErrors = [err39]
 } else {
@@ -705,8 +707,22 @@ vErrors.push(err39)
 }
 
 }
-} else {
+if (func4(data7) < 1) {
 const err40 = {
+instancePath: instancePath + '/data/visualHint',
+schemaPath: '#/properties/data/properties/visualHint/minLength',
+keyword: 'minLength',
+params: { limit: 1 },
+ message: "Required"}
+if (vErrors === null) {
+vErrors = [err40]
+} else {
+vErrors.push(err40)
+}
+
+}
+} else {
+const err41 = {
 instancePath: instancePath + '/data/visualHint',
 schemaPath: '#/properties/data/properties/visualHint/type',
 keyword: 'type',
@@ -714,9 +730,9 @@ params: { type: 'string' },
 message: 'must be string'
 }
 if (vErrors === null) {
-vErrors = [err40]
+vErrors = [err41]
 } else {
-vErrors.push(err40)
+vErrors.push(err41)
 }
 
 }
@@ -731,27 +747,12 @@ typeof data8 == 'number' &&
 isFinite(data8)
 )
 ) {
-const err41 = {
+const err42 = {
 instancePath: instancePath + '/data/audioType',
 schemaPath: '#/properties/data/properties/audioType/type',
 keyword: 'type',
 params: { type: 'integer' },
  message: "Must_be_an_integer"}
-if (vErrors === null) {
-vErrors = [err41]
-} else {
-vErrors.push(err41)
-}
-
-}
-if (typeof data8 == 'number' && isFinite(data8)) {
-if (data8 > 4 || isNaN(data8)) {
-const err42 = {
-instancePath: instancePath + '/data/audioType',
-schemaPath: '#/properties/data/properties/audioType/maximum',
-keyword: 'maximum',
-params: { comparison: '<=', limit: 4 },
- message: "Must_be_less_than_or_equal_to_maximum"}
 if (vErrors === null) {
 vErrors = [err42]
 } else {
@@ -759,17 +760,32 @@ vErrors.push(err42)
 }
 
 }
-if (data8 < 0 || isNaN(data8)) {
+if (typeof data8 == 'number' && isFinite(data8)) {
+if (data8 > 4 || isNaN(data8)) {
 const err43 = {
+instancePath: instancePath + '/data/audioType',
+schemaPath: '#/properties/data/properties/audioType/maximum',
+keyword: 'maximum',
+params: { comparison: '<=', limit: 4 },
+ message: "Must_be_less_than_or_equal_to_maximum"}
+if (vErrors === null) {
+vErrors = [err43]
+} else {
+vErrors.push(err43)
+}
+
+}
+if (data8 < 0 || isNaN(data8)) {
+const err44 = {
 instancePath: instancePath + '/data/audioType',
 schemaPath: '#/properties/data/properties/audioType/minimum',
 keyword: 'minimum',
 params: { comparison: '>=', limit: 0 },
  message: "Must_be_greater_than_or_equal_to_0"}
 if (vErrors === null) {
-vErrors = [err43]
+vErrors = [err44]
 } else {
-vErrors.push(err43)
+vErrors.push(err44)
 }
 
 }
@@ -779,21 +795,21 @@ if (data0.successSound !== undefined) {
 let data9 = data0.successSound
 if (typeof data9 === 'string') {
 if (!formats2.test(data9)) {
-const err44 = {
+const err45 = {
 instancePath: instancePath + '/data/successSound',
 schemaPath: '#/properties/data/properties/successSound/format',
 keyword: 'format',
 params: { format: 'uuid' },
  message: "Must_be_a_valid_UUID"}
 if (vErrors === null) {
-vErrors = [err44]
+vErrors = [err45]
 } else {
-vErrors.push(err44)
+vErrors.push(err45)
 }
 
 }
 } else {
-const err45 = {
+const err46 = {
 instancePath: instancePath + '/data/successSound',
 schemaPath: '#/properties/data/properties/successSound/type',
 keyword: 'type',
@@ -801,9 +817,9 @@ params: { type: 'string' },
 message: 'must be string'
 }
 if (vErrors === null) {
-vErrors = [err45]
+vErrors = [err46]
 } else {
-vErrors.push(err45)
+vErrors.push(err46)
 }
 
 }
@@ -818,27 +834,12 @@ typeof data10 == 'number' &&
 isFinite(data10)
 )
 ) {
-const err46 = {
+const err47 = {
 instancePath: instancePath + '/data/successSoundType',
 schemaPath: '#/properties/data/properties/successSoundType/type',
 keyword: 'type',
 params: { type: 'integer' },
  message: "Must_be_an_integer"}
-if (vErrors === null) {
-vErrors = [err46]
-} else {
-vErrors.push(err46)
-}
-
-}
-if (typeof data10 == 'number' && isFinite(data10)) {
-if (data10 > 4 || isNaN(data10)) {
-const err47 = {
-instancePath: instancePath + '/data/successSoundType',
-schemaPath: '#/properties/data/properties/successSoundType/maximum',
-keyword: 'maximum',
-params: { comparison: '<=', limit: 4 },
- message: "Must_be_less_than_or_equal_to_maximum"}
 if (vErrors === null) {
 vErrors = [err47]
 } else {
@@ -846,17 +847,32 @@ vErrors.push(err47)
 }
 
 }
-if (data10 < 0 || isNaN(data10)) {
+if (typeof data10 == 'number' && isFinite(data10)) {
+if (data10 > 4 || isNaN(data10)) {
 const err48 = {
+instancePath: instancePath + '/data/successSoundType',
+schemaPath: '#/properties/data/properties/successSoundType/maximum',
+keyword: 'maximum',
+params: { comparison: '<=', limit: 4 },
+ message: "Must_be_less_than_or_equal_to_maximum"}
+if (vErrors === null) {
+vErrors = [err48]
+} else {
+vErrors.push(err48)
+}
+
+}
+if (data10 < 0 || isNaN(data10)) {
+const err49 = {
 instancePath: instancePath + '/data/successSoundType',
 schemaPath: '#/properties/data/properties/successSoundType/minimum',
 keyword: 'minimum',
 params: { comparison: '>=', limit: 0 },
  message: "Must_be_greater_than_or_equal_to_0"}
 if (vErrors === null) {
-vErrors = [err48]
+vErrors = [err49]
 } else {
-vErrors.push(err48)
+vErrors.push(err49)
 }
 
 }
@@ -866,21 +882,21 @@ if (data0.successImage !== undefined) {
 let data11 = data0.successImage
 if (typeof data11 === 'string') {
 if (!formats2.test(data11)) {
-const err49 = {
+const err50 = {
 instancePath: instancePath + '/data/successImage',
 schemaPath: '#/properties/data/properties/successImage/format',
 keyword: 'format',
 params: { format: 'uuid' },
  message: "Must_be_a_valid_UUID"}
 if (vErrors === null) {
-vErrors = [err49]
+vErrors = [err50]
 } else {
-vErrors.push(err49)
+vErrors.push(err50)
 }
 
 }
 } else {
-const err50 = {
+const err51 = {
 instancePath: instancePath + '/data/successImage',
 schemaPath: '#/properties/data/properties/successImage/type',
 keyword: 'type',
@@ -888,9 +904,9 @@ params: { type: 'string' },
 message: 'must be string'
 }
 if (vErrors === null) {
-vErrors = [err50]
+vErrors = [err51]
 } else {
-vErrors.push(err50)
+vErrors.push(err51)
 }
 
 }
@@ -905,27 +921,12 @@ typeof data12 == 'number' &&
 isFinite(data12)
 )
 ) {
-const err51 = {
+const err52 = {
 instancePath: instancePath + '/data/successImageType',
 schemaPath: '#/properties/data/properties/successImageType/type',
 keyword: 'type',
 params: { type: 'integer' },
  message: "Must_be_an_integer"}
-if (vErrors === null) {
-vErrors = [err51]
-} else {
-vErrors.push(err51)
-}
-
-}
-if (typeof data12 == 'number' && isFinite(data12)) {
-if (data12 > 3 || isNaN(data12)) {
-const err52 = {
-instancePath: instancePath + '/data/successImageType',
-schemaPath: '#/properties/data/properties/successImageType/maximum',
-keyword: 'maximum',
-params: { comparison: '<=', limit: 3 },
- message: "Must_be_less_than_or_equal_to_maximum"}
 if (vErrors === null) {
 vErrors = [err52]
 } else {
@@ -933,17 +934,32 @@ vErrors.push(err52)
 }
 
 }
-if (data12 < 0 || isNaN(data12)) {
+if (typeof data12 == 'number' && isFinite(data12)) {
+if (data12 > 3 || isNaN(data12)) {
 const err53 = {
+instancePath: instancePath + '/data/successImageType',
+schemaPath: '#/properties/data/properties/successImageType/maximum',
+keyword: 'maximum',
+params: { comparison: '<=', limit: 3 },
+ message: "Must_be_less_than_or_equal_to_maximum"}
+if (vErrors === null) {
+vErrors = [err53]
+} else {
+vErrors.push(err53)
+}
+
+}
+if (data12 < 0 || isNaN(data12)) {
+const err54 = {
 instancePath: instancePath + '/data/successImageType',
 schemaPath: '#/properties/data/properties/successImageType/minimum',
 keyword: 'minimum',
 params: { comparison: '>=', limit: 0 },
  message: "Must_be_greater_than_or_equal_to_0"}
 if (vErrors === null) {
-vErrors = [err53]
+vErrors = [err54]
 } else {
-vErrors.push(err53)
+vErrors.push(err54)
 }
 
 }
@@ -953,21 +969,21 @@ if (data0.successAnimations !== undefined) {
 let data13 = data0.successAnimations
 if (typeof data13 === 'string') {
 if (func4(data13) > 100) {
-const err54 = {
+const err55 = {
 instancePath: instancePath + '/data/successAnimations',
 schemaPath: '#/properties/data/properties/successAnimations/maxLength',
 keyword: 'maxLength',
 params: { limit: 100 },
  message: "Must_be_less_than_100_characters"}
 if (vErrors === null) {
-vErrors = [err54]
+vErrors = [err55]
 } else {
-vErrors.push(err54)
+vErrors.push(err55)
 }
 
 }
 } else {
-const err55 = {
+const err56 = {
 instancePath: instancePath + '/data/successAnimations',
 schemaPath: '#/properties/data/properties/successAnimations/type',
 keyword: 'type',
@@ -975,9 +991,9 @@ params: { type: 'string' },
 message: 'must be string'
 }
 if (vErrors === null) {
-vErrors = [err55]
+vErrors = [err56]
 } else {
-vErrors.push(err55)
+vErrors.push(err56)
 }
 
 }
@@ -992,27 +1008,12 @@ typeof data14 == 'number' &&
 isFinite(data14)
 )
 ) {
-const err56 = {
+const err57 = {
 instancePath: instancePath + '/data/successImageTime',
 schemaPath: '#/properties/data/properties/successImageTime/type',
 keyword: 'type',
 params: { type: 'integer' },
  message: "Must_be_an_integer"}
-if (vErrors === null) {
-vErrors = [err56]
-} else {
-vErrors.push(err56)
-}
-
-}
-if (typeof data14 == 'number' && isFinite(data14)) {
-if (data14 < 0 || isNaN(data14)) {
-const err57 = {
-instancePath: instancePath + '/data/successImageTime',
-schemaPath: '#/properties/data/properties/successImageTime/minimum',
-keyword: 'minimum',
-params: { comparison: '>=', limit: 0 },
- message: "Must_be_greater_than_or_equal_to_0"}
 if (vErrors === null) {
 vErrors = [err57]
 } else {
@@ -1020,10 +1021,25 @@ vErrors.push(err57)
 }
 
 }
+if (typeof data14 == 'number' && isFinite(data14)) {
+if (data14 < 0 || isNaN(data14)) {
+const err58 = {
+instancePath: instancePath + '/data/successImageTime',
+schemaPath: '#/properties/data/properties/successImageTime/minimum',
+keyword: 'minimum',
+params: { comparison: '>=', limit: 0 },
+ message: "Must_be_greater_than_or_equal_to_0"}
+if (vErrors === null) {
+vErrors = [err58]
+} else {
+vErrors.push(err58)
+}
+
+}
 }
 }
 } else {
-const err58 = {
+const err59 = {
 instancePath: instancePath + '/data',
 schemaPath: '#/properties/data/type',
 keyword: 'type',
@@ -1031,9 +1047,9 @@ params: { type: 'object' },
 message: 'must be object'
 }
 if (vErrors === null) {
-vErrors = [err58]
+vErrors = [err59]
 } else {
-vErrors.push(err58)
+vErrors.push(err59)
 }
 
 }
@@ -1048,27 +1064,12 @@ typeof data15 == 'number' &&
 isFinite(data15)
 )
 ) {
-const err59 = {
+const err60 = {
 instancePath: instancePath + '/itemType',
 schemaPath: '#/properties/itemType/type',
 keyword: 'type',
 params: { type: 'integer' },
  message: "Must_be_an_integer"}
-if (vErrors === null) {
-vErrors = [err59]
-} else {
-vErrors.push(err59)
-}
-
-}
-if (typeof data15 == 'number' && isFinite(data15)) {
-if (data15 > 5 || isNaN(data15)) {
-const err60 = {
-instancePath: instancePath + '/itemType',
-schemaPath: '#/properties/itemType/maximum',
-keyword: 'maximum',
-params: { comparison: '<=', limit: 5 },
- message: "Must_be_less_than_or_equal_to_maximum"}
 if (vErrors === null) {
 vErrors = [err60]
 } else {
@@ -1076,17 +1077,32 @@ vErrors.push(err60)
 }
 
 }
-if (data15 < 0 || isNaN(data15)) {
+if (typeof data15 == 'number' && isFinite(data15)) {
+if (data15 > 5 || isNaN(data15)) {
 const err61 = {
+instancePath: instancePath + '/itemType',
+schemaPath: '#/properties/itemType/maximum',
+keyword: 'maximum',
+params: { comparison: '<=', limit: 5 },
+ message: "Must_be_less_than_or_equal_to_maximum"}
+if (vErrors === null) {
+vErrors = [err61]
+} else {
+vErrors.push(err61)
+}
+
+}
+if (data15 < 0 || isNaN(data15)) {
+const err62 = {
 instancePath: instancePath + '/itemType',
 schemaPath: '#/properties/itemType/minimum',
 keyword: 'minimum',
 params: { comparison: '>=', limit: 0 },
  message: "Must_be_greater_than_or_equal_to_0"}
 if (vErrors === null) {
-vErrors = [err61]
+vErrors = [err62]
 } else {
-vErrors.push(err61)
+vErrors.push(err62)
 }
 
 }
@@ -1102,31 +1118,31 @@ typeof data16 == 'number' &&
 isFinite(data16)
 )
 ) {
-const err62 = {
+const err63 = {
 instancePath: instancePath + '/order',
 schemaPath: '#/properties/order/type',
 keyword: 'type',
 params: { type: 'integer' },
  message: "Must_be_an_integer"}
 if (vErrors === null) {
-vErrors = [err62]
+vErrors = [err63]
 } else {
-vErrors.push(err62)
+vErrors.push(err63)
 }
 
 }
 if (typeof data16 == 'number' && isFinite(data16)) {
 if (data16 < 0 || isNaN(data16)) {
-const err63 = {
+const err64 = {
 instancePath: instancePath + '/order',
 schemaPath: '#/properties/order/minimum',
 keyword: 'minimum',
 params: { comparison: '>=', limit: 0 },
  message: "Must_be_greater_than_or_equal_to_0"}
 if (vErrors === null) {
-vErrors = [err63]
+vErrors = [err64]
 } else {
-vErrors.push(err63)
+vErrors.push(err64)
 }
 
 }
@@ -1136,21 +1152,21 @@ if (data.unitId !== undefined) {
 let data17 = data.unitId
 if (typeof data17 === 'string') {
 if (!formats2.test(data17)) {
-const err64 = {
+const err65 = {
 instancePath: instancePath + '/unitId',
 schemaPath: '#/properties/unitId/format',
 keyword: 'format',
 params: { format: 'uuid' },
  message: "Must_be_a_valid_UUID"}
 if (vErrors === null) {
-vErrors = [err64]
+vErrors = [err65]
 } else {
-vErrors.push(err64)
+vErrors.push(err65)
 }
 
 }
 } else {
-const err65 = {
+const err66 = {
 instancePath: instancePath + '/unitId',
 schemaPath: '#/properties/unitId/type',
 keyword: 'type',
@@ -1158,9 +1174,9 @@ params: { type: 'string' },
 message: 'must be string'
 }
 if (vErrors === null) {
-vErrors = [err65]
+vErrors = [err66]
 } else {
-vErrors.push(err65)
+vErrors.push(err66)
 }
 
 }
@@ -1169,27 +1185,12 @@ if (data.appId !== undefined) {
 let data18 = data.appId
 if (typeof data18 === 'string') {
 if (!formats2.test(data18)) {
-const err66 = {
+const err67 = {
 instancePath: instancePath + '/appId',
 schemaPath: '#/properties/appId/format',
 keyword: 'format',
 params: { format: 'uuid' },
  message: "Must_be_a_valid_UUID"}
-if (vErrors === null) {
-vErrors = [err66]
-} else {
-vErrors.push(err66)
-}
-
-}
-} else {
-const err67 = {
-instancePath: instancePath + '/appId',
-schemaPath: '#/properties/appId/type',
-keyword: 'type',
-params: { type: 'string' },
-message: 'must be string'
-}
 if (vErrors === null) {
 vErrors = [err67]
 } else {
@@ -1197,16 +1198,14 @@ vErrors.push(err67)
 }
 
 }
-}
-if (data.lastModified !== undefined) {
-let data19 = data.lastModified
-if (!(typeof data19 == 'number' && isFinite(data19))) {
+} else {
 const err68 = {
-instancePath: instancePath + '/lastModified',
-schemaPath: '#/properties/lastModified/type',
+instancePath: instancePath + '/appId',
+schemaPath: '#/properties/appId/type',
 keyword: 'type',
-params: { type: 'number' },
- message: "Must_be_a_number"}
+params: { type: 'string' },
+message: 'must be string'
+}
 if (vErrors === null) {
 vErrors = [err68]
 } else {
@@ -1215,22 +1214,15 @@ vErrors.push(err68)
 
 }
 }
-if (data.version !== undefined) {
-let data20 = data.version
-if (
-!(
-typeof data20 == 'number' &&
-!(data20 % 1) &&
-!isNaN(data20) &&
-isFinite(data20)
-)
-) {
+if (data.lastModified !== undefined) {
+let data19 = data.lastModified
+if (!(typeof data19 == 'number' && isFinite(data19))) {
 const err69 = {
-instancePath: instancePath + '/version',
-schemaPath: '#/properties/version/type',
+instancePath: instancePath + '/lastModified',
+schemaPath: '#/properties/lastModified/type',
 keyword: 'type',
-params: { type: 'integer' },
- message: "Must_be_an_integer"}
+params: { type: 'number' },
+ message: "Must_be_a_number"}
 if (vErrors === null) {
 vErrors = [err69]
 } else {
@@ -1238,14 +1230,15 @@ vErrors.push(err69)
 }
 
 }
-if (typeof data20 == 'number' && isFinite(data20)) {
-if (data20 < 0 || isNaN(data20)) {
+}
+if (data.touched !== undefined) {
+if (typeof data.touched !== 'boolean') {
 const err70 = {
-instancePath: instancePath + '/version',
-schemaPath: '#/properties/version/minimum',
-keyword: 'minimum',
-params: { comparison: '>=', limit: 0 },
- message: "Must_be_greater_than_or_equal_to_0"}
+instancePath: instancePath + '/touched',
+schemaPath: '#/properties/touched/type',
+keyword: 'type',
+params: { type: 'boolean' },
+ message: "Must_be_a_boolean"}
 if (vErrors === null) {
 vErrors = [err70]
 } else {
@@ -1254,17 +1247,22 @@ vErrors.push(err70)
 
 }
 }
-}
-if (data.databaseId !== undefined) {
-let data21 = data.databaseId
-if (typeof data21 === 'string') {
-if (!formats2.test(data21)) {
+if (data.version !== undefined) {
+let data21 = data.version
+if (
+!(
+typeof data21 == 'number' &&
+!(data21 % 1) &&
+!isNaN(data21) &&
+isFinite(data21)
+)
+) {
 const err71 = {
-instancePath: instancePath + '/databaseId',
-schemaPath: '#/properties/databaseId/format',
-keyword: 'format',
-params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+instancePath: instancePath + '/version',
+schemaPath: '#/properties/version/type',
+keyword: 'type',
+params: { type: 'integer' },
+ message: "Must_be_an_integer"}
 if (vErrors === null) {
 vErrors = [err71]
 } else {
@@ -1272,14 +1270,14 @@ vErrors.push(err71)
 }
 
 }
-} else {
+if (typeof data21 == 'number' && isFinite(data21)) {
+if (data21 < 0 || isNaN(data21)) {
 const err72 = {
-instancePath: instancePath + '/databaseId',
-schemaPath: '#/properties/databaseId/type',
-keyword: 'type',
-params: { type: 'string' },
-message: 'must be string'
-}
+instancePath: instancePath + '/version',
+schemaPath: '#/properties/version/minimum',
+keyword: 'minimum',
+params: { comparison: '>=', limit: 0 },
+ message: "Must_be_greater_than_or_equal_to_0"}
 if (vErrors === null) {
 vErrors = [err72]
 } else {
@@ -1288,13 +1286,14 @@ vErrors.push(err72)
 
 }
 }
-if (data.id !== undefined) {
-let data22 = data.id
+}
+if (data.databaseId !== undefined) {
+let data22 = data.databaseId
 if (typeof data22 === 'string') {
 if (!formats2.test(data22)) {
 const err73 = {
-instancePath: instancePath + '/id',
-schemaPath: '#/properties/id/format',
+instancePath: instancePath + '/databaseId',
+schemaPath: '#/properties/databaseId/format',
 keyword: 'format',
 params: { format: 'uuid' },
  message: "Must_be_a_valid_UUID"}
@@ -1307,8 +1306,8 @@ vErrors.push(err73)
 }
 } else {
 const err74 = {
-instancePath: instancePath + '/id',
-schemaPath: '#/properties/id/type',
+instancePath: instancePath + '/databaseId',
+schemaPath: '#/properties/databaseId/type',
 keyword: 'type',
 params: { type: 'string' },
 message: 'must be string'
@@ -1321,16 +1320,16 @@ vErrors.push(err74)
 
 }
 }
-if (data.dataText !== undefined) {
-let data23 = data.dataText
+if (data.id !== undefined) {
+let data23 = data.id
 if (typeof data23 === 'string') {
-if (func4(data23) > 8000) {
+if (!formats2.test(data23)) {
 const err75 = {
-instancePath: instancePath + '/dataText',
-schemaPath: '#/properties/dataText/maxLength',
-keyword: 'maxLength',
-params: { limit: 8000 },
- message: "Must_be_less_than_8000_characters"}
+instancePath: instancePath + '/id',
+schemaPath: '#/properties/id/format',
+keyword: 'format',
+params: { format: 'uuid' },
+ message: "Must_be_a_valid_UUID"}
 if (vErrors === null) {
 vErrors = [err75]
 } else {
@@ -1340,8 +1339,8 @@ vErrors.push(err75)
 }
 } else {
 const err76 = {
-instancePath: instancePath + '/dataText',
-schemaPath: '#/properties/dataText/type',
+instancePath: instancePath + '/id',
+schemaPath: '#/properties/id/type',
 keyword: 'type',
 params: { type: 'string' },
 message: 'must be string'
@@ -1354,8 +1353,41 @@ vErrors.push(err76)
 
 }
 }
-} else {
+if (data.dataText !== undefined) {
+let data24 = data.dataText
+if (typeof data24 === 'string') {
+if (func4(data24) > 8000) {
 const err77 = {
+instancePath: instancePath + '/dataText',
+schemaPath: '#/properties/dataText/maxLength',
+keyword: 'maxLength',
+params: { limit: 8000 },
+ message: "Must_be_less_than_8000_characters"}
+if (vErrors === null) {
+vErrors = [err77]
+} else {
+vErrors.push(err77)
+}
+
+}
+} else {
+const err78 = {
+instancePath: instancePath + '/dataText',
+schemaPath: '#/properties/dataText/type',
+keyword: 'type',
+params: { type: 'string' },
+message: 'must be string'
+}
+if (vErrors === null) {
+vErrors = [err78]
+} else {
+vErrors.push(err78)
+}
+
+}
+}
+} else {
+const err79 = {
 instancePath,
 schemaPath: '#/type',
 keyword: 'type',
@@ -1363,9 +1395,9 @@ params: { type: 'object' },
 message: 'must be object'
 }
 if (vErrors === null) {
-vErrors = [err77]
+vErrors = [err79]
 } else {
-vErrors.push(err77)
+vErrors.push(err79)
 }
 
 }

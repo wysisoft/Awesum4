@@ -13,6 +13,7 @@ export interface AwesumApp {
   id: string;
   lang: string;
   lastModified: number;
+  lastSync: number;
   name: string;
   uniqueName: string;
   version: number;
@@ -38,6 +39,7 @@ export interface AwesumDatabaseItem {
   itemType: number;
   lastModified: number;
   order: number;
+  touched: boolean;
   unitId: string;
   version: number;
 }
@@ -60,6 +62,7 @@ export interface AwesumDatabaseUnit {
   successSoundType: number;
   successVideoType: number;
   successVideoUrl: string;
+  touched: boolean;
   version: number;
 }
 
@@ -75,6 +78,7 @@ export interface AwesumFollowerDatabase {
   followerRequestId: string;
   id: string;
   lastModified: number;
+  touched: boolean;
   version: number;
 }
 
@@ -86,6 +90,7 @@ export interface AwesumFollowerDatabaseCompletion {
   itemLevel: number;
   lastModified: number;
   parentItemId: string;
+  touched: boolean;
   version: number;
 }
 
@@ -102,6 +107,7 @@ export interface AwesumFollowerRequest {
   leaderName: string;
   points: number;
   status: number;
+  touched: boolean;
   version: number;
 }
 
@@ -111,6 +117,7 @@ export interface AwesumMedia {
   id: string;
   lastModified: number;
   size: number;
+  touched: boolean;
 }
 
 export interface AwesumRouter {
@@ -125,6 +132,7 @@ export interface AwesumRouter {
   status: number;
   sundayTimesAndDurations: string;
   thursdayTimesAndDurations: string;
+  touched: boolean;
   tuesdayTimesAndDurations: string;
   version: number;
   wednesdayTimesAndDurations: string;

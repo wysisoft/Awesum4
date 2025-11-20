@@ -12,6 +12,7 @@ export interface ServerSpellingDatabaseItemInterface {
   unitId: string;
   appId: string;
   lastModified: number;
+  touched: boolean;
   version: number;
   databaseId: string;
   id: string;

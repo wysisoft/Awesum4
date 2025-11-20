@@ -10,6 +10,7 @@ export interface ServerFollowerDatabaseInterface {
   id: string;
   databaseId: string;
   lastModified: number;
+  touched: boolean;
   version: number;
   
 }

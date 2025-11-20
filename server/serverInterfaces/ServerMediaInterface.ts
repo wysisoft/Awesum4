@@ -11,5 +11,6 @@ export interface ServerMediaInterface {
   data: string;
   appId: string;
   lastModified: number;
+  touched: boolean;
   
 }

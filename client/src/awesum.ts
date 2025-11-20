@@ -16,7 +16,7 @@ import { ClientDatabase } from "./clientClasses/Database";
 import { ClientDatabaseUnit } from "./clientClasses/DatabaseUnit";
 import { ClientDatabaseItem } from "./clientClasses/DatabaseItem";
 import { Value } from "@sinclair/typebox/value";
-import { itemType, types,imageType,audioType } from "../../server/typebox";
+import { itemType, types, imageType, audioType, ItemLevel, syncResultType, syncAction } from "../../server/typebox";
 import type { ServerSyncRequestInterface } from "../../server/serverInterfaces/ServerSyncRequestInterface";
 import type { ServerSyncResponseInterface } from "../../server/serverInterfaces/ServerSyncResponseInterface";
 import { BreadcrumbItem } from "./breadcrumbItem";
@@ -28,9 +28,12 @@ import type { RouteLocationNormalized } from "vue-router";
 import type { ServerRouterInterface } from "../../server/serverInterfaces/ServerRouterInterface";
 import type { ServerSpellingDatabaseItemInterface } from "../../server/serverInterfaces/ServerSpellingDatabaseItemInterface";
 import type { ServerOneByOneMathDatabaseItemInterface } from "../../server/serverInterfaces/ServerOneByOneMathDatabaseItemInterface";
+import  { useToast } from "vue-toastification";
 //@ts-ignore
 const appVersion = __APP_VERSION__;
 export const awesum = reactive({
+  toast:{} as ReturnType<typeof useToast>,
+  touchedObjects: new Map<string, { tableName: string, fieldName: string }>(),
   debugText: "",
   appVersion: appVersion,
   mostRecentGroups: "",
@@ -50,7 +53,7 @@ export const awesum = reactive({
   emptyGuid: constants.emptyGuid,
 
   viewData: {},
-  viewDataPath:"",
+  viewDataPath: "",
 
   publicAppId: constants.publicAppId,
   publicAppEmail: 'public@awesum.app',
@@ -81,7 +84,7 @@ export const awesum = reactive({
   followerRequests: Array<ServerFollowerRequestInterface>(),
   currentAppRouters: Array<ServerRouterInterface>(),
 
-  
+
   errorMessage: "",
   audio: new Audio("null"),
   getDynamicUrl(
@@ -95,7 +98,7 @@ export const awesum = reactive({
   ) {
     var settings = (route ? route : awesum.router.currentRoute).path.toLocaleLowerCase()
       .startsWith(
-        "/" + I18nGlobal.t(resources.Settings.key) + "/" ,
+        ("/" + I18nGlobal.t(resources.i.key) + "/" + I18nGlobal.t(resources.Settings.key)).toLocaleLowerCase(),
       );
     var returnValue = "";
     switch (true) {
@@ -104,8 +107,8 @@ export const awesum = reactive({
       case obj instanceof ClientFollowerDatabase:
         returnValue = "IDontKnow"
         if (settings) {
-          returnValue = "/" + I18nGlobal.t(resources.Settings.key) + "/" +
-            
+          returnValue = "/" + I18nGlobal.t(resources.i.key) + "/" + I18nGlobal.t(resources.Settings.key) + 
+
             returnValue;
         }
         break;
@@ -113,8 +116,8 @@ export const awesum = reactive({
 
         returnValue = "/" + encodeURIComponent(obj.uniqueName);
         if (settings) {
-          returnValue = "/" + I18nGlobal.t(resources.Settings.key) + "/" +
-            
+          returnValue = "/" + I18nGlobal.t(resources.i.key) + "/" + I18nGlobal.t(resources.Settings.key) +
+
             returnValue;
         }
         break;
@@ -122,19 +125,19 @@ export const awesum = reactive({
         returnValue = "/" + encodeURIComponent(awesum.currentApp.uniqueName) + "/" +
           encodeURIComponent(obj.name);
         if (settings) {
-          returnValue = "/" + I18nGlobal.t(resources.Settings.key) + "/" +
-            
+          returnValue = "/" + I18nGlobal.t(resources.i.key) + "/" + I18nGlobal.t(resources.Settings.key) +
+
             returnValue;
         }
         break;
 
       case obj instanceof ClientDatabaseUnit:
         returnValue = "/" + encodeURIComponent(awesum.currentApp.uniqueName) + "/" +
-          encodeURIComponent(awesum.currentDatabase.name) + "/"  +
+          encodeURIComponent(awesum.currentDatabase.name) + "/" +
           encodeURIComponent(obj.name);
         if (settings) {
-          returnValue = "/" + I18nGlobal.t(resources.Settings.key) + "/" +
-            
+          returnValue = "/" + I18nGlobal.t(resources.i.key) + "/" + I18nGlobal.t(resources.Settings.key) + 
+
             returnValue;
         }
         break;
@@ -143,8 +146,8 @@ export const awesum = reactive({
           encodeURIComponent(awesum.currentDatabase.name) + "/" +
           encodeURIComponent(awesum.currentDatabaseUnit.name) + "/" + obj.order;
         if (settings) {
-          returnValue = "/" + I18nGlobal.t(resources.Settings.key) + "/" +
-            
+          returnValue = "/" + I18nGlobal.t(resources.i.key) + "/" + I18nGlobal.t(resources.Settings.key) + 
+
             returnValue;
         }
         break;
@@ -154,13 +157,18 @@ export const awesum = reactive({
 
     return returnValue;
   },
+
   setTablePropertyValueById(
     id: string,
     propName: string,
     value: any,
     table: Table,
+    dontTouch: boolean = false,
   ) {
     if (table) {
+      if (!dontTouch) {
+        this.touchedObjects.set(id, { tableName: table.name, fieldName: propName });
+      }
       if (propName.includes(".")) {
         var dexiePromise = this.AwesumDexieDB.table(table.name).update(
           id,
@@ -190,14 +198,14 @@ export const awesum = reactive({
       );
   },
   async refreshServerApps() {
-    if(this.serverEmail) {
-    this.apps = await this.AwesumDexieDB.serverApps.where('id').notEqual(this.publicAppId).sortBy(
-      "order",
-    ) as ServerAppInterface[];
-  }
-  else {
-    this.apps = await this.AwesumDexieDB.serverApps.where('id').equals(this.publicAppId).toArray();
-  }
+    if (this.serverEmail) {
+      this.apps = await this.AwesumDexieDB.serverApps.where('id').notEqual(this.publicAppId).sortBy(
+        "order",
+      ) as ServerAppInterface[];
+    }
+    else {
+      this.apps = await this.AwesumDexieDB.serverApps.where('id').equals(this.publicAppId).toArray();
+    }
   },
 
   async refreshCurrentDatabaseCompletions() {
@@ -232,11 +240,11 @@ export const awesum = reactive({
   /* async refreshGlobalMedia() {
     
   }, */
-isInstanceOfAny(obj: unknown, classList: Function[]) : boolean{
-     return classList.some(cls => obj instanceof (cls as any));
-}   ,
+  isInstanceOfAny(obj: unknown, classList: Function[]): boolean {
+    return classList.some(cls => obj instanceof (cls as any));
+  },
 
-  
+
 
 
   async cleanMedia() {
@@ -261,7 +269,7 @@ isInstanceOfAny(obj: unknown, classList: Function[]) : boolean{
       }
 
 
-      
+
 
 
 
@@ -273,14 +281,14 @@ isInstanceOfAny(obj: unknown, classList: Function[]) : boolean{
         }
       }
       for (var item of allItems) {
-   
-          if ((item.itemType == itemType.spelling || item.itemType == itemType.oneByTwoDigraphs || item.itemType == itemType.oneByOneMultiplication || item.itemType == itemType.oneByOneAddition ) && media.id == (item as ServerSpellingDatabaseItemInterface).data.successSound ||
-          (item.itemType == itemType.spelling || item.itemType == itemType.oneByTwoDigraphs || item.itemType == itemType.oneByOneMultiplication || item.itemType == itemType.oneByOneAddition ) && media.id == (item as ServerSpellingDatabaseItemInterface).data.successImage ||
-          (item.itemType == itemType.spelling || item.itemType == itemType.oneByTwoDigraphs ) && media.id == (item as ServerSpellingDatabaseItemInterface).data.image ||
-          (item.itemType == itemType.spelling || item.itemType == itemType.oneByTwoDigraphs || item.itemType == itemType.oneByOneMultiplication || item.itemType == itemType.oneByOneAddition ) && media.id == (item as ServerSpellingDatabaseItemInterface).data.sound
-          ) {
-            used = true;
-          }
+
+        if ((item.itemType == itemType.spelling || item.itemType == itemType.oneByTwoDigraphs || item.itemType == itemType.oneByOneMultiplication || item.itemType == itemType.oneByOneAddition) && media.id == (item as ServerSpellingDatabaseItemInterface).data.successSound ||
+          (item.itemType == itemType.spelling || item.itemType == itemType.oneByTwoDigraphs || item.itemType == itemType.oneByOneMultiplication || item.itemType == itemType.oneByOneAddition) && media.id == (item as ServerSpellingDatabaseItemInterface).data.successImage ||
+          (item.itemType == itemType.spelling || item.itemType == itemType.oneByTwoDigraphs) && media.id == (item as ServerSpellingDatabaseItemInterface).data.image ||
+          (item.itemType == itemType.spelling || item.itemType == itemType.oneByTwoDigraphs || item.itemType == itemType.oneByOneMultiplication || item.itemType == itemType.oneByOneAddition) && media.id == (item as ServerSpellingDatabaseItemInterface).data.sound
+        ) {
+          used = true;
+        }
       }
 
       if (!used
@@ -411,6 +419,64 @@ isInstanceOfAny(obj: unknown, classList: Function[]) : boolean{
     });
     return simpleObject;
   },
+  async processSyncResponse(syncResponse: ServerSyncResponseInterface[]) {
+    debugger;
+    for (const item of syncResponse) {
+      if(item.id){
+        if (item.level == ItemLevel.app && item.action == syncAction.modify && item.values) {
+            for (const key in item.values as Record<string, any>) {
+              this.setTablePropertyValueById(item.id, key, (item.values as Record<string, any>)[key], this.AwesumDexieDB.serverApps, true);
+            }
+          }
+        if (item.level == ItemLevel.followerRequest && 
+          item.action == syncAction.modify && item.values) {
+          for (const key in item.values as Record<string, any>) {
+            this.setTablePropertyValueById(item.id, key, (item.values as Record<string, any>)[key], this.AwesumDexieDB.serverFollowerRequests, true);
+          }
+          this.toast.success('Hello, world! This is a toast message.');
+          
+        }
+      }
+      if (item.app && item.result == syncResultType.added) {
+        await awesum.putOwnerAppInsideDatabase(item.app as ServerAppInterface);
+      }
+      
+      if (item.followerRequest) {
+        await awesum.AwesumDexieDB.serverFollowerRequests.put(item.followerRequest);
+        await awesum.refreshServerFollowerRequests();
+        if (item.action == syncAction.addAndRedirectToLeader) {
+          awesum.router.push({ path: "/i/LeadersAndFollowers/Leader/" + encodeURI(item.followerRequest.leaderEmail) });
+        }
+      }
+      if (item.followerDatabase) {
+        await awesum.AwesumDexieDB.serverFollowerDatabases.put(item.followerDatabase);
+        await awesum.refreshCurrentFollowerDatabases();
+      }
+      if (item.app) {
+        if (item.app.email == awesum.serverEmail) {
+          await awesum.putOwnerAppInsideDatabase(item.app as ServerAppInterface);
+        }
+        else {
+          await awesum.AwesumDexieDB.serverApps.put(item.app as ServerAppInterface);
+          await awesum.refreshServerApps();
+        }
+      }
+      if (item.database) {
+        await awesum.AwesumDexieDB.serverDatabases.put(item.database);
+      }
+
+      if (item.databaseUnit) {
+        await awesum.AwesumDexieDB.serverDatabaseUnits.put(item.databaseUnit);
+      }
+      if (item.databaseItem) {
+        (item.databaseItem as any).data = JSON.parse(item.databaseItem.dataText);
+        await awesum.AwesumDexieDB.serverDatabaseItems.put(item.databaseItem);
+      }
+      if (item.followerDatabaseCompletion) {
+        await awesum.AwesumDexieDB.serverFollowerDatabaseCompletions.put(item.followerDatabaseCompletion);
+      }
+    }
+  },
   async sync(syncRequest: Array<ServerSyncRequestInterface>) {
     var response = await fetch(window.location.origin + "/api/sync", {
       method: "POST",
@@ -418,115 +484,75 @@ isInstanceOfAny(obj: unknown, classList: Function[]) : boolean{
       body: JSON.stringify(syncRequest),
       credentials: "include",
     }) as Response;
+
     if (response.status == 200) {
       var responseJson = await response.json() as ServerSyncResponseInterface[];
-      if (!responseJson) {
-        this.errorMessage = I18nGlobal.t(
-          resources.InvalidResponse.key,
-        );
-        awesum.router.push({
-          name: I18nGlobal.t(resources.Error.key),
-        });
-        return;
-      }
+      await this.processSyncResponse(responseJson);
 
-      for (const item of responseJson) {
-        if (item.followerRequest) {
-          await awesum.AwesumDexieDB.serverFollowerRequests.put(item.followerRequest);
-          await awesum.refreshServerFollowerRequests();
-        }
-        if (item.followerDatabase) {
-          await awesum.AwesumDexieDB.serverFollowerDatabases.put(item.followerDatabase);
-          await awesum.refreshCurrentFollowerDatabases();
-        }
-        if (item.app) {
-          if (item.app.email == awesum.serverEmail) {
-            await awesum.putOwnerAppInsideDatabase(item.app as ServerAppInterface);
-          }
-          else {
-            await awesum.AwesumDexieDB.serverApps.put(item.app as ServerAppInterface);
-            await awesum.refreshServerApps();
-          }
-        }
-        if (item.database) {
-          await awesum.AwesumDexieDB.serverDatabases.put(item.database);
-        }
-        
-        if (item.databaseUnit) {
-          await awesum.AwesumDexieDB.serverDatabaseUnits.put(item.databaseUnit);
-        }
-        if (item.databaseItem) {
-          (item.databaseItem as any).data = JSON.parse(item.databaseItem.dataText);
-          await awesum.AwesumDexieDB.serverDatabaseItems.put(item.databaseItem);
-        }
-        if (item.followerDatabaseCompletion) {
-          await awesum.AwesumDexieDB.serverFollowerDatabaseCompletions.put(item.followerDatabaseCompletion);
-        }
-      }
     }
   },
   async refresh() {
-    // Load all the ids, types, lastModifieds, and versions for all tables into a single object to send to the server
-    var allData = Array<ServerSyncRequestInterface>();
+    // // Load all the ids, types, lastModifieds, and versions for all tables into a single object to send to the server
+    // var allData = Array<ServerSyncRequestInterface>();
 
-    var serverApps = await awesum.AwesumDexieDB.serverApps.where('id').notEqual(awesum.publicAppId).toArray();
-    for (const serverApp of serverApps) {
-      allData.push({
-        app: awesum.toPOJO(serverApp),
-      });
-    }
-
-
-    var serverDatabases = await awesum.AwesumDexieDB.serverDatabases.where('appId').notEqual(awesum.publicAppId).toArray();
-    for (const serverDatabase of serverDatabases) {
-      allData.push({
-        database: awesum.toPOJO(serverDatabase),
-      });
-    }
+    // var serverApps = await awesum.AwesumDexieDB.serverApps.where('id').notEqual(awesum.publicAppId).toArray();
+    // for (const serverApp of serverApps) {
+    //   allData.push({
+    //     app: awesum.toPOJO(serverApp),
+    //   });
+    // }
 
 
-    var serverDatabaseUnits = await awesum.AwesumDexieDB.serverDatabaseUnits.where('appId').notEqual(awesum.publicAppId).toArray();
-    for (const serverDatabaseUnit of serverDatabaseUnits) {
-      allData.push({
-        databaseUnit: awesum.toPOJO(serverDatabaseUnit),
-      });
-    }
+    // var serverDatabases = await awesum.AwesumDexieDB.serverDatabases.where('appId').notEqual(awesum.publicAppId).toArray();
+    // for (const serverDatabase of serverDatabases) {
+    //   allData.push({
+    //     database: awesum.toPOJO(serverDatabase),
+    //   });
+    // }
 
-    var serverDatabaseItems = await awesum.AwesumDexieDB.serverDatabaseItems
-      .where('appId').notEqual(awesum.publicAppId).toArray();
-    for (const serverDatabaseItem of serverDatabaseItems) {
-      var pojo = awesum.toPOJO(serverDatabaseItem);
-      //copy all properties from serverDatabaseItem to pojo except parent
-      var dataObj = {} as any;
-      for (const key in (serverDatabaseItem as any).data) {
-        if (key != "parent" && key != "table") {
-          dataObj[key.substring(1)] = (serverDatabaseItem as any).data[key];
-        }
-      }
-      pojo.dataText = JSON.stringify(dataObj);
-      allData.push({
-        databaseItem: pojo
-      });
-    }
 
-    var serverFollowerRequests = await awesum.AwesumDexieDB.serverFollowerRequests.filter((x) => 
-      x.leaderAppId != awesum.publicAppId && 
-    x.followerAppId != awesum.publicAppId && 
-    !(x.followerAppId == awesum.ownerApp.id && x.leaderAppId == awesum.ownerApp.id)).toArray();
-    for (const serverFollowerRequest of serverFollowerRequests) {
-      allData.push({
-        followerRequest: awesum.toPOJO(serverFollowerRequest),
-      });
-    }
+    // var serverDatabaseUnits = await awesum.AwesumDexieDB.serverDatabaseUnits.where('appId').notEqual(awesum.publicAppId).toArray();
+    // for (const serverDatabaseUnit of serverDatabaseUnits) {
+    //   allData.push({
+    //     databaseUnit: awesum.toPOJO(serverDatabaseUnit),
+    //   });
+    // }
 
-    var serverRouters = await awesum.AwesumDexieDB.serverRouters.toArray();
-    for (const serverRouter of serverRouters) {
-      allData.push({
-        router: awesum.toPOJO(serverRouter),
-      });
-    }
+    // var serverDatabaseItems = await awesum.AwesumDexieDB.serverDatabaseItems
+    //   .where('appId').notEqual(awesum.publicAppId).toArray();
+    // for (const serverDatabaseItem of serverDatabaseItems) {
+    //   var pojo = awesum.toPOJO(serverDatabaseItem);
+    //   //copy all properties from serverDatabaseItem to pojo except parent
+    //   var dataObj = {} as any;
+    //   for (const key in (serverDatabaseItem as any).data) {
+    //     if (key != "parent" && key != "table") {
+    //       dataObj[key.substring(1)] = (serverDatabaseItem as any).data[key];
+    //     }
+    //   }
+    //   pojo.dataText = JSON.stringify(dataObj);
+    //   allData.push({
+    //     databaseItem: pojo
+    //   });
+    // }
 
-    await this.sync(allData);
+    // var serverFollowerRequests = await awesum.AwesumDexieDB.serverFollowerRequests.filter((x) => 
+    //   x.leaderAppId != awesum.publicAppId && 
+    // x.followerAppId != awesum.publicAppId && 
+    // !(x.followerAppId == awesum.ownerApp.id && x.leaderAppId == awesum.ownerApp.id)).toArray();
+    // for (const serverFollowerRequest of serverFollowerRequests) {
+    //   allData.push({
+    //     followerRequest: awesum.toPOJO(serverFollowerRequest),
+    //   });
+    // }
+
+    // var serverRouters = await awesum.AwesumDexieDB.serverRouters.toArray();
+    // for (const serverRouter of serverRouters) {
+    //   allData.push({
+    //     router: awesum.toPOJO(serverRouter),
+    //   });
+    // }
+
+    // await this.sync(allData);
 
   },
   capitalizeFirstLetter(string: string) {
@@ -615,7 +641,7 @@ isInstanceOfAny(obj: unknown, classList: Function[]) : boolean{
     awesum.router.push({
       path: "/" +
         encodeURIComponent(this.currentApp.uniqueName) + "/" +
-        encodeURIComponent(this.currentDatabase.name) + 
+        encodeURIComponent(this.currentDatabase.name) +
         "/" + encodeURIComponent(this.currentDatabaseUnit.name) + "/" +
         currentDatabaseItem.order,
     });
@@ -698,7 +724,7 @@ isInstanceOfAny(obj: unknown, classList: Function[]) : boolean{
         if (item.database) {
           await awesum.AwesumDexieDB.serverDatabases.put(item.database);
         }
-        
+
         if (item.databaseUnit) {
           await awesum.AwesumDexieDB.serverDatabaseUnits.put(item.databaseUnit);
         }

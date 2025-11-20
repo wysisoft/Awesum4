@@ -1,4 +1,8 @@
 export type syncResponse = {
+  id?: string
+  level?: number
+  values?: Record<string, any>
+  action?: number
   app?: {
     email: string
     name: string
@@ -28,6 +32,7 @@ export type syncResponse = {
     name: string
     order: number
     lastModified: number
+    touched: boolean
     version: number
     id: string
     appId: string
@@ -50,6 +55,7 @@ export type syncResponse = {
     unitId: string
     appId: string
     lastModified: number
+    touched: boolean
     version: number
     databaseId: string
     id: string
@@ -66,6 +72,7 @@ export type syncResponse = {
     leaderEmail: string
     initiatedByFollower: boolean
     lastModified: number
+    touched: boolean
     version: number
     status: number
     groups: string
@@ -76,6 +83,7 @@ export type syncResponse = {
     id: string
     databaseId: string
     lastModified: number
+    touched: boolean
     version: number
   }
   followerDatabaseCompletion?: {
@@ -86,6 +94,7 @@ export type syncResponse = {
     parentItemId: string
     itemLevel: number
     lastModified: number
+    touched: boolean
     version: number
   }
   router?: {
@@ -102,6 +111,7 @@ export type syncResponse = {
     sundayTimesAndDurations: string
     version: number
     lastModified: number
+    touched: boolean
     status: number
   }
   media?: {
@@ -110,15 +120,8 @@ export type syncResponse = {
     data: string
     appId: string
     lastModified: number
+    touched: boolean
   }
-  deletion?: {
-    id: string
-    level: number
-  }
-  message?: {
-    level: number
-    message: string
-    id: string
-  }
+  message?: string
   result?: number
 }

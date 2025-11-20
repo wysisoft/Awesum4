@@ -115,16 +115,16 @@ export default {
       <div >
         <div :style="'width:' + $props.inputWidth + ';'">
           <div class="input-group" style="border:.1svmin solid #bfbfbf;border-radius:.7svmin;">
-            <label :style="{ width: labelWidth }" for="gettingStartedNameInput" class="input-group-text">{{
+            <label style="border:none;" :style="{ width: labelWidth }" for="gettingStartedNameInput" class="input-group-text">{{
               $props.displayName }}</label>
 
-            <component :is="$props.multiline ? 'textarea' : 'input'" spellcheck="false" v-on:input="changeFunction" 
+            <component style="border-top:none;border-bottom:none;" :is="$props.multiline ? 'textarea' : 'input'" spellcheck="false" v-on:input="changeFunction" 
               ref="input" :maxlength="$props.maxLength" :name="$props.name" :value="propertyValue"
               @input="(e: Event) => propertyValue = (e.target as HTMLInputElement).value" :readonly="requiresEditAndSave && !editing" type="text"
               class="form-control" :placeholder="$props.placeholder" :aria-label="$props.displayName"
               :class="errors.length > 0 ? 'is-invalid' : ''" />
 
-            <button class="btn btn-outline-secondary" style="margin:0svmin" type="button" @click="editButtonClicked"
+            <button class="btn btn-outline-secondary" style="border:none;margin:0svmin" type="button" @click="editButtonClicked"
               v-if="requiresEditAndSave && !editing">Edit</button>
             <button class="btn btn-outline-secondary" style="margin:0svmin" type="button" @click="cancelButtonClicked"
               v-if="requiresEditAndSave && editing">Cancel</button>

@@ -6,5 +6,6 @@ export type followerDatabaseCompletion = {
   parentItemId: string
   itemLevel: number
   lastModified: number
+  touched: boolean
   version: number
 }

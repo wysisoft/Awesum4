@@ -12,5 +12,6 @@ export type router = {
   sundayTimesAndDurations: string
   version: number
   lastModified: number
+  touched: boolean
   status: number
 }

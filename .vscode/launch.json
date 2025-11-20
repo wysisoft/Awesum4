@@ -6,7 +6,7 @@
             "type": "node",
             "request": "launch",
             // Debug current file in VSCode
-            "program": "${file}",
+            "program": "bootstrap.ts",
             "runtimeArgs": [
                 "--watch",           // enables hot reload
                 "--inspect"          // exposes debugger port

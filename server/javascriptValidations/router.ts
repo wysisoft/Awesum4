@@ -1,10 +1,10 @@
 'use strict'
-const schema28 = {
+const schema26 = {
 $id: 'router',
 type: 'object',
 properties: {
 id: {
-default: '019a7424-d933-71e8-89c8-201c7194f08a',
+default: '019a9c3d-99d4-7350-b701-c7bcf639647c',
 format: 'uuid',
 type: 'string'},
 appId: { format: 'uuid', type: 'string' },
@@ -51,7 +51,8 @@ format: 'regex',
 pattern: '^([0-9]{2}:[0-9]{2})\\|([0-9]+)$',
 type: 'string'},
 version: { default: 0, minimum: 0, type: 'integer' },
-lastModified: { default: 1762885163315, type: 'number' },
+lastModified: { default: 1763557874132, type: 'number' },
+touched: { default: false, type: 'boolean' },
 status: { default: 1, maximum: 2, type: 'integer' }
 },
 required: [
@@ -68,13 +69,14 @@ required: [
 'sundayTimesAndDurations',
 'version',
 'lastModified',
+'touched',
 'status'
 ]
 }
 const formats2 = /^(?:urn:uuid:)?[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/i
 import * as formats from 'ajv-formats/dist/formats'
-const formats94 = formats.fullFormats.regex as any
-const formats96 = /^(?:(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)\.){3}(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)$/
+const formats90 = formats.fullFormats.regex as any
+const formats92 = /^(?:(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)\.){3}(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)$/
 const pattern1 = new RegExp('^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$', 'u')
 const pattern2 = new RegExp('^([0-9]{2}:[0-9]{2})\\|([0-9]+)$', 'u')
 import type { ErrorObject } from 'ajv'
@@ -109,6 +111,7 @@ if (
 (missing0 = 'sundayTimesAndDurations')) ||
 (data.version === undefined && (missing0 = 'version')) ||
 (data.lastModified === undefined && (missing0 = 'lastModified')) ||
+(data.touched === undefined && (missing0 = 'touched')) ||
 (data.status === undefined && (missing0 = 'status'))
 ) {errors.push(
 {
@@ -199,7 +202,7 @@ pattern: '^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$'},
  message: "Must_be_a_valid_MAC_address"}
 );
 } else {
-if (!formats94(data2)) {errors.push(
+if (!formats90(data2)) {errors.push(
 {
 instancePath: instancePath + '/routerMac',
 schemaPath: '#/properties/routerMac/format',
@@ -232,7 +235,7 @@ const _errs7 = errors
 if (true) {
 if (true) {
 if (typeof data3 === 'string') {
-if (!formats96.test(data3)) {errors.push(
+if (!formats92.test(data3)) {errors.push(
 {
 instancePath: instancePath + '/ipAddress',
 schemaPath: '#/properties/ipAddress/format',
@@ -274,7 +277,7 @@ pattern: '^([0-9]{2}:[0-9]{2})\\|([0-9]+)$'},
  message: "Must_be_a_valid_time_and_duration"}
 );
 } else {
-if (!formats94(data4)) {errors.push(
+if (!formats90(data4)) {errors.push(
 {
 instancePath: instancePath + '/mondayTimesAndDurations',
 schemaPath: '#/properties/mondayTimesAndDurations/format',
@@ -317,7 +320,7 @@ pattern: '^([0-9]{2}:[0-9]{2})\\|([0-9]+)$'},
  message: "Must_be_a_valid_time_and_duration"}
 );
 } else {
-if (!formats94(data5)) {errors.push(
+if (!formats90(data5)) {errors.push(
 {
 instancePath: instancePath + '/tuesdayTimesAndDurations',
 schemaPath: '#/properties/tuesdayTimesAndDurations/format',
@@ -360,7 +363,7 @@ pattern: '^([0-9]{2}:[0-9]{2})\\|([0-9]+)$'},
  message: "Must_be_a_valid_time_and_duration"}
 );
 } else {
-if (!formats94(data6)) {errors.push(
+if (!formats90(data6)) {errors.push(
 {
 instancePath: instancePath + '/wednesdayTimesAndDurations',
 schemaPath: '#/properties/wednesdayTimesAndDurations/format',
@@ -403,7 +406,7 @@ pattern: '^([0-9]{2}:[0-9]{2})\\|([0-9]+)$'},
  message: "Must_be_a_valid_time_and_duration"}
 );
 } else {
-if (!formats94(data7)) {errors.push(
+if (!formats90(data7)) {errors.push(
 {
 instancePath: instancePath + '/thursdayTimesAndDurations',
 schemaPath: '#/properties/thursdayTimesAndDurations/format',
@@ -446,7 +449,7 @@ pattern: '^([0-9]{2}:[0-9]{2})\\|([0-9]+)$'},
  message: "Must_be_a_valid_time_and_duration"}
 );
 } else {
-if (!formats94(data8)) {errors.push(
+if (!formats90(data8)) {errors.push(
 {
 instancePath: instancePath + '/fridayTimesAndDurations',
 schemaPath: '#/properties/fridayTimesAndDurations/format',
@@ -489,7 +492,7 @@ pattern: '^([0-9]{2}:[0-9]{2})\\|([0-9]+)$'},
  message: "Must_be_a_valid_time_and_duration"}
 );
 } else {
-if (!formats94(data9)) {errors.push(
+if (!formats90(data9)) {errors.push(
 {
 instancePath: instancePath + '/saturdayTimesAndDurations',
 schemaPath: '#/properties/saturdayTimesAndDurations/format',
@@ -532,7 +535,7 @@ pattern: '^([0-9]{2}:[0-9]{2})\\|([0-9]+)$'},
  message: "Must_be_a_valid_time_and_duration"}
 );
 } else {
-if (!formats94(data10)) {errors.push(
+if (!formats90(data10)) {errors.push(
 {
 instancePath: instancePath + '/sundayTimesAndDurations',
 schemaPath: '#/properties/sundayTimesAndDurations/format',
@@ -624,15 +627,31 @@ var valid0 = _errs25 === errors
 var valid0 = true
 }
 if (valid0) {
-if (data.status !== undefined) {
-let data13 = data.status
+if (data.touched !== undefined) {
 const _errs27 = errors
+if (typeof data.touched !== 'boolean') {errors.push(
+{
+instancePath: instancePath + '/touched',
+schemaPath: '#/properties/touched/type',
+keyword: 'type',
+params: { type: 'boolean' },
+ message: "Must_be_a_boolean"}
+);
+}
+var valid0 = _errs27 === errors
+} else {
+var valid0 = true
+}
+if (valid0) {
+if (data.status !== undefined) {
+let data14 = data.status
+const _errs29 = errors
 if (
 !(
-typeof data13 == 'number' &&
-!(data13 % 1) &&
-!isNaN(data13) &&
-isFinite(data13)
+typeof data14 == 'number' &&
+!(data14 % 1) &&
+!isNaN(data14) &&
+isFinite(data14)
 )
 ) {errors.push(
 {
@@ -645,10 +664,10 @@ params: { type: 'integer' },
 }
 if (true) {
 if (
-typeof data13 == 'number' &&
-isFinite(data13)
+typeof data14 == 'number' &&
+isFinite(data14)
 ) {
-if (data13 > 2 || isNaN(data13)) {errors.push(
+if (data14 > 2 || isNaN(data14)) {errors.push(
 {
 instancePath: instancePath + '/status',
 schemaPath: '#/properties/status/maximum',
@@ -662,9 +681,10 @@ limit: 2
 }
 }
 }
-var valid0 = _errs27 === errors
+var valid0 = _errs29 === errors
 } else {
 var valid0 = true
+}
 }
 }
 }

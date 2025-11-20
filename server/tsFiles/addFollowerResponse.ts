@@ -9,6 +9,7 @@ export type addFollowerResponse = {
     leaderEmail: string
     initiatedByFollower: boolean
     lastModified: number
+    touched: boolean
     version: number
     status: number
     groups: string

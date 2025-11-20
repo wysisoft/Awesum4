@@ -17,19 +17,6 @@
   "lastSync" NUMERIC NOT NULL
 );
 
-DROP TABLE IF EXISTS awesum."Deletion";
-    CREATE TABLE awesum."Deletion" (
-  "id" UUID PRIMARY KEY NOT NULL,
-  "level" INTEGER NOT NULL
-);
-
-DROP TABLE IF EXISTS awesum."Message";
-    CREATE TABLE awesum."Message" (
-  "level" INTEGER NOT NULL,
-  "message" VARCHAR(100) NOT NULL,
-  "id" UUID PRIMARY KEY NOT NULL
-);
-
 DROP TABLE IF EXISTS awesum."Database";
     CREATE TABLE awesum."Database" (
   "name" VARCHAR(100) NOT NULL,
@@ -47,6 +34,7 @@ DROP TABLE IF EXISTS awesum."DatabaseUnit";
   "name" VARCHAR(100) NOT NULL,
   "order" INTEGER NOT NULL,
   "lastModified" NUMERIC NOT NULL,
+  "touched" BOOLEAN NOT NULL,
   "version" INTEGER NOT NULL,
   "id" UUID PRIMARY KEY NOT NULL,
   "appId" UUID NOT NULL,
@@ -71,6 +59,7 @@ DROP TABLE IF EXISTS awesum."DatabaseItem";
   "unitId" UUID NOT NULL,
   "appId" UUID NOT NULL,
   "lastModified" NUMERIC NOT NULL,
+  "touched" BOOLEAN NOT NULL,
   "version" INTEGER NOT NULL,
   "databaseId" UUID NOT NULL,
   "id" UUID PRIMARY KEY NOT NULL,
@@ -84,6 +73,7 @@ DROP TABLE IF EXISTS awesum."FollowerDatabase";
   "id" UUID PRIMARY KEY NOT NULL,
   "databaseId" UUID NOT NULL,
   "lastModified" NUMERIC NOT NULL,
+  "touched" BOOLEAN NOT NULL,
   "version" INTEGER NOT NULL
 );
 
@@ -98,6 +88,7 @@ DROP TABLE IF EXISTS awesum."FollowerRequest";
   "leaderEmail" VARCHAR(100) NOT NULL,
   "initiatedByFollower" BOOLEAN NOT NULL,
   "lastModified" NUMERIC NOT NULL,
+  "touched" BOOLEAN NOT NULL,
   "version" INTEGER NOT NULL,
   "status" INTEGER NOT NULL,
   "groups" VARCHAR(8000) NOT NULL,
@@ -110,7 +101,8 @@ DROP TABLE IF EXISTS awesum."Media";
   "size" INTEGER NOT NULL,
   "data" VARCHAR(8000) NOT NULL,
   "appId" UUID NOT NULL,
-  "lastModified" NUMERIC NOT NULL
+  "lastModified" NUMERIC NOT NULL,
+  "touched" BOOLEAN NOT NULL
 );
 
 DROP TABLE IF EXISTS awesum."FollowerDatabaseCompletion";
@@ -122,6 +114,7 @@ DROP TABLE IF EXISTS awesum."FollowerDatabaseCompletion";
   "parentItemId" UUID NOT NULL,
   "itemLevel" INTEGER NOT NULL,
   "lastModified" NUMERIC NOT NULL,
+  "touched" BOOLEAN NOT NULL,
   "version" INTEGER NOT NULL
 );
 
@@ -140,6 +133,7 @@ DROP TABLE IF EXISTS awesum."Router";
   "sundayTimesAndDurations" VARCHAR NOT NULL,
   "version" INTEGER NOT NULL,
   "lastModified" NUMERIC NOT NULL,
+  "touched" BOOLEAN NOT NULL,
   "status" INTEGER NOT NULL
 );
 

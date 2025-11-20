@@ -28,4 +28,6 @@ rm -r ../bun/dist || true && npm run build && cp -r dist ../bun/dist
 bun run automation
 bun run index.ts --env=dev
 
-npx kysely-codegen --out-file ./db/db.d.ts --type-mapping='{"numeric":"number"}'
+DATABASE_URL='postgresql://postgres:This4Now!@localhost:5
+432/awesumDev' npx kysely-codegen --out-file ./db/db.d.ts --type-mapping='{"numeric":"
+number"}'

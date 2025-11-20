@@ -6,6 +6,16 @@
  */
 
 export interface ServerSyncRequestInterface {
+  id?: string;
+  level?: number;
+  values?: {
+    /**
+     * This interface was referenced by `undefined`'s JSON-Schema definition
+     * via the `patternProperty` "^(.*)$".
+     */
+    
+  };
+  action?: number;
   app?: App;
   database?: Database;
   databaseUnit?: DatabaseUnit;
@@ -15,7 +25,6 @@ export interface ServerSyncRequestInterface {
   router?: Router;
   followerDatabaseCompletion?: FollowerDatabaseCompletion;
   media?: Media;
-  deletion?: Deletion;
   
 }
 export interface App {
@@ -49,6 +58,7 @@ export interface DatabaseUnit {
   name: string;
   order: number;
   lastModified: number;
+  touched: boolean;
   version: number;
   id: string;
   appId: string;
@@ -72,6 +82,7 @@ export interface DatabaseItem {
   unitId: string;
   appId: string;
   lastModified: number;
+  touched: boolean;
   version: number;
   databaseId: string;
   id: string;
@@ -89,6 +100,7 @@ export interface FollowerRequest {
   leaderEmail: string;
   initiatedByFollower: boolean;
   lastModified: number;
+  touched: boolean;
   version: number;
   status: number;
   groups: string;
@@ -100,6 +112,7 @@ export interface FollowerDatabase {
   id: string;
   databaseId: string;
   lastModified: number;
+  touched: boolean;
   version: number;
   
 }
@@ -117,6 +130,7 @@ export interface Router {
   sundayTimesAndDurations: string;
   version: number;
   lastModified: number;
+  touched: boolean;
   status: number;
   
 }
@@ -128,6 +142,7 @@ export interface FollowerDatabaseCompletion {
   parentItemId: string;
   itemLevel: number;
   lastModified: number;
+  touched: boolean;
   version: number;
   
 }
@@ -137,10 +152,6 @@ export interface Media {
   data: string;
   appId: string;
   lastModified: number;
-  
-}
-export interface Deletion {
-  id: string;
-  level: number;
+  touched: boolean;
   
 }

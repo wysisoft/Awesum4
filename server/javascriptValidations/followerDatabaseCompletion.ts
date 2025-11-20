@@ -1,10 +1,10 @@
 'use strict'
-const schema26 = {
+const schema24 = {
 $id: 'followerDatabaseCompletion',
 type: 'object',
 properties: {
 id: {
-default: '019a7424-d933-71e8-89c8-1f4a59116eff',
+default: '019a9c3d-99d4-7350-b701-c0052e1f3922',
 format: 'uuid',
 type: 'string'},
 followerRequestId: { format: 'uuid', type: 'string' },
@@ -13,6 +13,7 @@ itemId: { format: 'uuid', type: 'string' },
 parentItemId: { format: 'uuid', type: 'string' },
 itemLevel: { minimum: 0, maximum: 8, type: 'integer' },
 lastModified: { type: 'number' },
+touched: { default: false, type: 'boolean' },
 version: { minimum: 0, type: 'integer' }
 },
 required: [
@@ -23,6 +24,7 @@ required: [
 'parentItemId',
 'itemLevel',
 'lastModified',
+'touched',
 'version'
 ]
 }
@@ -48,6 +50,7 @@ if (
 (data.parentItemId === undefined && (missing0 = 'parentItemId')) ||
 (data.itemLevel === undefined && (missing0 = 'itemLevel')) ||
 (data.lastModified === undefined && (missing0 = 'lastModified')) ||
+(data.touched === undefined && (missing0 = 'touched')) ||
 (data.version === undefined && (missing0 = 'version'))
 ) {errors.push(
 {
@@ -280,15 +283,31 @@ var valid0 = _errs13 === errors
 var valid0 = true
 }
 if (valid0) {
-if (data.version !== undefined) {
-let data7 = data.version
+if (data.touched !== undefined) {
 const _errs15 = errors
+if (typeof data.touched !== 'boolean') {errors.push(
+{
+instancePath: instancePath + '/touched',
+schemaPath: '#/properties/touched/type',
+keyword: 'type',
+params: { type: 'boolean' },
+ message: "Must_be_a_boolean"}
+);
+}
+var valid0 = _errs15 === errors
+} else {
+var valid0 = true
+}
+if (valid0) {
+if (data.version !== undefined) {
+let data8 = data.version
+const _errs17 = errors
 if (
 !(
-typeof data7 == 'number' &&
-!(data7 % 1) &&
-!isNaN(data7) &&
-isFinite(data7)
+typeof data8 == 'number' &&
+!(data8 % 1) &&
+!isNaN(data8) &&
+isFinite(data8)
 )
 ) {errors.push(
 {
@@ -300,8 +319,8 @@ params: { type: 'integer' },
 );
 }
 if (true) {
-if (typeof data7 == 'number' && isFinite(data7)) {
-if (data7 < 0 || isNaN(data7)) {errors.push(
+if (typeof data8 == 'number' && isFinite(data8)) {
+if (data8 < 0 || isNaN(data8)) {errors.push(
 {
 instancePath: instancePath + '/version',
 schemaPath: '#/properties/version/minimum',
@@ -312,9 +331,10 @@ params: { comparison: '>=', limit: 0 },
 }
 }
 }
-var valid0 = _errs15 === errors
+var valid0 = _errs17 === errors
 } else {
 var valid0 = true
+}
 }
 }
 }

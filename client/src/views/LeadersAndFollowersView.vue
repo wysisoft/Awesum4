@@ -34,11 +34,17 @@ export default {
         title: 'Created', data: 'lastModified'
         , width: '10svmin', // Set the width to 9svmin
         className: 'text-center', // Center the content
+        render: function (data: any) {
+          return new Date(data).toLocaleDateString();
+        }
       },
       {
         title: 'Status', data: 'status'
         , width: '10svmin', // Set the width to 9svmin
         className: 'text-center', // Center the content
+        render: function (data: any) {
+          return followerRequestStatus[data];
+        }
       },
       {
         title: 'Actions',
@@ -107,15 +113,21 @@ export default {
 
       },
       {
-        title: 'Created', data: 'created'
+        title: 'Created', data: 'lastModified'
         , width: '10svmin', // Set the width to 9svmin
         className: 'text-center', // Center the content
+        render: function (data: any) {
+          return new Date(data).toLocaleDateString()
+        }
 
       },
       {
         title: 'Status', data: 'status'
         , width: '10svmin', // Set the width to 9svmin
         className: 'text-center', // Center the content
+        render: function (data: any) {
+          return followerRequestStatus[data];
+        }
       },
       {
         title: 'Actions',
@@ -207,7 +219,7 @@ export default {
     async approve(follower: ServerFollowerRequestInterface) {
       follower.status = followerRequestStatus.Approved;
 
-      
+
       var response = await fetch(window.location.origin + "/api/sync", {
         method: 'POST',
         headers: {
@@ -225,7 +237,7 @@ export default {
 
       follower.status = followerRequestStatus.Rejected;
 
-      
+
       var response = await fetch(window.location.origin + "/api/sync", {
         method: 'POST',
         headers: {
@@ -248,20 +260,11 @@ export default {
         }
       });
     },
-    async reject(follower: ServerFollowerRequestInterface) {
-      
-      var response = await fetch(window.location.origin + "/api/rejectLeader", {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: "{\"request\":\"" + follower.id + "\"}",
-        credentials: "include",
-      });
+    async respond(follower: ServerFollowerRequestInterface) {
 
-      if (response.ok) {
-        await awesum.AwesumDexieDB.serverFollowerRequests.delete(follower.id);
-      }
+      awesum.router.push({
+        path: "/i/LeadersAndFollowers/Leader/" + follower.leaderEmail
+      });
     },
     editFollower(row: ServerFollowerRequestInterface) {
       // Implement your edit logic here
@@ -295,13 +298,14 @@ export default {
             type="button" @click="$router.push({ query: { order, activeView: 'leaders' } })">
             Manage Leaders
           </button>
-          
-      </p>
-        <h2 style="margin-top:2svmin;font-size:3.5svmin;">{{ activeView === 'followers' ? "People Following You" : "People You Follow" }}</h2>
-<p>
-        <router-link v-if="activeView == 'followers'"
-          :to="'/' + $t($resources.i.key) +  '/' + $t($resources.LeadersAndFollowers.key) + '/' + $t($resources.AddFollower.key)" class="btn btn-primary"
-          style="margin-bottom:0svmin;">Add Person Following You</router-link>
+
+        </p>
+        <h2 style="margin-top:2svmin;font-size:3.5svmin;">{{ activeView === 'followers' ? "People Following You" :
+          "People You Follow" }}</h2>
+        <p>
+          <router-link v-if="activeView == 'followers'"
+            :to="'/' + $t($resources.i.key) + '/' + $t($resources.LeadersAndFollowers.key) + '/' + $t($resources.AddFollower.key)"
+            class="btn btn-primary" style="margin-bottom:0svmin;">Add Person Following You</router-link>
         </p>
         <div style="padding-right:1svmin;">
 
@@ -318,7 +322,7 @@ export default {
             <template #buttons="props">
               <button class="btn btn-primary" style="font-size:2.2svmin;padding:0.5svmin 1svmin;" type="button"
                 v-if="props.rowData.status == followerRequestStatus.Pending"
-                v-on:click="reject(props.rowData)">Reject</button>
+                v-on:click="respond(props.rowData)">Respond</button>
               <button v-if="props.rowData.status == followerRequestStatus.Approved" class="btn btn-primary"
                 type="button" v-on:click="unfollowAsLeader(props.rowData)"
                 style="font-size:2.2svmin;padding:0.5svmin 1svmin;">Remove</button>
@@ -402,13 +406,14 @@ export default {
   padding-left: 1svmin;
 }
 
-.dt-paging > nav{
+.dt-paging>nav {
   display: flex;
-  gap:.5svmin;
+  gap: .5svmin;
 }
+
 .dt-search {
   position: relative;
-  top:v-bind(searchTop);
-  height:0svmin;
+  top: v-bind(searchTop);
+  height: 0svmin;
 }
 </style>

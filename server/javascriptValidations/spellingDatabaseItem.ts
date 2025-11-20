@@ -1,5 +1,5 @@
 'use strict'
-const schema29 = {
+const schema27 = {
 $id: 'spellingDatabaseItem',
 type: 'object',
 properties: {
@@ -57,6 +57,7 @@ order: { minimum: 0, type: 'integer' },
 unitId: { format: 'uuid', type: 'string' },
 appId: { format: 'uuid', type: 'string' },
 lastModified: { type: 'number' },
+touched: { default: false, type: 'boolean' },
 version: { minimum: 0, type: 'integer' },
 databaseId: { format: 'uuid', type: 'string' },
 id: { format: 'uuid', type: 'string' },
@@ -69,6 +70,7 @@ required: [
 'unitId',
 'appId',
 'lastModified',
+'touched',
 'version',
 'databaseId',
 'id',
@@ -95,6 +97,7 @@ if (
 (data.unitId === undefined && (missing0 = 'unitId')) ||
 (data.appId === undefined && (missing0 = 'appId')) ||
 (data.lastModified === undefined && (missing0 = 'lastModified')) ||
+(data.touched === undefined && (missing0 = 'touched')) ||
 (data.version === undefined && (missing0 = 'version')) ||
 (data.databaseId === undefined && (missing0 = 'databaseId')) ||
 (data.id === undefined && (missing0 = 'id')) ||
@@ -864,15 +867,31 @@ var valid0 = _errs37 === errors
 var valid0 = true
 }
 if (valid0) {
-if (data.version !== undefined) {
-let data19 = data.version
+if (data.touched !== undefined) {
 const _errs39 = errors
+if (typeof data.touched !== 'boolean') {errors.push(
+{
+instancePath: instancePath + '/touched',
+schemaPath: '#/properties/touched/type',
+keyword: 'type',
+params: { type: 'boolean' },
+ message: "Must_be_a_boolean"}
+);
+}
+var valid0 = _errs39 === errors
+} else {
+var valid0 = true
+}
+if (valid0) {
+if (data.version !== undefined) {
+let data20 = data.version
+const _errs41 = errors
 if (
 !(
-typeof data19 == 'number' &&
-!(data19 % 1) &&
-!isNaN(data19) &&
-isFinite(data19)
+typeof data20 == 'number' &&
+!(data20 % 1) &&
+!isNaN(data20) &&
+isFinite(data20)
 )
 ) {errors.push(
 {
@@ -884,8 +903,8 @@ params: { type: 'integer' },
 );
 }
 if (true) {
-if (typeof data19 == 'number' && isFinite(data19)) {
-if (data19 < 0 || isNaN(data19)) {errors.push(
+if (typeof data20 == 'number' && isFinite(data20)) {
+if (data20 < 0 || isNaN(data20)) {errors.push(
 {
 instancePath: instancePath + '/version',
 schemaPath: '#/properties/version/minimum',
@@ -896,18 +915,18 @@ params: { comparison: '>=', limit: 0 },
 }
 }
 }
-var valid0 = _errs39 === errors
+var valid0 = _errs41 === errors
 } else {
 var valid0 = true
 }
 if (valid0) {
 if (data.databaseId !== undefined) {
-let data20 = data.databaseId
-const _errs41 = errors
+let data21 = data.databaseId
+const _errs43 = errors
 if (true) {
 if (true) {
-if (typeof data20 === 'string') {
-if (!formats2.test(data20)) {errors.push(
+if (typeof data21 === 'string') {
+if (!formats2.test(data21)) {errors.push(
 {
 instancePath: instancePath + '/databaseId',
 schemaPath: '#/properties/databaseId/format',
@@ -928,18 +947,18 @@ message: 'must be string'
 }
 }
 }
-var valid0 = _errs41 === errors
+var valid0 = _errs43 === errors
 } else {
 var valid0 = true
 }
 if (valid0) {
 if (data.id !== undefined) {
-let data21 = data.id
-const _errs43 = errors
+let data22 = data.id
+const _errs45 = errors
 if (true) {
 if (true) {
-if (typeof data21 === 'string') {
-if (!formats2.test(data21)) {errors.push(
+if (typeof data22 === 'string') {
+if (!formats2.test(data22)) {errors.push(
 {
 instancePath: instancePath + '/id',
 schemaPath: '#/properties/id/format',
@@ -960,17 +979,17 @@ message: 'must be string'
 }
 }
 }
-var valid0 = _errs43 === errors
+var valid0 = _errs45 === errors
 } else {
 var valid0 = true
 }
 if (valid0) {
 if (data.dataText !== undefined) {
-let data22 = data.dataText
-const _errs45 = errors
+let data23 = data.dataText
+const _errs47 = errors
 if (true) {
-if (typeof data22 === 'string') {
-if (func4(data22) > 8000) {errors.push(
+if (typeof data23 === 'string') {
+if (func4(data23) > 8000) {errors.push(
 {
 instancePath: instancePath + '/dataText',
 schemaPath: '#/properties/dataText/maxLength',
@@ -990,9 +1009,10 @@ message: 'must be string'
 );
 }
 }
-var valid0 = _errs45 === errors
+var valid0 = _errs47 === errors
 } else {
 var valid0 = true
+}
 }
 }
 }
