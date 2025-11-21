@@ -96,17 +96,19 @@ export const awesum = reactive({
       | ServerDatabaseItemInterface,
     route: RouteLocationNormalized
   ) {
-    var settings = (route ? route : awesum.router.currentRoute).path.toLocaleLowerCase()
+    
+    var hasThingAfterI = (route ? route : awesum.router.currentRoute).path.toLocaleLowerCase()
       .startsWith(
-        ("/" + I18nGlobal.t(resources.i.key) + "/" + I18nGlobal.t(resources.Settings.key)).toLocaleLowerCase(),
+        ("/" + I18nGlobal.t(resources.i.key) + "/" ).toLocaleLowerCase(),
       );
+      
     var returnValue = "";
     switch (true) {
 
 
       case obj instanceof ClientFollowerDatabase:
         returnValue = "IDontKnow"
-        if (settings) {
+        if (hasThingAfterI) {
           returnValue = "/" + I18nGlobal.t(resources.i.key) + "/" + I18nGlobal.t(resources.Settings.key) + 
 
             returnValue;
@@ -115,7 +117,7 @@ export const awesum = reactive({
       case obj instanceof ClientApp:
 
         returnValue = "/" + encodeURIComponent(obj.uniqueName);
-        if (settings) {
+        if (hasThingAfterI) {
           returnValue = "/" + I18nGlobal.t(resources.i.key) + "/" + I18nGlobal.t(resources.Settings.key) +
 
             returnValue;
@@ -124,7 +126,7 @@ export const awesum = reactive({
       case obj instanceof ClientDatabase:
         returnValue = "/" + encodeURIComponent(awesum.currentApp.uniqueName) + "/" +
           encodeURIComponent(obj.name);
-        if (settings) {
+        if (hasThingAfterI) {
           returnValue = "/" + I18nGlobal.t(resources.i.key) + "/" + I18nGlobal.t(resources.Settings.key) +
 
             returnValue;
@@ -135,7 +137,7 @@ export const awesum = reactive({
         returnValue = "/" + encodeURIComponent(awesum.currentApp.uniqueName) + "/" +
           encodeURIComponent(awesum.currentDatabase.name) + "/" +
           encodeURIComponent(obj.name);
-        if (settings) {
+        if (hasThingAfterI) {
           returnValue = "/" + I18nGlobal.t(resources.i.key) + "/" + I18nGlobal.t(resources.Settings.key) + 
 
             returnValue;
@@ -145,7 +147,7 @@ export const awesum = reactive({
         returnValue = "/" + encodeURIComponent(awesum.currentApp.uniqueName) + "/" +
           encodeURIComponent(awesum.currentDatabase.name) + "/" +
           encodeURIComponent(awesum.currentDatabaseUnit.name) + "/" + obj.order;
-        if (settings) {
+        if (hasThingAfterI) {
           returnValue = "/" + I18nGlobal.t(resources.i.key) + "/" + I18nGlobal.t(resources.Settings.key) + 
 
             returnValue;
@@ -423,6 +425,9 @@ export const awesum = reactive({
     debugger;
     for (const item of syncResponse) {
       if(item.id){
+        if (item.level == ItemLevel.app && item.action == syncAction.add && item.values) {
+          await this.putOwnerAppInsideDatabase(item.values as ServerAppInterface);
+        }
         if (item.level == ItemLevel.app && item.action == syncAction.modify && item.values) {
             for (const key in item.values as Record<string, any>) {
               this.setTablePropertyValueById(item.id, key, (item.values as Record<string, any>)[key], this.AwesumDexieDB.serverApps, true);

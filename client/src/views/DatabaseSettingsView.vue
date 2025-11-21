@@ -161,9 +161,9 @@ export default {
       </h2>
       <div v-for="typ in $awesum.currentDatabaseUnits" class="listItem"
         style="margin-bottom:1svmin;display:flex;align-items:baseline;">
-
+<div>{{ $router.currentRoute.value.fullPath + '/' + encodeURIComponent(typ.name) }}</div>
         <router-link
-          :to="$awesum.replaceAtFront('/' + $t($resources.Apps.key) + '/' + encodeURIComponent($awesum.currentApp.name) + '/' + encodeURIComponent($awesum.currentDatabase.name) + '/' + typ.name, '/' + $t($resources.Apps.key), '/' + $t($resources.Settings.key) + '/' + $t($resources.i.key))"
+          :to="$router.currentRoute.value.fullPath + '/' + encodeURIComponent(typ.name)"
           class="btn btn-primary" style="margin-left:2svmin;">{{ $t($resources.Edit.key) }}</router-link>
         <button class="btn btn-primary" style="margin-left:1svmin;" v-on:click="showDeleteModal(typ)">{{
           $t($resources.Delete.key) }}</button>
@@ -198,19 +198,19 @@ export default {
       <router-link custom
         :to="{ path: $awesum.getDynamicUrl($awesum.currentDatabase as ServerDatabaseInterface, $awesum.router.currentRoute) + '/EditJson' }"
         v-slot="{ href }">
-        <button @click="$router.push(href)" style="margin-left:2svmin;" class="btn btn-primary">
+        <button @click="$router.push(href)" style="margin-left:2svmin;margin-bottom:1svmin;" class="btn btn-primary">
           <span>{{ $t($resources.Edit_Json.key) }}</span>
         </button>
       </router-link>
 
 
-      <h2 style="font-size:3.5svmin;">{{ $t($resources.Database_Settings.key) }}</h2>
+      <h2 style="font-size:3.5svmin;margin-top:1svmin;">{{ $t($resources.Database_Settings.key) }}</h2>
       <EditTextComponent :labelWidth="'17svmin'" style="margin-left:2svmin;" :inputWidth="'99%'" :required="true" :requiresEditAndSave="true"
         :maxLength="100" :forbiddenChars="'/'"
         :redirectUrlAfterSave="'/' + $t($resources.i.key) +'/' + $t($resources.Settings.key) + '/' + encodeURI($awesum.currentApp.name) + '/'"
         :parentObject="$awesum.currentDatabase" :displayName="'Name'" :propertyName="'name'" />
 
-      <h2 style="font-size:3.5svmin;margin-top:1svmin;">{{ $t($resources.Background_Image.key) }}</h2>
+      <h2 style="font-size:3.5svmin;margin-top:2svmin;">{{ $t($resources.Background_Image.key) }}</h2>
       <EditImageComponent style="margin-left:2svmin;" ref="homepageImage"
         :imageType="$awesum.currentDatabase.homePageIconType" :image="$awesum.currentDatabase.homePageIcon" />
 

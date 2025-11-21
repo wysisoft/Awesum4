@@ -6,7 +6,7 @@ import { awesum } from '@/awesum';
 import { v7 as uuid } from "uuid";
 import { validatePushAppRequest } from '../../../server/javascriptClientValidations/pushAppRequest';
 import { types } from '../../../server/typebox';
-import { audioType, imageType } from "../../../server/typebox";
+import { audioType, imageType, ItemLevel, syncAction } from "../../../server/typebox";
 import { Value } from '@sinclair/typebox/value'
 import type { ServerAppInterface } from '../../../server/serverInterfaces/ServerAppInterface';
 import { constants } from '../../../server/constants';
@@ -53,14 +53,29 @@ export default {
         return;
       }
 
-      var jsonPayload = [{ app: this.payload }] as ServerSyncRequestInterface[];
-      //parse the payload and catch all the ZODErrors
-      var errors = await validateSyncRequest(jsonPayload[0]);
-      if (errors.length > 0) {
-        return;
+      if(awesum.ownerApp.id){
+        await awesum.sync([{
+          id: awesum.ownerApp.id,
+          level: ItemLevel.app,
+          action: syncAction.modify,
+          values: {
+            name: this.payload.name,
+            uniqueName: this.payload.uniqueName,
+          }
+        }]);
       }
-
-      var response = await awesum.sync(jsonPayload);      
+      else {
+        await awesum.sync([{
+          id: this.payload.id,
+          level: ItemLevel.app,
+          action: syncAction.add,
+          values: {
+            name: this.payload.name,
+            uniqueName: this.payload.uniqueName,
+            email: this.payload.email,
+          }
+        }]);
+      }
 
       awesum.router.push({ name: I18nGlobal.t(resources.Home.key) });
 

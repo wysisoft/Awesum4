@@ -181,7 +181,7 @@ export default {
           $t($resources.Add_Database.key) }}</button>
       </div>
 
-      <h2 v-if="$awesum.currentDatabases.length > 0" style="font-size:3.5svmin; ">{{
+      <h2 v-if="$awesum.currentDatabases.length > 0" style="font-size:3.5svmin;margin-top:1svmin ">{{
         $t($resources.Edit_Databases.key) }}</h2>
       <div v-for="database in $awesum.currentDatabases" class="listItem"
         style="display:flex;flex-direction:row;align-items:baseline">
@@ -199,7 +199,7 @@ export default {
         <div class="areaNameDiv">{{ database.name }}</div>
       </div>
 
-      <h2 style="font-size:3.5svmin;">{{ $t($resources.App_Settings.key) }}</h2>
+      <h2 style="font-size:3.5svmin;margin-top:1svmin;">{{ $t($resources.App_Settings.key) }}</h2>
 
       <EditTextComponent  style="margin-left:2svmin;" :labelWidth="'16.5svmin'" :inputWidth="'99%'" :required="true"
         :forbiddenChars="'/'" :requiresEditAndSave="true" :redirectUrlAfterSave="'/' + $t($resources.Settings.key)"
@@ -207,7 +207,7 @@ export default {
         :validation-function="validateApp" />
 
 
-      <h2 style="font-size:3.5svmin;margin-top:1svmin;">{{ $t($resources.Background_Image.key) }}</h2>
+      <h2 style="font-size:3.5svmin;margin-top:2svmin;">{{ $t($resources.Background_Image.key) }}</h2>
       <EditImageComponent style="margin-left:2svmin;" ref="homepageImage"
         :imageType="$awesum.currentApp.homePageImageType" :image="$awesum.currentApp.homePageImage"
         :inputWidth="'99%'" />

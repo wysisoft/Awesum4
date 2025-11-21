@@ -1,6 +1,12 @@
 
 import { exec, execSync } from 'node:child_process';
-import { chromium,test } from '@playwright/test';
+import { test } from '@playwright/test';
+// it augments the installed playwright with plugin functionality
+import { chromium } from 'playwright-extra';
+
+// Load the stealth plugin and use defaults (all tricks to hide playwright usage)
+// Note: playwright-extra is compatible with most puppeteer-extra plugins
+import stealth from 'puppeteer-extra-plugin-stealth'()
 execSync('npx tsx automation.ts');
 execSync('pkill chrome');
 execSync('find ~/.config/google-chrome -type d -name IndexedDB -exec rm -rf {}/* \;');

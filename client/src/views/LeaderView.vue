@@ -42,7 +42,7 @@ export default {
       ]);
 
       this.$router.push({
-        path: "/i/LeadersAndFollowers?order=[[%221%22,%22desc%22]]&activeView=leaders"
+        path: '/i/LeadersAndFollowers?order=[["1","desc"]]&activeView=leaders'
       });
     },
     async reject(follower: ServerFollowerRequestInterface) {

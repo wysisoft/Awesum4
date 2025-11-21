@@ -145,11 +145,11 @@ export default {
     },
     showEdit() {
       return this.$awesum.currentApp && this.$awesum.currentApp.id == this.$awesum.ownerApp.id && this.$awesum.currentApp.uniqueName
-        && this.$route.fullPath.indexOf("/" + I18nGlobal.t(resources.Settings.key) + "/") == -1
-        && this.$route.name != 'unitCompleted'
+        && !this.$route.fullPath.startsWith("/" + I18nGlobal.t(resources.i.key) + "/")
+        
     },
     showPlay() {
-      return this.$router.currentRoute.value.fullPath.startsWith('/' + I18nGlobal.t(resources.Settings.key) + '/');
+      return this.$router.currentRoute.value.fullPath.startsWith('/' + I18nGlobal.t(resources.i.key) + '/');
     }
   }
 };
@@ -173,7 +173,7 @@ export default {
           </button>
         </router-link>
 
-        <router-link custom :to="{ path: '/' + $t($resources.Settings.key) + $router.currentRoute.value.fullPath }"
+        <router-link custom :to="{ path: '/' + $t($resources.i.key) + '/' + $t($resources.Settings.key) + $router.currentRoute.value.fullPath }"
           v-slot="{ href }" v-if="showEdit()">
           <button :disabled="!$awesum.currentApp || !$awesum.currentApp.uniqueName" @click="$router.push(href)"
             class="btn btn-link">
@@ -183,7 +183,7 @@ export default {
         </router-link>
 
         <router-link custom
-          :to="{ path: $awesum.replaceAtFront($router.currentRoute.value.fullPath, '/' + $t($resources.Settings.key) + '/' + $t($resources.i.key), '') }"
+          :to="{ path: $awesum.replaceAtFront($router.currentRoute.value.fullPath, '/' +  $t($resources.i.key) + '/' + $t($resources.Settings.key) , '') }"
           v-slot="{ href }" v-if="showPlay()">
           <button v-if="$awesum.currentApp && $awesum.currentApp.uniqueName" @click="$router.push(href)"
             class="btn btn-link">

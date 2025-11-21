@@ -93,7 +93,7 @@ const routes = [
     component: AppSettingsView,
   },
   {
-    path: '/' + I18nGlobal.t(resources.i.key) + '/' + I18nGlobal.t(resources.Settings.key) + '/:app/:database/AddAssignment',
+    path: '/' + I18nGlobal.t(resources.i.key) + '/AddAssignment/:app/:database',
     name: I18nGlobal.t(resources.Add_Assignment.key),
     component: async () => {
       return AddAssignmentView;
@@ -323,8 +323,13 @@ router.beforeEach(async (to: RouteLocationNormalized, from: RouteLocationNormali
     breadcrumbs.push({
       name: I18nGlobal.t(resources.Settings.key),
       url: routes.find(x => x.name == I18nGlobal.t(resources.Settings.key))?.path ?? ""
+    });
+  }
 
-
+  if (to.fullPath.startsWith("/" + I18nGlobal.t(resources.i.key) + "/" + I18nGlobal.t(resources.AddAssignment.key))) {
+    breadcrumbs.push({
+      name: I18nGlobal.t(resources.Settings.key),
+      url: routes.find(x => x.name == I18nGlobal.t(resources.Settings.key))?.path ?? ""
     });
   }
 
@@ -514,6 +519,12 @@ router.beforeEach(async (to: RouteLocationNormalized, from: RouteLocationNormali
 
   }
 
+  if (to.fullPath.startsWith("/" + I18nGlobal.t(resources.i.key) + "/" + I18nGlobal.t(resources.AddAssignment.key))) {
+    breadcrumbs.push({
+      name: I18nGlobal.t(resources.Add_Assignment.key),
+      url: routes.find(x => x.name == I18nGlobal.t(resources.AddAssignment.key))?.path ?? ""
+    });
+  }
 
 awesum.breadcrumb = breadcrumbs;
 

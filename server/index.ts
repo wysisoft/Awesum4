@@ -1,6 +1,9 @@
 
 //@bun
+import { types } from './typebox';
+import type { ServerAppInterface } from './serverInterfaces/ServerAppInterface';
 
+import { Value } from '@sinclair/typebox/value'
 
 import { Kysely, PostgresDialect, HandleEmptyInListsPlugin, type HandleEmptyInListsOptions, pushValueIntoList } from 'kysely';
 import { type AwesumApp, type AwesumFollowerRequest, type AwesumFollowerDatabase, type DB, type AwesumFollowerDatabaseCompletion, type AwesumDatabaseUnit, type AwesumDatabaseItem, type AwesumRouter, type AwesumDatabase, type AwesumDnsEntry } from './db/db';
@@ -358,7 +361,7 @@ async function ensureFreshAccessToken(req: Request, res: Response, next: NextFun
 
 import type { ServerDisplayNameFromEmailResponseInterface } from './serverInterfaces/ServerDisplayNameFromEmailResponseInterface';
 import { validateFollowerRequest } from './javascriptValidations/followerRequest';
-import type { ErrorObject } from 'ajv';
+import { AsyncValidateFunction, ErrorObject, ValidationError } from 'ajv';
 import { validateDnsEntry } from './javascriptValidations/dnsEntry';
 console.log("Starting server...");
 
@@ -532,6 +535,7 @@ app.post("/api/sync", express.json({ limit: '1mb' }), async (req: express.Reques
   try {
     let syncRequestType = null;
     const userEmail = (req as any).user.emails[0];
+    const userProvider = (req as any).user.provider;
 
     const syncRequestArray = req.body as ServerSyncRequestInterface[];
     const syncResponseArray: ServerSyncResponseInterface[] = [];
@@ -1012,11 +1016,39 @@ app.post("/api/sync", express.json({ limit: '1mb' }), async (req: express.Reques
 
       if (item.id) {
         if (item.level == ItemLevel.app
-          && item.action == syncAction.delete
-          && item.id == foundLeaderAppId
+          && item.action == syncAction.add
+          && !foundApps[item.id]
+          && (item.values as AwesumApp).email == userEmail
         ) {
-
-          await DeleteApp(foundLeaderAppId, syncResponseArray, res);
+          var defaultApp = Value.Default(types.filter((x) => x.$id == "app")[0], {}) as ServerAppInterface;
+          defaultApp.authenticationType = userProvider;
+          for (const key in item.values as any) {
+            defaultApp[key] = (item.values as any)[key];
+          }
+          var validationErrors = await validateApp(defaultApp);
+          if (validationErrors.length > 0) {
+            for (const error of validationErrors) {
+              syncResponseArray.push({
+                id: (item.values as AwesumApp).id,
+                result: syncResultType.failedValidation,
+                message: error.message
+              });
+            }
+          }
+          else {
+            defaultApp.id = item.id;
+            defaultApp.lastSync = new Date().getTime();
+            await db.insertInto('awesum.App').values(defaultApp as AwesumApp).execute();
+            syncResponseArray.push(
+              {
+                id: defaultApp.id,
+                level: ItemLevel.app,
+                action: syncAction.add,
+                values: defaultApp
+              });
+              res.status(200).send(syncResponseArray);
+              return;
+          }
         }
 
         if (item.level == ItemLevel.followerRequest
@@ -1025,11 +1057,11 @@ app.post("/api/sync", express.json({ limit: '1mb' }), async (req: express.Reques
           && item.values
         ) {
           const followerRequest = foundFollowerRequests[item.id];
-          
-            for (const key in item.values as any) {
-              followerRequest[key] = (item.values as any)[key];
-            }
-          
+
+          for (const key in item.values as any) {
+            followerRequest[key] = (item.values as any)[key];
+          }
+
           await db.updateTable('awesum.FollowerRequest').set(followerRequest as AwesumFollowerRequest).where('id', '=', followerRequest.id).execute();
 
           const wses = socketConnections.get(item.values['status'] == followerRequestStatus.Approved ? followerRequest.leaderEmail : followerRequest.followerEmail);
@@ -1047,11 +1079,9 @@ app.post("/api/sync", express.json({ limit: '1mb' }), async (req: express.Reques
       if (item.app) {
         const app = foundApps[item.app.id];
 
-        if (!app && (
+        if (!app &&
           //don't think this is needed
-          item.app.id == foundLeaderAppId
-          //new app being created
-          || item.app.email == userEmail)) {
+          item.app.email == userEmail) {
 
           var validationErrors = await validateApp(item.app);
           if (validationErrors.length > 0) {
@@ -1086,11 +1116,11 @@ app.post("/api/sync", express.json({ limit: '1mb' }), async (req: express.Reques
               id: item.app.id,
               level: ItemLevel.app,
               action: syncAction.modify,
-              values: 
+              values:
                 {
                   lastSync: new Date().getTime()
                 } as Partial<AwesumApp>
-              
+
             });
         }
       }

@@ -234,6 +234,7 @@ export const types = [
                 },
             ),
             groups: Type.String({
+                default: "",
                 maxLength: 8000,
                 maxLengthMessage: "Must_be_less_than_8000_characters",
             }),
