@@ -1,0 +1,1 @@
+{"$id":"addAssignmentRequest","type":"object","properties":{"group":{"maxLength":100,"default":"","type":"string"},"followerRequestId":{"format":"uuid","type":"string"},"databaseId":{"minLength":1,"format":"uuid","type":"string"}},"required":["group","followerRequestId","databaseId"]}

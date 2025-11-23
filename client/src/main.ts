@@ -47,7 +47,7 @@ const app = createApp(App);
 
 const options: PluginOptions = {
     position:POSITION.BOTTOM_RIGHT,
-    timeout: 3044,
+    timeout: 20000,
     closeOnClick: true,
     pauseOnFocusLoss: true,
     pauseOnHover: true,

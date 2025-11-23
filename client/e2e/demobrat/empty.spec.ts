@@ -17,6 +17,8 @@ async function launchWithRecorder() {
   const page = await browser.pages()[0];
   await page.goto('https://dev.awesum.app/');
 
+  page.pause();
+
 }
 
 launchWithRecorder().catch(console.error);

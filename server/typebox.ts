@@ -137,7 +137,8 @@ export enum ItemLevel {
     followerDatabaseCompletion,
     followerDatabase,
     followerRequest,
-    router
+    router,
+    addAssignmentRequest
 }
 
 export enum followerRequestStatus {
@@ -781,6 +782,26 @@ export const types = [
             }),
         },
         { $id: "followerDatabase" },
+    ),
+    Type.Object(
+        {
+            group: Type.String({
+                maxLength: 100,
+                maxLengthMessage: "Must_be_less_than_100_characters",
+                default: "",
+            }),
+            followerRequestId: Type.String({
+                format: "uuid",
+                formatMessage: "Must_be_a_valid_UUID",
+            }),
+            databaseId: Type.String({
+                minLength: 1,
+                minLengthMessage: "Required",
+                format: "uuid",
+                formatMessage: "Must_be_a_valid_UUID",
+            }),
+        },
+        { $id: "addAssignmentRequest" },
     ),
     Type.Object(
         {

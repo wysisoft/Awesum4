@@ -1,16 +1,16 @@
 'use strict'
-const schema40 = {
+const schema41 = {
 $id: 'dnsEntry',
 type: 'object',
 properties: {
 timestamp: { type: 'number' },
 domain: { type: 'string' },
 routerId: {
-default: '019aa7ad-aa4c-72af-a448-c520e6e3be7d',
+default: '019aae7b-ab6c-754a-af44-3931c65be5dd',
 format: 'uuid',
 type: 'string'},
 id: {
-default: '019aa7ad-aa4c-72af-a448-ca1e751b19e1',
+default: '019aae7b-ab6c-754a-af44-3d4647ebdfe8',
 format: 'uuid',
 type: 'string'
 }

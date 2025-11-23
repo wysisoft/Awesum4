@@ -28,11 +28,11 @@ import type { RouteLocationNormalized } from "vue-router";
 import type { ServerRouterInterface } from "../../server/serverInterfaces/ServerRouterInterface";
 import type { ServerSpellingDatabaseItemInterface } from "../../server/serverInterfaces/ServerSpellingDatabaseItemInterface";
 import type { ServerOneByOneMathDatabaseItemInterface } from "../../server/serverInterfaces/ServerOneByOneMathDatabaseItemInterface";
-import  { useToast } from "vue-toastification";
+import { useToast } from "vue-toastification";
 //@ts-ignore
 const appVersion = __APP_VERSION__;
 export const awesum = reactive({
-  toast:{} as ReturnType<typeof useToast>,
+  toast: {} as ReturnType<typeof useToast>,
   touchedObjects: new Map<string, { tableName: string, fieldName: string }>(),
   debugText: "",
   appVersion: appVersion,
@@ -96,12 +96,12 @@ export const awesum = reactive({
       | ServerDatabaseItemInterface,
     route: RouteLocationNormalized
   ) {
-    
+
     var hasThingAfterI = (route ? route : awesum.router.currentRoute).path.toLocaleLowerCase()
       .startsWith(
-        ("/" + I18nGlobal.t(resources.i.key) + "/" ).toLocaleLowerCase(),
+        ("/" + I18nGlobal.t(resources.i.key) + "/").toLocaleLowerCase(),
       );
-      
+
     var returnValue = "";
     switch (true) {
 
@@ -109,7 +109,7 @@ export const awesum = reactive({
       case obj instanceof ClientFollowerDatabase:
         returnValue = "IDontKnow"
         if (hasThingAfterI) {
-          returnValue = "/" + I18nGlobal.t(resources.i.key) + "/" + I18nGlobal.t(resources.Settings.key) + 
+          returnValue = "/" + I18nGlobal.t(resources.i.key) + "/" + I18nGlobal.t(resources.Settings.key) +
 
             returnValue;
         }
@@ -138,7 +138,7 @@ export const awesum = reactive({
           encodeURIComponent(awesum.currentDatabase.name) + "/" +
           encodeURIComponent(obj.name);
         if (hasThingAfterI) {
-          returnValue = "/" + I18nGlobal.t(resources.i.key) + "/" + I18nGlobal.t(resources.Settings.key) + 
+          returnValue = "/" + I18nGlobal.t(resources.i.key) + "/" + I18nGlobal.t(resources.Settings.key) +
 
             returnValue;
         }
@@ -148,7 +148,7 @@ export const awesum = reactive({
           encodeURIComponent(awesum.currentDatabase.name) + "/" +
           encodeURIComponent(awesum.currentDatabaseUnit.name) + "/" + obj.order;
         if (hasThingAfterI) {
-          returnValue = "/" + I18nGlobal.t(resources.i.key) + "/" + I18nGlobal.t(resources.Settings.key) + 
+          returnValue = "/" + I18nGlobal.t(resources.i.key) + "/" + I18nGlobal.t(resources.Settings.key) +
 
             returnValue;
         }
@@ -159,6 +159,7 @@ export const awesum = reactive({
 
     return returnValue;
   },
+
 
   setTablePropertyValueById(
     id: string,
@@ -424,28 +425,40 @@ export const awesum = reactive({
   async processSyncResponse(syncResponse: ServerSyncResponseInterface[]) {
     debugger;
     for (const item of syncResponse) {
-      if(item.id){
+      if (item.id) {
+        if (item.level == ItemLevel.followerDatabase && item.action == syncAction.add && item.values) {
+          await awesum.AwesumDexieDB.serverFollowerDatabases.put(item.values as ServerFollowerDatabaseInterface);
+          await awesum.refreshCurrentFollowerDatabases();
+          awesum.router.push({ path: awesum.getDynamicUrl(awesum.currentDatabase, awesum.router.currentRoute) });
+        }
         if (item.level == ItemLevel.app && item.action == syncAction.add && item.values) {
           await this.putOwnerAppInsideDatabase(item.values as ServerAppInterface);
         }
         if (item.level == ItemLevel.app && item.action == syncAction.modify && item.values) {
-            for (const key in item.values as Record<string, any>) {
-              this.setTablePropertyValueById(item.id, key, (item.values as Record<string, any>)[key], this.AwesumDexieDB.serverApps, true);
-            }
+          for (const key in item.values as Record<string, any>) {
+            this.setTablePropertyValueById(item.id, key, (item.values as Record<string, any>)[key], this.AwesumDexieDB.serverApps, true);
           }
-        if (item.level == ItemLevel.followerRequest && 
+        }
+        if (item.level == ItemLevel.followerRequest &&
           item.action == syncAction.modify && item.values) {
           for (const key in item.values as Record<string, any>) {
             this.setTablePropertyValueById(item.id, key, (item.values as Record<string, any>)[key], this.AwesumDexieDB.serverFollowerRequests, true);
           }
           this.toast.success('Hello, world! This is a toast message.');
-          
+
         }
       }
       if (item.app && item.result == syncResultType.added) {
         await awesum.putOwnerAppInsideDatabase(item.app as ServerAppInterface);
       }
-      
+
+      if (item.id && item.level == ItemLevel.followerRequest && item.action == syncAction.add && item.values) {
+        await awesum.AwesumDexieDB.serverFollowerRequests.put(item.values as ServerFollowerRequestInterface);
+        await awesum.refreshServerFollowerRequests();
+
+        awesum.router.push({ path: "/i/LeadersAndFollowers/Leader/" + encodeURI((item.values as ServerFollowerRequestInterface).leaderEmail) });
+      }
+
       if (item.followerRequest) {
         await awesum.AwesumDexieDB.serverFollowerRequests.put(item.followerRequest);
         await awesum.refreshServerFollowerRequests();

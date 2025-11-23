@@ -179,8 +179,8 @@ export default {
 
       <button v-if="$awesum.currentApp.id != $awesum.publicAppId" class="btn btn-primary"
         style="margin-left:2svmin;margin-bottom:1svmin;"
-        v-on:click="$router.push({ path: '/' + $t($resources.Settings.key) + '/' + $t($resources.i.key) + '/' + encodeURI($awesum.currentApp.name) + '/' + encodeURI($awesum.currentDatabase.name) + '/AddAssignment' })">{{
-          $t($resources.Add_Assignment.key) }}</button>
+        v-on:click="$router.push({ path: '/'+ $t($resources.i.key) + '/' + $t($resources.AddAssignment.key) + '/' + encodeURI($awesum.currentApp.name) + '/' + encodeURI($awesum.currentDatabase.name)  })">{{
+          $t($resources.Add_Assignment.key) }}</button> 
 
       <div v-for="typ in getCurrentAssignments()" class="listItem">
 

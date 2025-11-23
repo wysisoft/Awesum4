@@ -1,5 +1,5 @@
 'use strict'
-const schema35 = {
+const schema36 = {
 $id: 'addFollowerResponse',
 type: 'object',
 properties: {
@@ -16,7 +16,7 @@ default: '00000000-0000-0000-0000-000000000000',
 format: 'uuid',
 type: 'string'},
 id: {
-default: '019aa7ad-aa4c-72af-a448-b68102a036ec',
+default: '019aae7b-ab6b-730e-b242-98c3621f39ff',
 format: 'uuid',
 type: 'string'},
 followerName: {
@@ -44,7 +44,7 @@ doesEmailExist: true,
 default: 'leader@example.com',
 type: 'string'},
 initiatedByFollower: { default: false, type: 'boolean' },
-lastModified: { default: 1763749767756, type: 'number' },
+lastModified: { default: 1763863931755, type: 'number' },
 touched: { default: false, type: 'boolean' },
 version: { default: 0, minimum: 0, type: 'integer' },
 status: { default: 0, minimum: 0, maximum: 2, type: 'integer' },

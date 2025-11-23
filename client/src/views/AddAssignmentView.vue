@@ -7,12 +7,13 @@ import { QrcodeStream, QrcodeDropZone, QrcodeCapture } from 'vue-qrcode-reader'
 import QRCodeVue3 from '@/qrcode-vue3/QRCodeVue3.vue';
 import EditMultiselectComponent from '@/components/EditMultiselectComponent.vue';
 import { Value } from '@sinclair/typebox/value'
-import { types,imageType } from '../../../server/typebox';
+import { types, imageType } from '../../../server/typebox';
 import type { ServerFollowerDatabaseInterface } from '../../../server/serverInterfaces/ServerFollowerDatabaseInterface';
 import { validateFollowerDatabase } from '../../../server/javascriptClientValidations/followerDatabase';
 import type { ServerSyncRequestInterface } from '../../../server/serverInterfaces/ServerSyncRequestInterface';
-import { syncAction } from '../../../server/typebox';
+import { syncAction, ItemLevel } from '../../../server/typebox';
 import type { ServerFollowerRequestInterface } from '../../../server/serverInterfaces/ServerFollowerRequestInterface';
+import type { ServerDatabaseInterface } from '../../../server/serverInterfaces/ServerDatabaseInterface';
 export default {
   components: {
     EditMultiselectComponent
@@ -21,7 +22,6 @@ export default {
   setup() {
     //awesum.serverApp.groups is a comma separated string of groups
     let addAssignmentPayload = Value.Default(types.filter((x) => x.$id == "followerDatabase")[0], {}) as ServerFollowerDatabaseInterface;
-    
 
     let users = ref({});
     let groups = ref({});
@@ -41,16 +41,16 @@ export default {
       isSelectionValid
     };
   },
-  async beforeCreate  () {
+  async beforeCreate() {
     this.addAssignmentPayload.databaseId = this.$awesum.currentDatabase.id;
     var allUsers = await this.$awesum.AwesumDexieDB.serverFollowerRequests.where("leaderAppId").equals(this.$awesum.ownerApp.id)
-    .and((x) => x.followerAppId != this.$awesum.ownerApp.id)
-    .toArray() as ServerFollowerRequestInterface[];
-    for(const user of allUsers) {
+      .and((x) => x.followerAppId != this.$awesum.ownerApp.id)
+      .toArray() as ServerFollowerRequestInterface[];
+    for (const user of allUsers) {
       (this.users as any)[user.id] = user.followerName + " (" + user.followerEmail + ")";
     }
-    for(const group of this.$awesum.ownerApp.groups.split(',')) {
-      if(group.trim()) {
+    for (const group of this.$awesum.ownerApp.groups.split(',')) {
+      if (group.trim()) {
         (this.groups as any)[group] = group;
       }
     }
@@ -61,31 +61,28 @@ export default {
       this.selectedUserOrGroup = ''; // Reset selection when switching types
     },
     async addAssignment() {
-      this.addAssignmentPayload.followerRequestId = this.selectedUserOrGroup;
 
-        //parse the payload and catch all the ZODErrors
-        var errors = await validateFollowerDatabase(this.addAssignmentPayload);
-        if (errors.length > 0) {
-          return;
-        }
 
-        var syncRequest:Array<ServerSyncRequestInterface> = [];
-      syncRequest.push({
-        id: this.addAssignmentPayload.id,
-        action: syncAction.add,
-        followerDatabase: this.addAssignmentPayload
-      });
-      
-      await awesum.sync(syncRequest);
-
-        this.$awesum.router.push({
-          path: "/" + this.$t(resources.i.key) + "/" + this.$t(resources.LeadersAndFollowers.key), query: {
-            activeView: "followers",
-            order: '[[2,"asc"]]'
-          }
-        });
-        
+      if (this.assignmentType === 'user') {
+        await awesum.sync([{
+          id: this.addAssignmentPayload.id,
+          action: syncAction.add,
+          level: ItemLevel.followerDatabase,
+          values: {
+            databaseId: this.$awesum.currentDatabase.id,
+            followerRequestId: this.selectedUserOrGroup,
+          } as ServerFollowerDatabaseInterface
+        }])
       }
+      else {
+        alert('not implemented yet');
+      }
+
+      this.$awesum.router.push({
+        path: awesum.getDynamicUrl(this.$awesum.currentDatabase as ServerDatabaseInterface, this.$awesum.router.currentRoute)
+      });
+
+    }
 
 
 
@@ -116,59 +113,41 @@ export default {
     <div class="content">
 
       <div class="mb-3">
-        <label class="form-label">Assignment Type</label>
-        <div class="btn-group" role="group" aria-label="Assignment type toggle">
-          <button 
-            type="button" 
-            class="btn" 
-            :class="assignmentType === 'user' ? 'btn-primary' : 'btn-outline-primary'"
-            @click="setAssignmentType('user')"
-          >
-            User
+
+        <div style="margin-top:1svmin;margin-bottom:2svmin;" class="btn-group" role="group"
+          aria-label="Assignment type toggle">
+          <button type="button" class="btn" :class="assignmentType === 'user' ? 'btn-primary' : 'btn-outline-primary'"
+            @click="setAssignmentType('user')">
+            Assign to User
           </button>
-          <button 
-            type="button" 
-            class="btn" 
-            :class="assignmentType === 'group' ? 'btn-primary' : 'btn-outline-primary'"
-            @click="setAssignmentType('group')"
-          >
-            Group
+          <button type="button" class="btn" :class="assignmentType === 'group' ? 'btn-primary' : 'btn-outline-primary'"
+            @click="setAssignmentType('group')">
+            Assign to Group
           </button>
         </div>
       </div>
 
       <div class="mb-3">
-        <label class="form-label" v-if="assignmentType === 'user'">Select User</label>
-        <label class="form-label" v-else>Select Group</label>
-        <select 
-          v-model="selectedUserOrGroup" 
-          class="form-select" 
-          :aria-label="assignmentType === 'user' ? 'Select user' : 'Select group'"
-        >
+
+
+        <select style="margin-left:0svmin;width:97svmin;" v-model="selectedUserOrGroup" class="form-select"
+          :aria-label="assignmentType === 'user' ? 'Select user' : 'Select group'">
           <option value="" disabled>-- Select {{ assignmentType === 'user' ? 'User' : 'Group' }} --</option>
-          <option 
-            v-if="assignmentType === 'user'"
-            v-for="userId in Object.keys(users)" 
-            :key="userId"
-            :value="userId"
-          >
+          <option v-if="assignmentType === 'user'" v-for="userId in Object.keys(users)" :key="userId" :value="userId">
             {{ users[userId as keyof typeof users] }}
           </option>
-          <option 
-            v-if="assignmentType === 'group'"
-            v-for="groupName in Object.keys(groups)" 
-            :key="groupName"
-            :value="groupName"
-          >
+          <option v-if="assignmentType === 'group'" v-for="groupName in Object.keys(groups)" :key="groupName"
+            :value="groupName">
             {{ groups[groupName as keyof typeof groups] }}
           </option>
         </select>
       </div>
 
-      <div class="modal-footer" style="justify-content:space-between;margin-top:3svmin;">
+      <div class="modal-footer" style="justify-content:space-between;margin-top:3svmin;width:97svmin;">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" ref="cancelButton"
           @click="$router.push({ name: 'AppDatabaseSettings', params: { app: $awesum.currentApp.name, database: $awesum.currentDatabase.name } })">Cancel</button>
-        <button type="button" class="btn btn-primary" ref="submitButton" @click="addAssignment()" :disabled="!isSelectionValid">Submit</button>
+        <button type="button" class="btn btn-primary" ref="submitButton" @click="addAssignment()"
+          :disabled="!isSelectionValid">Submit</button>
       </div>
     </div>
   </div>

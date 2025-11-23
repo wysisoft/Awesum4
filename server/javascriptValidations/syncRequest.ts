@@ -1,10 +1,10 @@
 'use strict'
-const schema32 = {
+const schema33 = {
 $id: 'syncRequest',
 type: 'object',
 properties: {
 id: { format: 'uuid', type: 'string' },
-level: { minimum: 0, maximum: 8, type: 'integer' },
+level: { minimum: 0, maximum: 9, type: 'integer' },
 values: { type: 'object', patternProperties: { '^(.*)$': {} } },
 action: { minimum: 0, maximum: 3, type: 'integer' },
 app: {
@@ -30,7 +30,7 @@ isNameGloballyUnique: true,
 transform: ['trim', 'toLowerCase'],
 type: 'string'},
 version: { default: 0, minimum: 0, type: 'integer' },
-lastModified: { default: 1763749767755, type: 'number' },
+lastModified: { default: 1763863931755, type: 'number' },
 homePageImageType: {
 default: 0,
 minimum: 0,
@@ -54,7 +54,7 @@ type: 'string'},
 enableNarrator: { default: false, type: 'boolean' },
 groups: { default: '', maxLength: 8000, type: 'string' },
 id: {
-default: '019aa7ad-aa4b-73bf-bf4b-9c60761520a4',
+default: '019aae7b-ab6b-730e-b242-8d22861a9117',
 format: 'uuid',
 minLength: 36,
 type: 'string'},
@@ -81,11 +81,11 @@ $id: 'database',
 type: 'object',
 properties: {
 name: { minLength: 1, maxLength: 100, type: 'string' },
-lastModified: { default: 1763749767756, type: 'number' },
+lastModified: { default: 1763863931755, type: 'number' },
 version: { default: 0, minimum: 0, type: 'integer' },
 appId: { format: 'uuid', type: 'string' },
 id: {
-default: '019aa7ad-aa4c-72af-a448-aeaa7fe987d4',
+default: '019aae7b-ab6b-730e-b242-91812e9d220a',
 format: 'uuid',
 type: 'string'},
 order: { default: 0, minimum: 0, type: 'integer' },
@@ -218,7 +218,7 @@ default: '00000000-0000-0000-0000-000000000000',
 format: 'uuid',
 type: 'string'},
 id: {
-default: '019aa7ad-aa4c-72af-a448-b68102a036ec',
+default: '019aae7b-ab6b-730e-b242-98c3621f39ff',
 format: 'uuid',
 type: 'string'},
 followerName: {
@@ -246,7 +246,7 @@ doesEmailExist: true,
 default: 'leader@example.com',
 type: 'string'},
 initiatedByFollower: { default: false, type: 'boolean' },
-lastModified: { default: 1763749767756, type: 'number' },
+lastModified: { default: 1763863931755, type: 'number' },
 touched: { default: false, type: 'boolean' },
 version: { default: 0, minimum: 0, type: 'integer' },
 status: { default: 0, minimum: 0, maximum: 2, type: 'integer' },
@@ -279,14 +279,14 @@ default: '00000000-0000-0000-0000-000000000000',
 format: 'uuid',
 type: 'string'},
 id: {
-default: '019aa7ad-aa4c-72af-a448-b1ede7bd84ed',
+default: '019aae7b-ab6b-730e-b242-97bf061174de',
 format: 'uuid',
 type: 'string'},
 databaseId: {
 default: '00000000-0000-0000-0000-000000000000',
 format: 'uuid',
 type: 'string'},
-lastModified: { default: 1763749767756, type: 'number' },
+lastModified: { default: 1763863931755, type: 'number' },
 touched: { default: false, type: 'boolean' },
 version: { default: 0, minimum: 0, type: 'integer' }
 },
@@ -304,7 +304,7 @@ $id: 'router',
 type: 'object',
 properties: {
 id: {
-default: '019aa7ad-aa4c-72af-a448-c3e309baec50',
+default: '019aae7b-ab6b-730e-b242-a43d01174e09',
 format: 'uuid',
 type: 'string'},
 appId: { format: 'uuid', type: 'string' },
@@ -351,7 +351,7 @@ format: 'regex',
 pattern: '^([0-9]{2}:[0-9]{2})\\|([0-9]+)$',
 type: 'string'},
 version: { default: 0, minimum: 0, type: 'integer' },
-lastModified: { default: 1763749767756, type: 'number' },
+lastModified: { default: 1763863931755, type: 'number' },
 touched: { default: false, type: 'boolean' },
 status: { default: 1, maximum: 2, type: 'integer' }
 },
@@ -378,14 +378,14 @@ $id: 'followerDatabaseCompletion',
 type: 'object',
 properties: {
 id: {
-default: '019aa7ad-aa4c-72af-a448-bcce92816473',
+default: '019aae7b-ab6b-730e-b242-a008a656a16a',
 format: 'uuid',
 type: 'string'},
 followerRequestId: { format: 'uuid', type: 'string' },
 description: { maxLength: 1000, type: 'string' },
 itemId: { format: 'uuid', type: 'string' },
 parentItemId: { format: 'uuid', type: 'string' },
-itemLevel: { minimum: 0, maximum: 8, type: 'integer' },
+itemLevel: { minimum: 0, maximum: 9, type: 'integer' },
 lastModified: { type: 'number' },
 touched: { default: false, type: 'boolean' },
 version: { minimum: 0, type: 'integer' }
@@ -407,7 +407,7 @@ $id: 'media',
 type: 'object',
 properties: {
 id: {
-default: '019aa7ad-aa4c-72af-a448-bb52c6d3ae4a',
+default: '019aae7b-ab6b-730e-b242-9f97d3ef2169',
 format: 'uuid',
 type: 'string'},
 size: { minimum: 0, type: 'integer' },
@@ -423,8 +423,8 @@ required: ['id', 'size', 'data', 'appId', 'lastModified', 'touched']
 const formats2 = /^(?:urn:uuid:)?[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/i
 const formats0 = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/i
 import * as formats from 'ajv-formats/dist/formats'
-const formats90 = formats.fullFormats.regex as any
-const formats92 = /^(?:(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)\.){3}(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)$/
+const formats94 = formats.fullFormats.regex as any
+const formats96 = /^(?:(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)\.){3}(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)$/
 const func2 = (await import('ajv-keywords/dist/definitions/transform')).default.transform
 .toLowerCase
 const func3 = (await import('ajv-keywords/dist/definitions/transform')).default.transform.trim
@@ -495,12 +495,12 @@ params: { type: 'integer' },
 }
 if (true) {
 if (typeof data1 == 'number' && isFinite(data1)) {
-if (data1 > 8 || isNaN(data1)) {errors.push(
+if (data1 > 9 || isNaN(data1)) {errors.push(
 {
 instancePath: instancePath + '/level',
 schemaPath: '#/properties/level/maximum',
 keyword: 'maximum',
-params: { comparison: '<=', limit: 8 },
+params: { comparison: '<=', limit: 9 },
  message: "Must_be_less_than_or_equal_to_maximum"}
 );
 } else {
@@ -3870,7 +3870,7 @@ pattern: '^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$'},
  message: "Must_be_a_valid_MAC_address"}
 );
 } else {
-if (!formats90(data83)) {errors.push(
+if (!formats94(data83)) {errors.push(
 {
 instancePath: instancePath + '/router/routerMac',
 schemaPath: '#/properties/router/properties/routerMac/format',
@@ -3904,7 +3904,7 @@ const _errs169 = errors
 if (true) {
 if (true) {
 if (typeof data84 === 'string') {
-if (!formats92.test(data84)) {errors.push(
+if (!formats96.test(data84)) {errors.push(
 {
 instancePath: instancePath + '/router/ipAddress',
 schemaPath: '#/properties/router/properties/ipAddress/format',
@@ -3951,7 +3951,7 @@ pattern: '^([0-9]{2}:[0-9]{2})\\|([0-9]+)$'},
  message: "Must_be_a_valid_time_and_duration"}
 );
 } else {
-if (!formats90(data85)) {errors.push(
+if (!formats94(data85)) {errors.push(
 {
 instancePath: instancePath + '/router/mondayTimesAndDurations',
 schemaPath: '#/properties/router/properties/mondayTimesAndDurations/format',
@@ -4002,7 +4002,7 @@ pattern: '^([0-9]{2}:[0-9]{2})\\|([0-9]+)$'},
  message: "Must_be_a_valid_time_and_duration"}
 );
 } else {
-if (!formats90(data86)) {errors.push(
+if (!formats94(data86)) {errors.push(
 {
 instancePath: instancePath + '/router/tuesdayTimesAndDurations',
 schemaPath: '#/properties/router/properties/tuesdayTimesAndDurations/format',
@@ -4054,7 +4054,7 @@ pattern: '^([0-9]{2}:[0-9]{2})\\|([0-9]+)$'},
 );
 } else {
 if (
-!formats90(data87)
+!formats94(data87)
 ) {errors.push(
 {
 instancePath: instancePath + '/router/wednesdayTimesAndDurations',
@@ -4107,7 +4107,7 @@ pattern: '^([0-9]{2}:[0-9]{2})\\|([0-9]+)$'},
 );
 } else {
 if (
-!formats90(data88)
+!formats94(data88)
 ) {errors.push(
 {
 instancePath: instancePath + '/router/thursdayTimesAndDurations',
@@ -4162,7 +4162,7 @@ pattern: '^([0-9]{2}:[0-9]{2})\\|([0-9]+)$'},
 );
 } else {
 if (
-!formats90(data89)
+!formats94(data89)
 ) {errors.push(
 {
 instancePath: instancePath + '/router/fridayTimesAndDurations',
@@ -4219,7 +4219,7 @@ pattern: '^([0-9]{2}:[0-9]{2})\\|([0-9]+)$'},
 );
 } else {
 if (
-!formats90(
+!formats94(
 data90
 )
 ) {errors.push(
@@ -4280,7 +4280,7 @@ pattern: '^([0-9]{2}:[0-9]{2})\\|([0-9]+)$'},
 );
 } else {
 if (
-!formats90(
+!formats94(
 data91
 )
 ) {errors.push(
@@ -4745,7 +4745,7 @@ typeof data102 == 'number' &&
 isFinite(data102)
 ) {
 if (
-data102 > 8 ||
+data102 > 9 ||
 isNaN(data102)
 ) {errors.push(
 {
@@ -4754,7 +4754,7 @@ schemaPath: '#/properties/followerDatabaseCompletion/properties/itemLevel/maximu
 keyword: 'maximum',
 params: {
 comparison: '<=',
-limit: 8
+limit: 9
 },
  message: "Must_be_less_than_or_equal_to_maximum"}
 );

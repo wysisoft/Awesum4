@@ -17,6 +17,8 @@ async function launchWithRecorder() {
   const page = await browser.pages()[0];
   await page.goto('https://dev.awesum.app/');
 
+  page.pause();
+
   // Now the recorder extension should be active, and you can start recording manually
 }
 

@@ -1,7 +1,7 @@
 <script lang="ts">
 import { v7 as uuidv7, validate } from 'uuid';
 import { Value } from '@sinclair/typebox/value'
-import { types,imageType, syncAction } from '../../../server/typebox';
+import { types,imageType, syncAction, ItemLevel } from '../../../server/typebox';
 
 import { I18nGlobal } from '@/i18nGlobal';
 import { resources } from '@/resources/Resources';
@@ -95,7 +95,9 @@ let groups = reactive({value:''});
       var syncRequest:Array<ServerSyncRequestInterface> = [];
       syncRequest.push({
         action: syncAction.add,
-        followerRequest:this.payload
+        id:this.payload.id,
+        level:ItemLevel.followerRequest,
+        values:this.payload,
       });
       
       await awesum.sync(syncRequest);

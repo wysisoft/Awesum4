@@ -1,17 +1,17 @@
 'use strict'
-const schema24 = {
+const schema25 = {
 $id: 'followerDatabaseCompletion',
 type: 'object',
 properties: {
 id: {
-default: '019aa7ad-aa4c-72af-a448-bcce92816473',
+default: '019aae7b-ab6b-730e-b242-a008a656a16a',
 format: 'uuid',
 type: 'string'},
 followerRequestId: { format: 'uuid', type: 'string' },
 description: { maxLength: 1000, type: 'string' },
 itemId: { format: 'uuid', type: 'string' },
 parentItemId: { format: 'uuid', type: 'string' },
-itemLevel: { minimum: 0, maximum: 8, type: 'integer' },
+itemLevel: { minimum: 0, maximum: 9, type: 'integer' },
 lastModified: { type: 'number' },
 touched: { default: false, type: 'boolean' },
 version: { minimum: 0, type: 'integer' }
@@ -240,12 +240,12 @@ params: { type: 'integer' },
 }
 if (true) {
 if (typeof data5 == 'number' && isFinite(data5)) {
-if (data5 > 8 || isNaN(data5)) {errors.push(
+if (data5 > 9 || isNaN(data5)) {errors.push(
 {
 instancePath: instancePath + '/itemLevel',
 schemaPath: '#/properties/itemLevel/maximum',
 keyword: 'maximum',
-params: { comparison: '<=', limit: 8 },
+params: { comparison: '<=', limit: 9 },
  message: "Must_be_less_than_or_equal_to_maximum"}
 );
 } else {

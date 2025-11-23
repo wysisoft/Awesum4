@@ -1,5 +1,5 @@
 'use strict'
-const schema22 = {
+const schema23 = {
 $id: 'resetAllServerDataResponse',
 type: 'object',
 properties: {
