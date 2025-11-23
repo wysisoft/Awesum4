@@ -11,6 +11,9 @@ export default {
             viewData,
             syncResultType,
         };
+    },
+    beforeCreate() {
+        if(awesum.ownerApp.touched) {
     }
 };
 </script>

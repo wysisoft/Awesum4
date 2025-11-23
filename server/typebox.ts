@@ -191,6 +191,10 @@ export const types = [
                 minimumMessage: "Must_be_greater_than_or_equal_to_0",
                 typeMessage: "Must_be_an_integer",
             }),
+            touched: Type.Boolean({
+                default: false,
+                typeMessage: "Must_be_a_boolean",
+            }),
 
             lastModified: Type.Number({
                 default: new Date().getTime(),
@@ -933,7 +937,6 @@ export const types = [
                 format: "uuid",
                 formatMessage: "Must_be_a_valid_UUID",
             }),
-            lastModified: Type.Number({ typeMessage: "Must_be_a_number" }),
             touched: Type.Boolean({
                 default: false,
                 typeMessage: "Must_be_a_boolean",

@@ -15,6 +15,7 @@ export interface App {
   name: string;
   uniqueName: string;
   version: number;
+  touched: boolean;
   lastModified: number;
   homePageImageType: number;
   homePageImage: string;

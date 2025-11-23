@@ -3,6 +3,5 @@ export type media = {
   size: number
   data: string
   appId: string
-  lastModified: number
   touched: boolean
 }

@@ -10,7 +10,6 @@ export interface ServerMediaInterface {
   size: number;
   data: string;
   appId: string;
-  lastModified: number;
   touched: boolean;
   
 }

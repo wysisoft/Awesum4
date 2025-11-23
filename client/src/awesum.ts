@@ -422,8 +422,7 @@ export const awesum = reactive({
     });
     return simpleObject;
   },
-  async processSyncResponse(syncResponse: ServerSyncResponseInterface[]) {
-    debugger;
+  async processSyncResponse(syncResponse: ServerSyncResponseInterface[]): Promise<ServerSyncResponseInterface[]> {
     for (const item of syncResponse) {
       if (item.id) {
         if (item.level == ItemLevel.followerDatabase && item.action == syncAction.add && item.values) {
@@ -494,6 +493,7 @@ export const awesum = reactive({
         await awesum.AwesumDexieDB.serverFollowerDatabaseCompletions.put(item.followerDatabaseCompletion);
       }
     }
+    return syncResponse;
   },
   async sync(syncRequest: Array<ServerSyncRequestInterface>) {
     var response = await fetch(window.location.origin + "/api/sync", {

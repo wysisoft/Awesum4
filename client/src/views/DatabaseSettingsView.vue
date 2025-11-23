@@ -10,11 +10,12 @@ import type { ServerDatabaseUnitInterface } from '../../../server/serverInterfac
 
 import { type ServerFollowerDatabaseInterface } from '../../../server/serverInterfaces/ServerFollowerDatabaseInterface';
 import { type ServerDatabaseInterface } from '../../../server/serverInterfaces/ServerDatabaseInterface';
+import type { ServerFollowerRequestInterface } from '../../../server/serverInterfaces/ServerFollowerRequestInterface';
 import { itemType } from '../../../server/typebox';
 
 import { successVideoType } from '../../../server/typebox';
 import { audioType, imageType } from '../../../server/typebox';
-import { constants } from   '../../../server/constants';
+import { constants } from '../../../server/constants';
 import { awesum } from '@/awesum';
 
 export default {
@@ -23,12 +24,14 @@ export default {
     EditTextComponent
   },
   setup() {
+    const existingAssignments = ref<Array<{ followerDatabase: ServerFollowerDatabaseInterface, displayName: string, isGroup: boolean }>>([]);
 
     return {
       showModal: ref(false),
       homepageImage: ref(null) as any as typeof EditImageComponent,
       currentType: ref(null) as any,
       itemType,
+      existingAssignments,
     }
   },
   async beforeRouteLeave(to, from, next) {
@@ -77,8 +80,9 @@ export default {
   },
   async beforeCreate() {
   },
-  mounted() {
+  async mounted() {
     this.homepageImage = this.$refs.homepageImage as typeof EditImageComponent;
+    await this.loadExistingAssignments();
   },
   methods: {
     showDeleteModal(typ: ServerDatabaseUnitInterface) {
@@ -110,11 +114,43 @@ export default {
           await this.$awesum.cleanMedia();
         });
     },
-    async getCurrentAssignments() {
-      /* //need to change line below to only return distinct groups of followers
-      var followers = await this.$awesum.AwesumDexieDB.serverFollowerDatabases.filter((o: ServerFollowerDatabaseInterface) => { return o.databaseId == this.$awesum.currentDatabase.id }).toArray();
-      return new Set(followers.map(o => o.groups)); */
-      return {};
+    async loadExistingAssignments() {
+      var followerDatabases = await this.$awesum.AwesumDexieDB.serverFollowerDatabases
+        .where("databaseId").equals(this.$awesum.currentDatabase.id)
+        .toArray() as ServerFollowerDatabaseInterface[];
+
+      var assignments: Array<{ followerDatabase: ServerFollowerDatabaseInterface, displayName: string, isGroup: boolean }> = [];
+
+      var allFollowerRequestsById = await this.$awesum.AwesumDexieDB.serverFollowerRequests.toArray() as ServerFollowerRequestInterface[];
+      var allFollowerRequestsByFollowerRequestId = allFollowerRequestsById.reduce((acc, followerRequest) => {
+        acc[followerRequest.id] = followerRequest;
+        return acc;
+      }, {} as Record<string, ServerFollowerRequestInterface>);
+
+      for (const followerDatabase of followerDatabases) {
+        const followerRequest = allFollowerRequestsByFollowerRequestId[followerDatabase.followerRequestId];
+        // Check if it's a group (followerRequestId matches a group name)
+
+
+        if (followerRequest.groups.length > 0) {
+          assignments.push({
+            followerDatabase,
+            displayName: `Group - ${followerDatabase.followerRequestId}`,
+            isGroup: true
+          });
+        } else {
+          assignments.push({
+            followerDatabase,
+            displayName: `User - ${followerRequest.followerName} (${followerRequest.followerEmail})`,
+            isGroup: false
+          });
+        }
+      }
+
+      this.existingAssignments = assignments;
+    },
+    getCurrentAssignments() {
+      return this.existingAssignments;
     },
     async addUnit() {
       var maxOrder = this.$awesum.currentDatabaseUnits.length == 0 ? 0 : this.$awesum.currentDatabaseUnits.reduce((max, databaseUnit) => Math.max(max, databaseUnit.order), 0);
@@ -153,7 +189,7 @@ export default {
 
 
       <h2 style="font-size:3.5svmin; ">{{ $t($resources.Add_Unit.key)
-      }}</h2>
+        }}</h2>
       <button class="btn btn-primary" style="margin-left:2svmin;margin-bottom:1svmin;" v-on:click="addUnit()">{{
         $t($resources.Add_Unit.key) }}</button>
 
@@ -161,9 +197,8 @@ export default {
       </h2>
       <div v-for="typ in $awesum.currentDatabaseUnits" class="listItem"
         style="margin-bottom:1svmin;display:flex;align-items:baseline;">
-<div>{{ $router.currentRoute.value.fullPath + '/' + encodeURIComponent(typ.name) }}</div>
-        <router-link
-          :to="$router.currentRoute.value.fullPath + '/' + encodeURIComponent(typ.name)"
+        <div>{{ $router.currentRoute.value.fullPath + '/' + encodeURIComponent(typ.name) }}</div>
+        <router-link :to="$router.currentRoute.value.fullPath + '/' + encodeURIComponent(typ.name)"
           class="btn btn-primary" style="margin-left:2svmin;">{{ $t($resources.Edit.key) }}</router-link>
         <button class="btn btn-primary" style="margin-left:1svmin;" v-on:click="showDeleteModal(typ)">{{
           $t($resources.Delete.key) }}</button>
@@ -179,18 +214,16 @@ export default {
 
       <button v-if="$awesum.currentApp.id != $awesum.publicAppId" class="btn btn-primary"
         style="margin-left:2svmin;margin-bottom:1svmin;"
-        v-on:click="$router.push({ path: '/'+ $t($resources.i.key) + '/' + $t($resources.AddAssignment.key) + '/' + encodeURI($awesum.currentApp.name) + '/' + encodeURI($awesum.currentDatabase.name)  })">{{
-          $t($resources.Add_Assignment.key) }}</button> 
+        v-on:click="$router.push({ path: '/' + $t($resources.i.key) + '/' + $t($resources.AddAssignment.key) + '/' + encodeURI($awesum.currentApp.name) + '/' + encodeURI($awesum.currentDatabase.name) })">{{
+          $t($resources.Add_Assignment.key) }}</button>
 
-      <div v-for="typ in getCurrentAssignments()" class="listItem">
+      <div v-if="existingAssignments.length > 0" v-for="assignment in existingAssignments"
+        :key="assignment.followerDatabase.id" class="listItem"
+        style="margin-bottom:1svmin;display:flex;align-items:baseline;">
+        <button class="btn btn-primary" style="margin-left:1svmin;">{{
+          $t($resources.Delete.key) }}</button>
+        <span style="margin-left:2svmin;">{{ assignment.displayName }}</span>
 
-        <router-link custom :to="'google'" v-slot="{ href }">
-          <button class="btn btn-primary" @click="$router.push(href)">
-            <span>{{ $t($resources.Edit.key) }}</span>
-          </button>
-        </router-link>
-
-        <div class="areaNameDiv">{{ '??' }}</div>
       </div>
 
       <h2 style="font-size:3.5svmin;">{{ $t($resources.Edit_Json.key) }}</h2>
@@ -205,9 +238,9 @@ export default {
 
 
       <h2 style="font-size:3.5svmin;margin-top:1svmin;">{{ $t($resources.Database_Settings.key) }}</h2>
-      <EditTextComponent :labelWidth="'17svmin'" style="margin-left:2svmin;" :inputWidth="'99%'" :required="true" :requiresEditAndSave="true"
-        :maxLength="100" :forbiddenChars="'/'"
-        :redirectUrlAfterSave="'/' + $t($resources.i.key) +'/' + $t($resources.Settings.key) + '/' + encodeURI($awesum.currentApp.name) + '/'"
+      <EditTextComponent :labelWidth="'17svmin'" style="margin-left:2svmin;" :inputWidth="'99%'" :required="true"
+        :requiresEditAndSave="true" :maxLength="100" :forbiddenChars="'/'"
+        :redirectUrlAfterSave="'/' + $t($resources.i.key) + '/' + $t($resources.Settings.key) + '/' + encodeURI($awesum.currentApp.name) + '/'"
         :parentObject="$awesum.currentDatabase" :displayName="'Name'" :propertyName="'name'" />
 
       <h2 style="font-size:3.5svmin;margin-top:2svmin;">{{ $t($resources.Background_Image.key) }}</h2>

@@ -6,6 +6,7 @@
   "name" VARCHAR(100) NOT NULL,
   "uniqueName" VARCHAR(100) NOT NULL,
   "version" INTEGER NOT NULL,
+  "touched" BOOLEAN NOT NULL,
   "lastModified" NUMERIC NOT NULL,
   "homePageImageType" INTEGER NOT NULL,
   "homePageImage" UUID NOT NULL,
@@ -101,7 +102,6 @@ DROP TABLE IF EXISTS awesum."Media";
   "size" INTEGER NOT NULL,
   "data" VARCHAR(8000) NOT NULL,
   "appId" UUID NOT NULL,
-  "lastModified" NUMERIC NOT NULL,
   "touched" BOOLEAN NOT NULL
 );
 

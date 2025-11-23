@@ -17,13 +17,13 @@ import { ClientDatabaseUnit } from "./clientClasses/DatabaseUnit";
 import { ClientFollowerDatabase } from "./clientClasses/FollowerDatabase";
 import type { ServerRouterInterface } from "../../server/serverInterfaces/ServerRouterInterface";
 import { ClientRouter } from "./clientClasses/Router";
-import { followerRequestStatus, itemType, successVideoType,imageType,audioType } from "../../server/typebox";
+import { followerRequestStatus, itemType, successVideoType, imageType, audioType } from "../../server/typebox";
 import { constants } from "../../server/constants";
 import { v7 as uuid } from 'uuid';
 import type { ServerSpellingDatabaseItemInterface } from "../../server/serverInterfaces/ServerSpellingDatabaseItemInterface";
 import type { ServerSpellingDatabaseItemDataInterface } from "../../server/serverInterfaces/ServerSpellingDatabaseItemDataInterface";
 export class AwesumDexieDB extends Dexie {
-    
+
     internal!: Table<any, string>;
     deletions!: Table<any, string>;
     serverApps!: Table<ServerAppInterface, string>;
@@ -72,483 +72,484 @@ export class AwesumDexieDB extends Dexie {
                 lastModified: new Date().getTime(),
             });
 
-            var followerRequestId = uuid();
-            trans.table('serverFollowerRequests').put({
-                leaderAppId: awesum.publicAppId,
-                followerAppId: awesum.publicAppId,
-                id: followerRequestId,
-                followerName: 'Public App',
-                leaderName: 'Public App',
-                followerEmail: 'public@awesum.app',
-                leaderEmail: 'public@awesum.app',
-                initiatedByFollower: false,
-                
-                lastModified: new Date().getTime(),
-                version: 0,
-                status: followerRequestStatus.Approved,
-                groups: '',
-                points: 0,
-            } as ServerFollowerRequestInterface)
+            if (awesum.serverEmail == '') {
+                var followerRequestId = uuid();
+                trans.table('serverFollowerRequests').put({
+                    leaderAppId: awesum.publicAppId,
+                    followerAppId: awesum.publicAppId,
+                    id: followerRequestId,
+                    followerName: 'Public App',
+                    leaderName: 'Public App',
+                    followerEmail: 'public@awesum.app',
+                    leaderEmail: 'public@awesum.app',
+                    initiatedByFollower: false,
 
-            
-
-            trans.table('serverApps').put({
-                email: awesum.publicAppEmail,
-                name: 'Public App',
-                uniqueName: 'public',
-                version: 0,
-                
-                lastModified: new Date().getTime(),
-                homePageImageType: imageType.WebAddress,
-                homePageImage: awesum.defaultAppBackgroundGuid,
-                authenticationType: "Google",
-                lang: 'en',
-                enableNarrator: false,
-                groups: '',
-                id: awesum.publicAppId,
-            } as ServerAppInterface)
-
-            var dbId = uuid();
-            trans.table('serverDatabases').put({
-                id: dbId,
-                appId: awesum.publicAppId,
-                
-                lastModified: new Date().getTime(),
-                version: 0,
-                size: 0,
-                name: 'Public Database',
-                order: 0,
-                homePageIconType: imageType.WebAddress,
-                homePageIcon: awesum.defaultDatabaseBackgroundGuid,
-            } as ServerDatabaseInterface)
-
-
-            trans.table('serverFollowerDatabases').put({
-                followerRequestId: followerRequestId,
-                id: uuid(),
-                databaseId: dbId,
-                
-                lastModified: new Date().getTime(),
-                version: 0,
-            } as ServerFollowerDatabaseInterface)
+                    lastModified: new Date().getTime(),
+                    version: 0,
+                    status: followerRequestStatus.Approved,
+                    groups: '',
+                    points: 0,
+                } as ServerFollowerRequestInterface)
 
 
 
-            var dbUnitId = uuid();
-            trans.table('serverDatabaseUnits').put({
-                name: 'Unit 1',
-                order: 0,
-                
-                lastModified: 0,
-                version: 0,
-                id: dbUnitId,
-                appId: awesum.publicAppId,
-                databaseId: dbId,
-                successVideoType: successVideoType.YouTube,
-                successVideoUrl: awesum.defaultYouTubeVideoUrl,
-                successAnimations: '',
-                successSound: awesum.defaultSuccessSoundGuid,
-                successSoundType: audioType.WebAddress,
-                homePageImageType: imageType.WebAddress,
-                homePageImage: awesum.defaultAppBackgroundGuid,
-                router: constants.emptyGuid,
-                routerTime: 0,
-                routerTimeImmediate: false,
-                points: 0,
+                trans.table('serverApps').put({
+                    email: awesum.publicAppEmail,
+                    name: 'Public App',
+                    uniqueName: 'public',
+                    version: 0,
 
-            } as ServerDatabaseUnitInterface)
+                    lastModified: new Date().getTime(),
+                    homePageImageType: imageType.WebAddress,
+                    homePageImage: awesum.defaultAppBackgroundGuid,
+                    authenticationType: "Google",
+                    lang: 'en',
+                    enableNarrator: false,
+                    groups: '',
+                    id: awesum.publicAppId,
+                } as ServerAppInterface)
 
-            trans.table('serverDatabaseItems').put({
-                id: uuid(),
-                unitId: dbUnitId,
-                order: 1,
-                databaseId: dbId,
-                lastModified: new Date().getTime(),
-                version: 0,
-                appId: awesum.publicAppId,
-                
-                dataText: "",
-                data: {
-                    letters: 'w,o,r\no,r,d\nr,d,e\nd,e,l',
-                    image: awesum.emptyImageGuid,
-                    sound: awesum.ttsGuid,
-                    text: 'word',
-                    imageType: imageType.WebAddress,
-                    visualHint: 'Visual Hint',
-                    audioType: audioType.TTS,
+                var dbId = uuid();
+                trans.table('serverDatabases').put({
+                    id: dbId,
+                    appId: awesum.publicAppId,
+
+                    lastModified: new Date().getTime(),
+                    version: 0,
+                    size: 0,
+                    name: 'Public Database',
+                    order: 0,
+                    homePageIconType: imageType.WebAddress,
+                    homePageIcon: awesum.defaultDatabaseBackgroundGuid,
+                } as ServerDatabaseInterface)
+
+
+                trans.table('serverFollowerDatabases').put({
+                    followerRequestId: followerRequestId,
+                    id: uuid(),
+                    databaseId: dbId,
+
+                    lastModified: new Date().getTime(),
+                    version: 0,
+                } as ServerFollowerDatabaseInterface)
+
+
+
+                var dbUnitId = uuid();
+                trans.table('serverDatabaseUnits').put({
+                    name: 'Unit 1',
+                    order: 0,
+
+                    lastModified: 0,
+                    version: 0,
+                    id: dbUnitId,
+                    appId: awesum.publicAppId,
+                    databaseId: dbId,
+                    successVideoType: successVideoType.YouTube,
+                    successVideoUrl: awesum.defaultYouTubeVideoUrl,
+                    successAnimations: '',
                     successSound: awesum.defaultSuccessSoundGuid,
                     successSoundType: audioType.WebAddress,
-                    successImage: awesum.defaultSuccessImageGuid,
-                    successImageType: imageType.WebAddress,
-                    successAnimations: "Fireworks,Balloons,Confetti",
-                    successImageTime: 3000,
-                } as ServerSpellingDatabaseItemDataInterface,
-                itemType: itemType.spelling,
+                    homePageImageType: imageType.WebAddress,
+                    homePageImage: awesum.defaultAppBackgroundGuid,
+                    router: constants.emptyGuid,
+                    routerTime: 0,
+                    routerTimeImmediate: false,
+                    points: 0,
 
-            } as ServerSpellingDatabaseItemInterface)
+                } as ServerDatabaseUnitInterface)
 
-            trans.table('serverDatabaseItems').put({
-                id: uuid(),
-                unitId: dbUnitId,
-                order: 2,
-                databaseId: dbId,
-                lastModified: new Date().getTime(),
-                version: 0,
-                appId: awesum.publicAppId,
-                
-                dataText: "",
-                data: {
-                    letters: '',
-                    image: awesum.emptyImageGuid,
-                    sound: awesum.ttsGuid,
-                    text: 'nerd',
-                    imageType: imageType.WebAddress,
-                    visualHint: 'Visual Hint',
-                    audioType: audioType.TTS,
+                trans.table('serverDatabaseItems').put({
+                    id: uuid(),
+                    unitId: dbUnitId,
+                    order: 1,
+                    databaseId: dbId,
+                    lastModified: new Date().getTime(),
+                    version: 0,
+                    appId: awesum.publicAppId,
+
+                    dataText: "",
+                    data: {
+                        letters: 'w,o,r\no,r,d\nr,d,e\nd,e,l',
+                        image: awesum.emptyImageGuid,
+                        sound: awesum.ttsGuid,
+                        text: 'word',
+                        imageType: imageType.WebAddress,
+                        visualHint: 'Visual Hint',
+                        audioType: audioType.TTS,
+                        successSound: awesum.defaultSuccessSoundGuid,
+                        successSoundType: audioType.WebAddress,
+                        successImage: awesum.defaultSuccessImageGuid,
+                        successImageType: imageType.WebAddress,
+                        successAnimations: "Fireworks,Balloons,Confetti",
+                        successImageTime: 3000,
+                    } as ServerSpellingDatabaseItemDataInterface,
+                    itemType: itemType.spelling,
+
+                } as ServerSpellingDatabaseItemInterface)
+
+                trans.table('serverDatabaseItems').put({
+                    id: uuid(),
+                    unitId: dbUnitId,
+                    order: 2,
+                    databaseId: dbId,
+                    lastModified: new Date().getTime(),
+                    version: 0,
+                    appId: awesum.publicAppId,
+
+                    dataText: "",
+                    data: {
+                        letters: '',
+                        image: awesum.emptyImageGuid,
+                        sound: awesum.ttsGuid,
+                        text: 'nerd',
+                        imageType: imageType.WebAddress,
+                        visualHint: 'Visual Hint',
+                        audioType: audioType.TTS,
+                        successSound: awesum.defaultSuccessSoundGuid,
+                        successSoundType: audioType.WebAddress,
+                        successImage: awesum.defaultSuccessImageGuid,
+                        successImageType: imageType.WebAddress,
+                        successAnimations: "Fireworks,Balloons,Confetti",
+                        successImageTime: 3000,
+                    } as ServerSpellingDatabaseItemDataInterface,
+                    itemType: itemType.spelling,
+
+                })
+
+                trans.table('serverDatabaseItems').put({
+                    id: uuid(),
+                    unitId: dbUnitId,
+                    order: 3,
+                    databaseId: dbId,
+                    lastModified: new Date().getTime(),
+                    version: 0,
+                    appId: awesum.publicAppId,
+
+                    dataText: "",
+                    data: {
+                        letters: '',
+                        image: awesum.emptyImageGuid,
+                        sound: awesum.ttsGuid,
+                        text: 'worm',
+                        imageType: imageType.WebAddress,
+                        visualHint: 'Visual Hint',
+                        audioType: audioType.TTS,
+                        successSound: awesum.defaultSuccessSoundGuid,
+                        successSoundType: audioType.WebAddress,
+                        successImage: awesum.defaultSuccessImageGuid,
+                        successImageType: imageType.WebAddress,
+                        successAnimations: "Fireworks,Balloons,Confetti",
+                        successImageTime: 3000,
+                    } as ServerSpellingDatabaseItemDataInterface,
+                    itemType: itemType.spelling,
+
+                } as ServerSpellingDatabaseItemInterface)
+
+
+                dbUnitId = uuid();
+                trans.table('serverDatabaseUnits').put({
+                    name: 'Unit 2',
+                    order: 1,
+
+                    lastModified: 0,
+                    version: 0,
+                    id: dbUnitId,
+                    appId: awesum.publicAppId,
+                    databaseId: dbId,
+                    successVideoType: successVideoType.YouTube,
+                    successVideoUrl: awesum.defaultYouTubeVideoUrl,
+                    successAnimations: '',
                     successSound: awesum.defaultSuccessSoundGuid,
                     successSoundType: audioType.WebAddress,
-                    successImage: awesum.defaultSuccessImageGuid,
-                    successImageType: imageType.WebAddress,
-                    successAnimations: "Fireworks,Balloons,Confetti",
-                    successImageTime: 3000,
-                } as ServerSpellingDatabaseItemDataInterface,
-                itemType: itemType.spelling,
+                    homePageImageType: imageType.WebAddress,
+                    homePageImage: awesum.defaultAppBackgroundGuid,
+                    router: constants.emptyGuid,
+                    routerTime: 0,
+                    routerTimeImmediate: false,
+                    points: 0,
+                } as ServerDatabaseUnitInterface)
 
-            })
+                trans.table('serverDatabaseItems').put({
 
-            trans.table('serverDatabaseItems').put({
-                id: uuid(),
-                unitId: dbUnitId,
-                order: 3,
-                databaseId: dbId,
-                lastModified: new Date().getTime(),
-                version: 0,
-                appId: awesum.publicAppId,
-                
-                dataText: "",
-                data: {
-                    letters: '',
-                    image: awesum.emptyImageGuid,
-                    sound: awesum.ttsGuid,
-                    text: 'worm',
-                    imageType: imageType.WebAddress,
-                    visualHint: 'Visual Hint',
-                    audioType: audioType.TTS,
+                    id: uuid(),
+                    unitId: dbUnitId,
+                    order: 1,
+                    databaseId: dbId,
+                    lastModified: new Date().getTime(),
+                    version: 0,
+                    appId: awesum.publicAppId,
+
+                    dataText: "",
+                    data: {
+
+                        leftDigraphs: 'c,b,s,h,r',
+                        rightDigraphs: 'an,at',
+                        text: 'cat',
+                        image: awesum.emptyImageGuid,
+                        sound: awesum.ttsGuid,
+                        imageType: imageType.WebAddress,
+                        visualHint: 'Visual Hint',
+                        audioType: audioType.TTS,
+                        successSound: awesum.defaultSuccessSoundGuid,
+                        successSoundType: audioType.WebAddress,
+                        successImage: awesum.defaultSuccessImageGuid,
+                        successImageType: imageType.WebAddress,
+                        successAnimations: "Fireworks,Balloons,Confetti",
+                        successImageTime: 3000,
+                    },
+                    itemType: itemType.oneByTwoDigraphs,
+
+                })
+
+                trans.table('serverDatabaseItems').put({
+
+                    id: uuid(),
+                    unitId: dbUnitId,
+                    order: 2,
+                    databaseId: dbId,
+                    lastModified: new Date().getTime(),
+                    version: 0,
+                    appId: awesum.publicAppId,
+
+                    dataText: "",
+                    data: {
+                        leftDigraphs: 'c,b,s,h,r,m',
+                        rightDigraphs: 'an,at',
+                        text: 'mat',
+                        image: awesum.emptyImageGuid,
+                        sound: awesum.ttsGuid,
+                        imageType: imageType.WebAddress,
+                        visualHint: 'Visual Hint',
+                        audioType: audioType.TTS,
+                        successSound: awesum.defaultSuccessSoundGuid,
+                        successSoundType: audioType.WebAddress,
+                        successImage: awesum.defaultSuccessImageGuid,
+                        successImageType: imageType.WebAddress,
+                        successAnimations: "Fireworks,Balloons,Confetti",
+                        successImageTime: 3000,
+                    },
+                    itemType: itemType.oneByTwoDigraphs,
+
+                })
+
+                trans.table('serverDatabaseItems').put({
+
+                    id: uuid(),
+                    unitId: dbUnitId,
+                    order: 3,
+                    databaseId: dbId,
+                    lastModified: new Date().getTime(),
+                    version: 0,
+                    appId: awesum.publicAppId,
+
+                    dataText: "",
+                    data: {
+
+                        leftDigraphs: 'c,b,s,h,r',
+                        rightDigraphs: 'an,at',
+                        text: 'rat',
+                        image: awesum.emptyImageGuid,
+                        sound: awesum.ttsGuid,
+                        imageType: imageType.WebAddress,
+                        visualHint: 'Visual Hint',
+                        audioType: audioType.TTS,
+                        successSound: awesum.defaultSuccessSoundGuid,
+                        successSoundType: audioType.WebAddress,
+                        successImage: awesum.defaultSuccessImageGuid,
+                        successImageType: imageType.WebAddress,
+                        successAnimations: "Fireworks,Balloons,Confetti",
+                        successImageTime: 3000,
+                    },
+                    itemType: itemType.oneByTwoDigraphs,
+
+                })
+
+
+
+
+
+
+
+
+
+
+
+                dbUnitId = uuid();
+                trans.table('serverDatabaseUnits').put({
+                    name: 'Unit 3',
+                    order: 1,
+
+                    lastModified: 0,
+                    version: 0,
+                    id: dbUnitId,
+                    appId: awesum.publicAppId,
+                    databaseId: dbId,
+                    successVideoType: successVideoType.YouTube,
+                    successVideoUrl: awesum.defaultYouTubeVideoUrl,
+                    successAnimations: '',
                     successSound: awesum.defaultSuccessSoundGuid,
                     successSoundType: audioType.WebAddress,
-                    successImage: awesum.defaultSuccessImageGuid,
-                    successImageType: imageType.WebAddress,
-                    successAnimations: "Fireworks,Balloons,Confetti",
-                    successImageTime: 3000,
-                } as ServerSpellingDatabaseItemDataInterface,
-                itemType: itemType.spelling,
+                    homePageImageType: imageType.WebAddress,
+                    homePageImage: awesum.defaultAppBackgroundGuid,
+                    router: constants.emptyGuid,
+                    routerTime: 0,
+                    routerTimeImmediate: false,
+                    points: 0,
+                } as ServerDatabaseUnitInterface)
 
-            } as ServerSpellingDatabaseItemInterface)
+                trans.table('serverDatabaseItems').put({
+
+                    id: uuid(),
+                    unitId: dbUnitId,
+                    order: 1,
+                    databaseId: dbId,
+                    lastModified: new Date().getTime(),
+                    version: 0,
+                    appId: awesum.publicAppId,
+
+                    dataText: "",
+                    data: {
+
+                        firstNumber: 2,
+                        secondNumber: 3,
+                        options: '6,12,18,24,30,36,42,48,54,60',
+                        sound: awesum.ttsGuid,
+                        audioType: audioType.TTS,
+                        successSound: awesum.defaultSuccessSoundGuid,
+                        successSoundType: audioType.WebAddress,
+                        successImage: awesum.defaultSuccessImageGuid,
+                        successImageType: imageType.WebAddress,
+                        successAnimations: "Fireworks,Balloons,Confetti",
+                        successImageTime: 3000,
+                    },
+                    itemType: itemType.oneByOneMultiplication,
+
+                })
+
+                trans.table('serverDatabaseItems').put({
+
+                    id: uuid(),
+                    unitId: dbUnitId,
+                    order: 2,
+                    databaseId: dbId,
+                    lastModified: new Date().getTime(),
+                    version: 0,
+                    appId: awesum.publicAppId,
+
+                    dataText: "",
+                    data: {
+
+                        firstNumber: 3,
+                        secondNumber: 4,
+                        options: '6,12,18,24,30,36,42,48,54,60',
+                        sound: awesum.ttsGuid,
+                        audioType: audioType.TTS,
+                        successSound: awesum.defaultSuccessSoundGuid,
+                        successSoundType: audioType.WebAddress,
+                        successImage: awesum.defaultSuccessImageGuid,
+                        successImageType: imageType.WebAddress,
+                        successAnimations: "Fireworks,Balloons,Confetti",
+                        successImageTime: 3000,
+                    },
+                    itemType: itemType.oneByOneMultiplication,
+
+                })
 
 
-            dbUnitId = uuid();
-            trans.table('serverDatabaseUnits').put({
-                name: 'Unit 2',
-                order: 1,
-                
-                lastModified: 0,
-                version: 0,
-                id: dbUnitId,
-                appId: awesum.publicAppId,
-                databaseId: dbId,
-                successVideoType: successVideoType.YouTube,
-                successVideoUrl: awesum.defaultYouTubeVideoUrl,
-                successAnimations: '',
-                successSound: awesum.defaultSuccessSoundGuid,
-                successSoundType: audioType.WebAddress,
-                homePageImageType: imageType.WebAddress,
-                homePageImage: awesum.defaultAppBackgroundGuid,
-                router: constants.emptyGuid,
-                routerTime: 0,
-                routerTimeImmediate: false,
-                points: 0,
-            } as ServerDatabaseUnitInterface)
 
-            trans.table('serverDatabaseItems').put({
 
-                id: uuid(),
-                unitId: dbUnitId,
-                order: 1,
-                databaseId: dbId,
-                lastModified: new Date().getTime(),
-                version: 0,
-                appId: awesum.publicAppId,
-                
-                dataText: "",
-                data: {
 
-                    leftDigraphs: 'c,b,s,h,r',
-                    rightDigraphs: 'an,at',
-                    text: 'cat',
-                    image: awesum.emptyImageGuid,
-                    sound: awesum.ttsGuid,
-                    imageType: imageType.WebAddress,
-                    visualHint: 'Visual Hint',
-                    audioType: audioType.TTS,
+
+
+
+
+
+
+
+
+                dbUnitId = uuid();
+                trans.table('serverDatabaseUnits').put({
+                    name: 'Unit 4',
+                    order: 1,
+
+                    lastModified: 0,
+                    version: 0,
+                    id: dbUnitId,
+                    appId: awesum.publicAppId,
+                    databaseId: dbId,
+                    successVideoType: successVideoType.YouTube,
+                    successVideoUrl: awesum.defaultYouTubeVideoUrl,
+                    successAnimations: '',
                     successSound: awesum.defaultSuccessSoundGuid,
                     successSoundType: audioType.WebAddress,
-                    successImage: awesum.defaultSuccessImageGuid,
-                    successImageType: imageType.WebAddress,
-                    successAnimations: "Fireworks,Balloons,Confetti",
-                    successImageTime: 3000,
-                },
-                itemType: itemType.oneByTwoDigraphs,
+                    homePageImageType: imageType.WebAddress,
+                    homePageImage: awesum.defaultAppBackgroundGuid,
+                    router: constants.emptyGuid,
+                    routerTime: 0,
+                    routerTimeImmediate: false,
+                    points: 0,
+                } as ServerDatabaseUnitInterface)
 
-            })
+                trans.table('serverDatabaseItems').put({
 
-            trans.table('serverDatabaseItems').put({
+                    id: uuid(),
+                    unitId: dbUnitId,
+                    order: 1,
+                    databaseId: dbId,
+                    lastModified: new Date().getTime(),
+                    version: 0,
+                    appId: awesum.publicAppId,
 
-                id: uuid(),
-                unitId: dbUnitId,
-                order: 2,
-                databaseId: dbId,
-                lastModified: new Date().getTime(),
-                version: 0,
-                appId: awesum.publicAppId,
-                
-                dataText: "",
-                data: {
-                    leftDigraphs: 'c,b,s,h,r,m',
-                    rightDigraphs: 'an,at',
-                    text: 'mat',
-                    image: awesum.emptyImageGuid,
-                    sound: awesum.ttsGuid,
-                    imageType: imageType.WebAddress,
-                    visualHint: 'Visual Hint',
-                    audioType: audioType.TTS,
-                    successSound: awesum.defaultSuccessSoundGuid,
-                    successSoundType: audioType.WebAddress,
-                    successImage: awesum.defaultSuccessImageGuid,
-                    successImageType: imageType.WebAddress,
-                    successAnimations: "Fireworks,Balloons,Confetti",
-                    successImageTime: 3000,
-                },
-                itemType: itemType.oneByTwoDigraphs,
+                    dataText: "",
+                    data: {
 
-            })
+                        firstNumber: 2,
+                        secondNumber: 3,
+                        options: '1,2,3,4,5,6,7,8',
+                        sound: awesum.ttsGuid,
+                        audioType: audioType.TTS,
+                        successSound: awesum.defaultSuccessSoundGuid,
+                        successSoundType: audioType.WebAddress,
+                        successImage: awesum.defaultSuccessImageGuid,
+                        successImageType: imageType.WebAddress,
+                        successAnimations: "Fireworks,Balloons,Confetti",
+                        successImageTime: 3000,
+                    },
+                    itemType: itemType.oneByOneAddition,
 
-            trans.table('serverDatabaseItems').put({
+                })
 
-                id: uuid(),
-                unitId: dbUnitId,
-                order: 3,
-                databaseId: dbId,
-                lastModified: new Date().getTime(),
-                version: 0,
-                appId: awesum.publicAppId,
-                
-                dataText: "",
-                data: {
+                trans.table('serverDatabaseItems').put({
 
-                    leftDigraphs: 'c,b,s,h,r',
-                    rightDigraphs: 'an,at',
-                    text: 'rat',
-                    image: awesum.emptyImageGuid,
-                    sound: awesum.ttsGuid,
-                    imageType: imageType.WebAddress,
-                    visualHint: 'Visual Hint',
-                    audioType: audioType.TTS,
-                    successSound: awesum.defaultSuccessSoundGuid,
-                    successSoundType: audioType.WebAddress,
-                    successImage: awesum.defaultSuccessImageGuid,
-                    successImageType: imageType.WebAddress,
-                    successAnimations: "Fireworks,Balloons,Confetti",
-                    successImageTime: 3000,
-                },
-                itemType: itemType.oneByTwoDigraphs,
+                    id: uuid(),
+                    unitId: dbUnitId,
+                    order: 2,
+                    databaseId: dbId,
+                    lastModified: new Date().getTime(),
+                    version: 0,
+                    appId: awesum.publicAppId,
 
-            })
+                    dataText: "",
+                    data: {
 
+                        firstNumber: 3,
+                        secondNumber: 4,
+                        options: '1,2,3,4,5,6,7,8',
+                        sound: awesum.ttsGuid,
+                        audioType: audioType.TTS,
+                        successSound: awesum.defaultSuccessSoundGuid,
+                        successSoundType: audioType.WebAddress,
+                        successImage: awesum.defaultSuccessImageGuid,
+                        successImageType: imageType.WebAddress,
+                        successAnimations: "Fireworks,Balloons,Confetti",
+                        successImageTime: 3000,
+                    },
+                    itemType: itemType.oneByOneAddition,
 
+                })
 
-
-
-
-
-
-
-
-
-            dbUnitId = uuid();
-            trans.table('serverDatabaseUnits').put({
-                name: 'Unit 3',
-                order: 1,
-                
-                lastModified: 0,
-                version: 0,
-                id: dbUnitId,
-                appId: awesum.publicAppId,
-                databaseId: dbId,
-                successVideoType: successVideoType.YouTube,
-                successVideoUrl: awesum.defaultYouTubeVideoUrl,
-                successAnimations: '',
-                successSound: awesum.defaultSuccessSoundGuid,
-                successSoundType: audioType.WebAddress,
-                homePageImageType: imageType.WebAddress,
-                homePageImage: awesum.defaultAppBackgroundGuid,
-                router: constants.emptyGuid,
-                routerTime: 0,
-                routerTimeImmediate: false,
-                points: 0,
-            } as ServerDatabaseUnitInterface)
-
-            trans.table('serverDatabaseItems').put({
-
-                id: uuid(),
-                unitId: dbUnitId,
-                order: 1,
-                databaseId: dbId,
-                lastModified: new Date().getTime(),
-                version: 0,
-                appId: awesum.publicAppId,
-                
-                dataText: "",
-                data: {
-
-                    firstNumber: 2,
-                    secondNumber: 3,
-                    options: '6,12,18,24,30,36,42,48,54,60',
-                    sound: awesum.ttsGuid,
-                    audioType: audioType.TTS,
-                    successSound: awesum.defaultSuccessSoundGuid,
-                    successSoundType: audioType.WebAddress,
-                    successImage: awesum.defaultSuccessImageGuid,
-                    successImageType: imageType.WebAddress,
-                    successAnimations: "Fireworks,Balloons,Confetti",
-                    successImageTime: 3000,
-                },
-                itemType: itemType.oneByOneMultiplication,
-
-            })
-
-            trans.table('serverDatabaseItems').put({
-
-                id: uuid(),
-                unitId: dbUnitId,
-                order: 2,
-                databaseId: dbId,
-                lastModified: new Date().getTime(),
-                version: 0,
-                appId: awesum.publicAppId,
-                
-                dataText: "",
-                data: {
-
-                    firstNumber: 3,
-                    secondNumber: 4,
-                    options: '6,12,18,24,30,36,42,48,54,60',
-                    sound: awesum.ttsGuid,
-                    audioType: audioType.TTS,
-                    successSound: awesum.defaultSuccessSoundGuid,
-                    successSoundType: audioType.WebAddress,
-                    successImage: awesum.defaultSuccessImageGuid,
-                    successImageType: imageType.WebAddress,
-                    successAnimations: "Fireworks,Balloons,Confetti",
-                    successImageTime: 3000,
-                },
-                itemType: itemType.oneByOneMultiplication,
-
-            })
-
-
-
-
-
-
-
-
-
-
-
-
-
-            dbUnitId = uuid();
-            trans.table('serverDatabaseUnits').put({
-                name: 'Unit 4',
-                order: 1,
-                
-                lastModified: 0,
-                version: 0,
-                id: dbUnitId,
-                appId: awesum.publicAppId,
-                databaseId: dbId,
-                successVideoType: successVideoType.YouTube,
-                successVideoUrl: awesum.defaultYouTubeVideoUrl,
-                successAnimations: '',
-                successSound: awesum.defaultSuccessSoundGuid,
-                successSoundType: audioType.WebAddress,
-                homePageImageType: imageType.WebAddress,
-                homePageImage: awesum.defaultAppBackgroundGuid,
-                router: constants.emptyGuid,
-                routerTime: 0,
-                routerTimeImmediate: false,
-                points: 0,
-            } as ServerDatabaseUnitInterface)
-
-            trans.table('serverDatabaseItems').put({
-
-                id: uuid(),
-                unitId: dbUnitId,
-                order: 1,
-                databaseId: dbId,
-                lastModified: new Date().getTime(),
-                version: 0,
-                appId: awesum.publicAppId,
-                
-                dataText: "",
-                data: {
-
-                    firstNumber: 2,
-                    secondNumber: 3,
-                    options: '1,2,3,4,5,6,7,8',
-                    sound: awesum.ttsGuid,
-                    audioType: audioType.TTS,
-                    successSound: awesum.defaultSuccessSoundGuid,
-                    successSoundType: audioType.WebAddress,
-                    successImage: awesum.defaultSuccessImageGuid,
-                    successImageType: imageType.WebAddress,
-                    successAnimations: "Fireworks,Balloons,Confetti",
-                    successImageTime: 3000,
-                },
-                itemType: itemType.oneByOneAddition,
-
-            })
-
-            trans.table('serverDatabaseItems').put({
-
-                id: uuid(),
-                unitId: dbUnitId,
-                order: 2,
-                databaseId: dbId,
-                lastModified: new Date().getTime(),
-                version: 0,
-                appId: awesum.publicAppId,
-                
-                dataText: "",
-                data: {
-
-                    firstNumber: 3,
-                    secondNumber: 4,
-                    options: '1,2,3,4,5,6,7,8',
-                    sound: awesum.ttsGuid,
-                    audioType: audioType.TTS,
-                    successSound: awesum.defaultSuccessSoundGuid,
-                    successSoundType: audioType.WebAddress,
-                    successImage: awesum.defaultSuccessImageGuid,
-                    successImageType: imageType.WebAddress,
-                    successAnimations: "Fireworks,Balloons,Confetti",
-                    successImageTime: 3000,
-                },
-                itemType: itemType.oneByOneAddition,
-
-            })
-
-
+            }
 
 
 
@@ -559,7 +560,6 @@ export class AwesumDexieDB extends Dexie {
             var url = '/defaultAppBackground' + awesum.appVersion + '.webp';
             trans.table('serverMedia').put({
                 appId: awesum.publicAppId,
-                lastModified: 0,
                 data: url,
                 id: awesum.defaultAppBackgroundGuid,
                 size: url.length,
@@ -569,7 +569,6 @@ export class AwesumDexieDB extends Dexie {
             var url = '/defaultDatabaseBackground' + awesum.appVersion + '.webp';
             trans.table('serverMedia').put({
                 appId: awesum.publicAppId,
-                lastModified: 0,
                 data: url,
                 id: awesum.defaultDatabaseBackgroundGuid,
                 size: url.length,
@@ -579,7 +578,6 @@ export class AwesumDexieDB extends Dexie {
             var url = '/successSound' + awesum.appVersion + '.mp3';
             trans.table('serverMedia').put({
                 appId: awesum.publicAppId,
-                lastModified: 0,
                 data: url,
                 id: awesum.defaultSuccessSoundGuid,
                 size: url.length,
@@ -589,32 +587,30 @@ export class AwesumDexieDB extends Dexie {
             var url = '/successVideo' + awesum.appVersion + '.mp4';
             trans.table('serverMedia').put({
                 appId: awesum.publicAppId,
-                lastModified: 0,
                 data: url,
                 id: awesum.defaultSuccessVideoGuid,
                 size: url.length,
-                version: 0
+                version: 0,
+                touched: false,
             } as ServerMediaInterface)
 
             var url = '/successImage' + awesum.appVersion + '.webp';
             trans.table('serverMedia').put({
                 appId: awesum.publicAppId,
-                lastModified: 0,
                 data: url,
                 id: awesum.defaultSuccessImageGuid,
                 size: url.length,
                 version: 0,
+                touched: false,
             } as ServerMediaInterface)
 
             var url = '/EmptyImage' + awesum.appVersion + '.jpg';
             trans.table('serverMedia').put({
-                lastModified: 0,
                 data: url,
                 id: awesum.emptyImageGuid,
             } as ServerMediaInterface)
 
             trans.table('serverMedia').put({
-                lastModified: 0,
                 data: 'TTS',
                 id: awesum.ttsGuid,
             } as ServerMediaInterface)
@@ -630,7 +626,7 @@ export class AwesumDexieDB extends Dexie {
         super("awesum_" + awesum.serverEmail);
 
         this.version(1).stores({
-            internal:"id",
+            internal: "id",
             deletions: "id",
             serverDatabases: "id,appId,touched",
             serverFollowerRequests: "id,touched,followerAppId,leaderAppId",

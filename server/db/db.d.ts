@@ -15,6 +15,7 @@ export interface AwesumApp {
   lastModified: number;
   lastSync: number;
   name: string;
+  touched: boolean;
   uniqueName: string;
   version: number;
 }
@@ -115,7 +116,6 @@ export interface AwesumMedia {
   appId: string;
   data: string;
   id: string;
-  lastModified: number;
   size: number;
   touched: boolean;
 }

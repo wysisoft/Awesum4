@@ -8,11 +8,11 @@ import { chromium, Page } from 'playwright';
 // chromium.use(stealthPlugin);
 
 
-async function launchWithRecorder(dataDir: string) {
+async function launchWithRecorder(dataDir: string, windowTop: number,windowLeft: number,windowWidth: number, windowHeight: number) {
 
   const browser = await chromium.launchPersistentContext(dataDir, {
     headless: false,
-    viewport: { width: 500, height: 500 },
+    viewport: { width: 0, height: 0 },
     args: [
       '--no-first-run',
       '--disable-session-crashed-bubble', // ⚡ hides the restore popup
@@ -20,12 +20,27 @@ async function launchWithRecorder(dataDir: string) {
     ],
   });
 
+  const page = await browser.pages()[0];
+
+  const session = await browser.newCDPSession(page);
+
+  await session.send('Browser.setWindowBounds', {
+    windowId: (await session.send('Browser.getWindowForTarget')).windowId,
+    bounds: { top: windowTop, left: windowLeft, width: windowWidth, height: windowHeight }
+  });
+
+  page.exposeFunction('openInspector', async () => {
+    console.log('Inspector triggered');
+    await page.pause();
+  });
+
+
   return browser!;
 
   // Now the recorder extension should be active, and you can start recording manually
 }
 
-const wildertBrowser = await launchWithRecorder('./../wildert/UserDataDir').catch(console.error);
+const wildertBrowser = await launchWithRecorder('./../wildert/UserDataDir', 100,0,600,600).catch(console.error);
 
 const wildert = await wildertBrowser.pages()[0];
 await wildert.goto('https://dev.awesum.app/');
@@ -44,7 +59,7 @@ await wildert.getByRole('button', { name: 'Lets Go!' }).click();
 
 
 
-const demobratBrowser = await launchWithRecorder('./../demobrat/UserDataDir').catch(console.error);
+const demobratBrowser = await launchWithRecorder('./../demobrat/UserDataDir', 100,600,600,600).catch(console.error);
 const demobrat = await demobratBrowser.pages()[0];
 await demobrat.goto('https://dev.awesum.app/');
 
@@ -86,7 +101,7 @@ await wildert.waitForSelector('text=Hello, world! This is a toast');
 
 
 
-  await wildert.pause();
+  
 
     await wildert.getByRole('heading', { name: 'Edit Databases' }).click();
   await wildert.locator('body').press('Tab');

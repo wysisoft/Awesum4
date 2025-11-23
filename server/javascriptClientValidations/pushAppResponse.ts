@@ -26,7 +26,8 @@ isNameGloballyUnique: true,
 transform: ['trim', 'toLowerCase'],
 type: 'string'},
 version: { default: 0, minimum: 0, type: 'integer' },
-lastModified: { default: 1763863931755, type: 'number' },
+touched: { default: false, type: 'boolean' },
+lastModified: { default: 1763901578597, type: 'number' },
 homePageImageType: {
 default: 0,
 minimum: 0,
@@ -50,7 +51,7 @@ type: 'string'},
 enableNarrator: { default: false, type: 'boolean' },
 groups: { default: '', maxLength: 8000, type: 'string' },
 id: {
-default: '019aae7b-ab6b-730e-b242-8d22861a9117',
+default: '019ab0ba-1d65-71b9-aa75-5576dc859e13',
 format: 'uuid',
 minLength: 36,
 type: 'string'},
@@ -61,6 +62,7 @@ required: [
 'name',
 'uniqueName',
 'version',
+'touched',
 'lastModified',
 'homePageImageType',
 'homePageImage',
@@ -168,13 +170,13 @@ vErrors.push(err4)
 }
 
 }
-if (data0.lastModified === undefined) {
+if (data0.touched === undefined) {
 const err5 = {
 instancePath: instancePath + '/app',
 schemaPath: '#/properties/app/required',
 keyword: 'required',
-params: { missingProperty: 'lastModified' },
-message: "must have required property '" + 'lastModified' + "'"
+params: { missingProperty: 'touched' },
+message: "must have required property '" + 'touched' + "'"
 }
 if (vErrors === null) {
 vErrors = [err5]
@@ -183,13 +185,13 @@ vErrors.push(err5)
 }
 
 }
-if (data0.homePageImageType === undefined) {
+if (data0.lastModified === undefined) {
 const err6 = {
 instancePath: instancePath + '/app',
 schemaPath: '#/properties/app/required',
 keyword: 'required',
-params: { missingProperty: 'homePageImageType' },
-message: "must have required property '" + 'homePageImageType' + "'"
+params: { missingProperty: 'lastModified' },
+message: "must have required property '" + 'lastModified' + "'"
 }
 if (vErrors === null) {
 vErrors = [err6]
@@ -198,13 +200,13 @@ vErrors.push(err6)
 }
 
 }
-if (data0.homePageImage === undefined) {
+if (data0.homePageImageType === undefined) {
 const err7 = {
 instancePath: instancePath + '/app',
 schemaPath: '#/properties/app/required',
 keyword: 'required',
-params: { missingProperty: 'homePageImage' },
-message: "must have required property '" + 'homePageImage' + "'"
+params: { missingProperty: 'homePageImageType' },
+message: "must have required property '" + 'homePageImageType' + "'"
 }
 if (vErrors === null) {
 vErrors = [err7]
@@ -213,13 +215,13 @@ vErrors.push(err7)
 }
 
 }
-if (data0.authenticationType === undefined) {
+if (data0.homePageImage === undefined) {
 const err8 = {
 instancePath: instancePath + '/app',
 schemaPath: '#/properties/app/required',
 keyword: 'required',
-params: { missingProperty: 'authenticationType' },
-message: "must have required property '" + 'authenticationType' + "'"
+params: { missingProperty: 'homePageImage' },
+message: "must have required property '" + 'homePageImage' + "'"
 }
 if (vErrors === null) {
 vErrors = [err8]
@@ -228,13 +230,13 @@ vErrors.push(err8)
 }
 
 }
-if (data0.lang === undefined) {
+if (data0.authenticationType === undefined) {
 const err9 = {
 instancePath: instancePath + '/app',
 schemaPath: '#/properties/app/required',
 keyword: 'required',
-params: { missingProperty: 'lang' },
-message: "must have required property '" + 'lang' + "'"
+params: { missingProperty: 'authenticationType' },
+message: "must have required property '" + 'authenticationType' + "'"
 }
 if (vErrors === null) {
 vErrors = [err9]
@@ -243,13 +245,13 @@ vErrors.push(err9)
 }
 
 }
-if (data0.enableNarrator === undefined) {
+if (data0.lang === undefined) {
 const err10 = {
 instancePath: instancePath + '/app',
 schemaPath: '#/properties/app/required',
 keyword: 'required',
-params: { missingProperty: 'enableNarrator' },
-message: "must have required property '" + 'enableNarrator' + "'"
+params: { missingProperty: 'lang' },
+message: "must have required property '" + 'lang' + "'"
 }
 if (vErrors === null) {
 vErrors = [err10]
@@ -258,13 +260,13 @@ vErrors.push(err10)
 }
 
 }
-if (data0.groups === undefined) {
+if (data0.enableNarrator === undefined) {
 const err11 = {
 instancePath: instancePath + '/app',
 schemaPath: '#/properties/app/required',
 keyword: 'required',
-params: { missingProperty: 'groups' },
-message: "must have required property '" + 'groups' + "'"
+params: { missingProperty: 'enableNarrator' },
+message: "must have required property '" + 'enableNarrator' + "'"
 }
 if (vErrors === null) {
 vErrors = [err11]
@@ -273,13 +275,13 @@ vErrors.push(err11)
 }
 
 }
-if (data0.id === undefined) {
+if (data0.groups === undefined) {
 const err12 = {
 instancePath: instancePath + '/app',
 schemaPath: '#/properties/app/required',
 keyword: 'required',
-params: { missingProperty: 'id' },
-message: "must have required property '" + 'id' + "'"
+params: { missingProperty: 'groups' },
+message: "must have required property '" + 'groups' + "'"
 }
 if (vErrors === null) {
 vErrors = [err12]
@@ -288,8 +290,23 @@ vErrors.push(err12)
 }
 
 }
-if (data0.lastSync === undefined) {
+if (data0.id === undefined) {
 const err13 = {
+instancePath: instancePath + '/app',
+schemaPath: '#/properties/app/required',
+keyword: 'required',
+params: { missingProperty: 'id' },
+message: "must have required property '" + 'id' + "'"
+}
+if (vErrors === null) {
+vErrors = [err13]
+} else {
+vErrors.push(err13)
+}
+
+}
+if (data0.lastSync === undefined) {
+const err14 = {
 instancePath: instancePath + '/app',
 schemaPath: '#/properties/app/required',
 keyword: 'required',
@@ -297,9 +314,9 @@ params: { missingProperty: 'lastSync' },
 message: "must have required property '" + 'lastSync' + "'"
 }
 if (vErrors === null) {
-vErrors = [err13]
+vErrors = [err14]
 } else {
-vErrors.push(err13)
+vErrors.push(err14)
 }
 
 }
@@ -311,26 +328,12 @@ data0['email'] = data1
 }
 if (typeof data1 === 'string') {
 if (func4(data1) > 100) {
-const err14 = {
+const err15 = {
 instancePath: instancePath + '/app/email',
 schemaPath: '#/properties/app/properties/email/maxLength',
 keyword: 'maxLength',
 params: { limit: 100 },
  message: "Must_be_less_than_100_characters"}
-if (vErrors === null) {
-vErrors = [err14]
-} else {
-vErrors.push(err14)
-}
-
-}
-if (func4(data1) < 5) {
-const err15 = {
-instancePath: instancePath + '/app/email',
-schemaPath: '#/properties/app/properties/email/minLength',
-keyword: 'minLength',
-params: { limit: 5 },
- message: "Required"}
 if (vErrors === null) {
 vErrors = [err15]
 } else {
@@ -338,13 +341,13 @@ vErrors.push(err15)
 }
 
 }
-if (!formats0.test(data1)) {
+if (func4(data1) < 5) {
 const err16 = {
 instancePath: instancePath + '/app/email',
-schemaPath: '#/properties/app/properties/email/format',
-keyword: 'format',
-params: { format: 'email' },
- message: "Must_be_a_valid_email"}
+schemaPath: '#/properties/app/properties/email/minLength',
+keyword: 'minLength',
+params: { limit: 5 },
+ message: "Required"}
 if (vErrors === null) {
 vErrors = [err16]
 } else {
@@ -352,8 +355,22 @@ vErrors.push(err16)
 }
 
 }
-} else {
+if (!formats0.test(data1)) {
 const err17 = {
+instancePath: instancePath + '/app/email',
+schemaPath: '#/properties/app/properties/email/format',
+keyword: 'format',
+params: { format: 'email' },
+ message: "Must_be_a_valid_email"}
+if (vErrors === null) {
+vErrors = [err17]
+} else {
+vErrors.push(err17)
+}
+
+}
+} else {
+const err18 = {
 instancePath: instancePath + '/app/email',
 schemaPath: '#/properties/app/properties/email/type',
 keyword: 'type',
@@ -361,9 +378,9 @@ params: { type: 'string' },
 message: 'must be string'
 }
 if (vErrors === null) {
-vErrors = [err17]
+vErrors = [err18]
 } else {
-vErrors.push(err17)
+vErrors.push(err18)
 }
 
 }
@@ -376,26 +393,12 @@ data0['name'] = data2
 }
 if (typeof data2 === 'string') {
 if (func4(data2) > 100) {
-const err18 = {
+const err19 = {
 instancePath: instancePath + '/app/name',
 schemaPath: '#/properties/app/properties/name/maxLength',
 keyword: 'maxLength',
 params: { limit: 100 },
  message: "Must_be_less_than_100_characters"}
-if (vErrors === null) {
-vErrors = [err18]
-} else {
-vErrors.push(err18)
-}
-
-}
-if (func4(data2) < 1) {
-const err19 = {
-instancePath: instancePath + '/app/name',
-schemaPath: '#/properties/app/properties/name/minLength',
-keyword: 'minLength',
-params: { limit: 1 },
- message: "Required"}
 if (vErrors === null) {
 vErrors = [err19]
 } else {
@@ -403,8 +406,22 @@ vErrors.push(err19)
 }
 
 }
-} else {
+if (func4(data2) < 1) {
 const err20 = {
+instancePath: instancePath + '/app/name',
+schemaPath: '#/properties/app/properties/name/minLength',
+keyword: 'minLength',
+params: { limit: 1 },
+ message: "Required"}
+if (vErrors === null) {
+vErrors = [err20]
+} else {
+vErrors.push(err20)
+}
+
+}
+} else {
+const err21 = {
 instancePath: instancePath + '/app/name',
 schemaPath: '#/properties/app/properties/name/type',
 keyword: 'type',
@@ -412,9 +429,9 @@ params: { type: 'string' },
 message: 'must be string'
 }
 if (vErrors === null) {
-vErrors = [err20]
+vErrors = [err21]
 } else {
-vErrors.push(err20)
+vErrors.push(err21)
 }
 
 }
@@ -427,26 +444,12 @@ data0['uniqueName'] = data3
 }
 if (typeof data3 === 'string') {
 if (func4(data3) > 100) {
-const err21 = {
+const err22 = {
 instancePath: instancePath + '/app/uniqueName',
 schemaPath: '#/properties/app/properties/uniqueName/maxLength',
 keyword: 'maxLength',
 params: { limit: 100 },
  message: "Must_be_less_than_100_characters"}
-if (vErrors === null) {
-vErrors = [err21]
-} else {
-vErrors.push(err21)
-}
-
-}
-if (func4(data3) < 1) {
-const err22 = {
-instancePath: instancePath + '/app/uniqueName',
-schemaPath: '#/properties/app/properties/uniqueName/minLength',
-keyword: 'minLength',
-params: { limit: 1 },
- message: "Required"}
 if (vErrors === null) {
 vErrors = [err22]
 } else {
@@ -454,13 +457,13 @@ vErrors.push(err22)
 }
 
 }
-if (!pattern0.test(data3)) {
+if (func4(data3) < 1) {
 const err23 = {
 instancePath: instancePath + '/app/uniqueName',
-schemaPath: '#/properties/app/properties/uniqueName/pattern',
-keyword: 'pattern',
-params: { pattern: '/^(?!API$|I$).+$/i' },
- message: "Unique_name_contains_reserved_words"}
+schemaPath: '#/properties/app/properties/uniqueName/minLength',
+keyword: 'minLength',
+params: { limit: 1 },
+ message: "Required"}
 if (vErrors === null) {
 vErrors = [err23]
 } else {
@@ -468,15 +471,13 @@ vErrors.push(err23)
 }
 
 }
-if (
-!await serverAndClientFunctions.isNameGloballyUnique(data,data3)
-) {
+if (!pattern0.test(data3)) {
 const err24 = {
 instancePath: instancePath + '/app/uniqueName',
-schemaPath: '#/properties/app/properties/uniqueName/isNameGloballyUnique',
-keyword: 'isNameGloballyUnique',
-params: {},
- message: "Not_Globally_Unique"}
+schemaPath: '#/properties/app/properties/uniqueName/pattern',
+keyword: 'pattern',
+params: { pattern: '/^(?!API$|I$).+$/i' },
+ message: "Unique_name_contains_reserved_words"}
 if (vErrors === null) {
 vErrors = [err24]
 } else {
@@ -484,8 +485,24 @@ vErrors.push(err24)
 }
 
 }
-} else {
+if (
+!await serverAndClientFunctions.isNameGloballyUnique(data,data3)
+) {
 const err25 = {
+instancePath: instancePath + '/app/uniqueName',
+schemaPath: '#/properties/app/properties/uniqueName/isNameGloballyUnique',
+keyword: 'isNameGloballyUnique',
+params: {},
+ message: "Not_Globally_Unique"}
+if (vErrors === null) {
+vErrors = [err25]
+} else {
+vErrors.push(err25)
+}
+
+}
+} else {
+const err26 = {
 instancePath: instancePath + '/app/uniqueName',
 schemaPath: '#/properties/app/properties/uniqueName/type',
 keyword: 'type',
@@ -493,9 +510,9 @@ params: { type: 'string' },
 message: 'must be string'
 }
 if (vErrors === null) {
-vErrors = [err25]
+vErrors = [err26]
 } else {
-vErrors.push(err25)
+vErrors.push(err26)
 }
 
 }
@@ -510,27 +527,12 @@ typeof data4 == 'number' &&
 isFinite(data4)
 )
 ) {
-const err26 = {
+const err27 = {
 instancePath: instancePath + '/app/version',
 schemaPath: '#/properties/app/properties/version/type',
 keyword: 'type',
 params: { type: 'integer' },
  message: "Must_be_an_integer"}
-if (vErrors === null) {
-vErrors = [err26]
-} else {
-vErrors.push(err26)
-}
-
-}
-if (typeof data4 == 'number' && isFinite(data4)) {
-if (data4 < 0 || isNaN(data4)) {
-const err27 = {
-instancePath: instancePath + '/app/version',
-schemaPath: '#/properties/app/properties/version/minimum',
-keyword: 'minimum',
-params: { comparison: '>=', limit: 0 },
- message: "Must_be_greater_than_or_equal_to_0"}
 if (vErrors === null) {
 vErrors = [err27]
 } else {
@@ -538,17 +540,14 @@ vErrors.push(err27)
 }
 
 }
-}
-}
-if (data0.lastModified !== undefined) {
-let data5 = data0.lastModified
-if (!(typeof data5 == 'number' && isFinite(data5))) {
+if (typeof data4 == 'number' && isFinite(data4)) {
+if (data4 < 0 || isNaN(data4)) {
 const err28 = {
-instancePath: instancePath + '/app/lastModified',
-schemaPath: '#/properties/app/properties/lastModified/type',
-keyword: 'type',
-params: { type: 'number' },
- message: "Must_be_a_number"}
+instancePath: instancePath + '/app/version',
+schemaPath: '#/properties/app/properties/version/minimum',
+keyword: 'minimum',
+params: { comparison: '>=', limit: 0 },
+ message: "Must_be_greater_than_or_equal_to_0"}
 if (vErrors === null) {
 vErrors = [err28]
 } else {
@@ -557,22 +556,15 @@ vErrors.push(err28)
 
 }
 }
-if (data0.homePageImageType !== undefined) {
-let data6 = data0.homePageImageType
-if (
-!(
-typeof data6 == 'number' &&
-!(data6 % 1) &&
-!isNaN(data6) &&
-isFinite(data6)
-)
-) {
+}
+if (data0.touched !== undefined) {
+if (typeof data0.touched !== 'boolean') {
 const err29 = {
-instancePath: instancePath + '/app/homePageImageType',
-schemaPath: '#/properties/app/properties/homePageImageType/type',
+instancePath: instancePath + '/app/touched',
+schemaPath: '#/properties/app/properties/touched/type',
 keyword: 'type',
-params: { type: 'integer' },
- message: "Must_be_an_integer"}
+params: { type: 'boolean' },
+ message: "Must_be_a_boolean"}
 if (vErrors === null) {
 vErrors = [err29]
 } else {
@@ -580,14 +572,16 @@ vErrors.push(err29)
 }
 
 }
-if (typeof data6 == 'number' && isFinite(data6)) {
-if (data6 > 3 || isNaN(data6)) {
+}
+if (data0.lastModified !== undefined) {
+let data6 = data0.lastModified
+if (!(typeof data6 == 'number' && isFinite(data6))) {
 const err30 = {
-instancePath: instancePath + '/app/homePageImageType',
-schemaPath: '#/properties/app/properties/homePageImageType/maximum',
-keyword: 'maximum',
-params: { comparison: '<=', limit: 3 },
- message: "Must_be_less_than_or_equal_to_maximum"}
+instancePath: instancePath + '/app/lastModified',
+schemaPath: '#/properties/app/properties/lastModified/type',
+keyword: 'type',
+params: { type: 'number' },
+ message: "Must_be_a_number"}
 if (vErrors === null) {
 vErrors = [err30]
 } else {
@@ -595,13 +589,23 @@ vErrors.push(err30)
 }
 
 }
-if (data6 < 0 || isNaN(data6)) {
+}
+if (data0.homePageImageType !== undefined) {
+let data7 = data0.homePageImageType
+if (
+!(
+typeof data7 == 'number' &&
+!(data7 % 1) &&
+!isNaN(data7) &&
+isFinite(data7)
+)
+) {
 const err31 = {
 instancePath: instancePath + '/app/homePageImageType',
-schemaPath: '#/properties/app/properties/homePageImageType/minimum',
-keyword: 'minimum',
-params: { comparison: '>=', limit: 0 },
- message: "Must_be_greater_than_or_equal_to_0"}
+schemaPath: '#/properties/app/properties/homePageImageType/type',
+keyword: 'type',
+params: { type: 'integer' },
+ message: "Must_be_an_integer"}
 if (vErrors === null) {
 vErrors = [err31]
 } else {
@@ -609,18 +613,14 @@ vErrors.push(err31)
 }
 
 }
-}
-}
-if (data0.homePageImage !== undefined) {
-let data7 = data0.homePageImage
-if (typeof data7 === 'string') {
-if (!formats2.test(data7)) {
+if (typeof data7 == 'number' && isFinite(data7)) {
+if (data7 > 3 || isNaN(data7)) {
 const err32 = {
-instancePath: instancePath + '/app/homePageImage',
-schemaPath: '#/properties/app/properties/homePageImage/format',
-keyword: 'format',
-params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+instancePath: instancePath + '/app/homePageImageType',
+schemaPath: '#/properties/app/properties/homePageImageType/maximum',
+keyword: 'maximum',
+params: { comparison: '<=', limit: 3 },
+ message: "Must_be_less_than_or_equal_to_maximum"}
 if (vErrors === null) {
 vErrors = [err32]
 } else {
@@ -628,14 +628,13 @@ vErrors.push(err32)
 }
 
 }
-} else {
+if (data7 < 0 || isNaN(data7)) {
 const err33 = {
-instancePath: instancePath + '/app/homePageImage',
-schemaPath: '#/properties/app/properties/homePageImage/type',
-keyword: 'type',
-params: { type: 'string' },
-message: 'must be string'
-}
+instancePath: instancePath + '/app/homePageImageType',
+schemaPath: '#/properties/app/properties/homePageImageType/minimum',
+keyword: 'minimum',
+params: { comparison: '>=', limit: 0 },
+ message: "Must_be_greater_than_or_equal_to_0"}
 if (vErrors === null) {
 vErrors = [err33]
 } else {
@@ -644,20 +643,17 @@ vErrors.push(err33)
 
 }
 }
-if (data0.authenticationType !== undefined) {
-let data8 = data0.authenticationType
-if (typeof data8 == 'string' && data0 !== undefined) {
-data8 = func2(func3(data8))
-data0['authenticationType'] = data8
 }
+if (data0.homePageImage !== undefined) {
+let data8 = data0.homePageImage
 if (typeof data8 === 'string') {
-if (func4(data8) > 100) {
+if (!formats2.test(data8)) {
 const err34 = {
-instancePath: instancePath + '/app/authenticationType',
-schemaPath: '#/properties/app/properties/authenticationType/maxLength',
-keyword: 'maxLength',
-params: { limit: 100 },
- message: "Must_be_less_than_100_characters"}
+instancePath: instancePath + '/app/homePageImage',
+schemaPath: '#/properties/app/properties/homePageImage/format',
+keyword: 'format',
+params: { format: 'uuid' },
+ message: "Must_be_a_valid_UUID"}
 if (vErrors === null) {
 vErrors = [err34]
 } else {
@@ -665,13 +661,14 @@ vErrors.push(err34)
 }
 
 }
-if (func4(data8) < 1) {
+} else {
 const err35 = {
-instancePath: instancePath + '/app/authenticationType',
-schemaPath: '#/properties/app/properties/authenticationType/minLength',
-keyword: 'minLength',
-params: { limit: 1 },
- message: "Required"}
+instancePath: instancePath + '/app/homePageImage',
+schemaPath: '#/properties/app/properties/homePageImage/type',
+keyword: 'type',
+params: { type: 'string' },
+message: 'must be string'
+}
 if (vErrors === null) {
 vErrors = [err35]
 } else {
@@ -679,14 +676,21 @@ vErrors.push(err35)
 }
 
 }
-} else {
+}
+if (data0.authenticationType !== undefined) {
+let data9 = data0.authenticationType
+if (typeof data9 == 'string' && data0 !== undefined) {
+data9 = func2(func3(data9))
+data0['authenticationType'] = data9
+}
+if (typeof data9 === 'string') {
+if (func4(data9) > 100) {
 const err36 = {
 instancePath: instancePath + '/app/authenticationType',
-schemaPath: '#/properties/app/properties/authenticationType/type',
-keyword: 'type',
-params: { type: 'string' },
-message: 'must be string'
-}
+schemaPath: '#/properties/app/properties/authenticationType/maxLength',
+keyword: 'maxLength',
+params: { limit: 100 },
+ message: "Must_be_less_than_100_characters"}
 if (vErrors === null) {
 vErrors = [err36]
 } else {
@@ -694,21 +698,13 @@ vErrors.push(err36)
 }
 
 }
-}
-if (data0.lang !== undefined) {
-let data9 = data0.lang
-if (typeof data9 == 'string' && data0 !== undefined) {
-data9 = func2(func3(data9))
-data0['lang'] = data9
-}
-if (typeof data9 === 'string') {
-if (func4(data9) > 100) {
+if (func4(data9) < 1) {
 const err37 = {
-instancePath: instancePath + '/app/lang',
-schemaPath: '#/properties/app/properties/lang/maxLength',
-keyword: 'maxLength',
-params: { limit: 100 },
- message: "Must_be_less_than_100_characters"}
+instancePath: instancePath + '/app/authenticationType',
+schemaPath: '#/properties/app/properties/authenticationType/minLength',
+keyword: 'minLength',
+params: { limit: 1 },
+ message: "Required"}
 if (vErrors === null) {
 vErrors = [err37]
 } else {
@@ -716,13 +712,14 @@ vErrors.push(err37)
 }
 
 }
-if (func4(data9) < 1) {
+} else {
 const err38 = {
-instancePath: instancePath + '/app/lang',
-schemaPath: '#/properties/app/properties/lang/minLength',
-keyword: 'minLength',
-params: { limit: 1 },
- message: "Required"}
+instancePath: instancePath + '/app/authenticationType',
+schemaPath: '#/properties/app/properties/authenticationType/type',
+keyword: 'type',
+params: { type: 'string' },
+message: 'must be string'
+}
 if (vErrors === null) {
 vErrors = [err38]
 } else {
@@ -730,14 +727,21 @@ vErrors.push(err38)
 }
 
 }
-} else {
+}
+if (data0.lang !== undefined) {
+let data10 = data0.lang
+if (typeof data10 == 'string' && data0 !== undefined) {
+data10 = func2(func3(data10))
+data0['lang'] = data10
+}
+if (typeof data10 === 'string') {
+if (func4(data10) > 100) {
 const err39 = {
 instancePath: instancePath + '/app/lang',
-schemaPath: '#/properties/app/properties/lang/type',
-keyword: 'type',
-params: { type: 'string' },
-message: 'must be string'
-}
+schemaPath: '#/properties/app/properties/lang/maxLength',
+keyword: 'maxLength',
+params: { limit: 100 },
+ message: "Must_be_less_than_100_characters"}
 if (vErrors === null) {
 vErrors = [err39]
 } else {
@@ -745,15 +749,13 @@ vErrors.push(err39)
 }
 
 }
-}
-if (data0.enableNarrator !== undefined) {
-if (typeof data0.enableNarrator !== 'boolean') {
+if (func4(data10) < 1) {
 const err40 = {
-instancePath: instancePath + '/app/enableNarrator',
-schemaPath: '#/properties/app/properties/enableNarrator/type',
-keyword: 'type',
-params: { type: 'boolean' },
- message: "Must_be_a_boolean"}
+instancePath: instancePath + '/app/lang',
+schemaPath: '#/properties/app/properties/lang/minLength',
+keyword: 'minLength',
+params: { limit: 1 },
+ message: "Required"}
 if (vErrors === null) {
 vErrors = [err40]
 } else {
@@ -761,17 +763,14 @@ vErrors.push(err40)
 }
 
 }
-}
-if (data0.groups !== undefined) {
-let data11 = data0.groups
-if (typeof data11 === 'string') {
-if (func4(data11) > 8000) {
+} else {
 const err41 = {
-instancePath: instancePath + '/app/groups',
-schemaPath: '#/properties/app/properties/groups/maxLength',
-keyword: 'maxLength',
-params: { limit: 8000 },
- message: "Must_be_less_than_8000_characters"}
+instancePath: instancePath + '/app/lang',
+schemaPath: '#/properties/app/properties/lang/type',
+keyword: 'type',
+params: { type: 'string' },
+message: 'must be string'
+}
 if (vErrors === null) {
 vErrors = [err41]
 } else {
@@ -779,14 +778,15 @@ vErrors.push(err41)
 }
 
 }
-} else {
-const err42 = {
-instancePath: instancePath + '/app/groups',
-schemaPath: '#/properties/app/properties/groups/type',
-keyword: 'type',
-params: { type: 'string' },
-message: 'must be string'
 }
+if (data0.enableNarrator !== undefined) {
+if (typeof data0.enableNarrator !== 'boolean') {
+const err42 = {
+instancePath: instancePath + '/app/enableNarrator',
+schemaPath: '#/properties/app/properties/enableNarrator/type',
+keyword: 'type',
+params: { type: 'boolean' },
+ message: "Must_be_a_boolean"}
 if (vErrors === null) {
 vErrors = [err42]
 } else {
@@ -795,16 +795,16 @@ vErrors.push(err42)
 
 }
 }
-if (data0.id !== undefined) {
-let data12 = data0.id
+if (data0.groups !== undefined) {
+let data12 = data0.groups
 if (typeof data12 === 'string') {
-if (func4(data12) < 36) {
+if (func4(data12) > 8000) {
 const err43 = {
-instancePath: instancePath + '/app/id',
-schemaPath: '#/properties/app/properties/id/minLength',
-keyword: 'minLength',
-params: { limit: 36 },
- message: "Must_be_36_characters"}
+instancePath: instancePath + '/app/groups',
+schemaPath: '#/properties/app/properties/groups/maxLength',
+keyword: 'maxLength',
+params: { limit: 8000 },
+ message: "Must_be_less_than_8000_characters"}
 if (vErrors === null) {
 vErrors = [err43]
 } else {
@@ -812,13 +812,14 @@ vErrors.push(err43)
 }
 
 }
-if (!formats2.test(data12)) {
+} else {
 const err44 = {
-instancePath: instancePath + '/app/id',
-schemaPath: '#/properties/app/properties/id/format',
-keyword: 'format',
-params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+instancePath: instancePath + '/app/groups',
+schemaPath: '#/properties/app/properties/groups/type',
+keyword: 'type',
+params: { type: 'string' },
+message: 'must be string'
+}
 if (vErrors === null) {
 vErrors = [err44]
 } else {
@@ -826,14 +827,17 @@ vErrors.push(err44)
 }
 
 }
-} else {
+}
+if (data0.id !== undefined) {
+let data13 = data0.id
+if (typeof data13 === 'string') {
+if (func4(data13) < 36) {
 const err45 = {
 instancePath: instancePath + '/app/id',
-schemaPath: '#/properties/app/properties/id/type',
-keyword: 'type',
-params: { type: 'string' },
-message: 'must be string'
-}
+schemaPath: '#/properties/app/properties/id/minLength',
+keyword: 'minLength',
+params: { limit: 36 },
+ message: "Must_be_36_characters"}
 if (vErrors === null) {
 vErrors = [err45]
 } else {
@@ -841,16 +845,13 @@ vErrors.push(err45)
 }
 
 }
-}
-if (data0.lastSync !== undefined) {
-let data13 = data0.lastSync
-if (!(typeof data13 == 'number' && isFinite(data13))) {
+if (!formats2.test(data13)) {
 const err46 = {
-instancePath: instancePath + '/app/lastSync',
-schemaPath: '#/properties/app/properties/lastSync/type',
-keyword: 'type',
-params: { type: 'number' },
- message: "Must_be_a_number"}
+instancePath: instancePath + '/app/id',
+schemaPath: '#/properties/app/properties/id/format',
+keyword: 'format',
+params: { format: 'uuid' },
+ message: "Must_be_a_valid_UUID"}
 if (vErrors === null) {
 vErrors = [err46]
 } else {
@@ -858,14 +859,13 @@ vErrors.push(err46)
 }
 
 }
-}
 } else {
 const err47 = {
-instancePath: instancePath + '/app',
-schemaPath: '#/properties/app/type',
+instancePath: instancePath + '/app/id',
+schemaPath: '#/properties/app/properties/id/type',
 keyword: 'type',
-params: { type: 'object' },
-message: 'must be object'
+params: { type: 'string' },
+message: 'must be string'
 }
 if (vErrors === null) {
 vErrors = [err47]
@@ -875,8 +875,41 @@ vErrors.push(err47)
 
 }
 }
-} else {
+if (data0.lastSync !== undefined) {
+let data14 = data0.lastSync
+if (!(typeof data14 == 'number' && isFinite(data14))) {
 const err48 = {
+instancePath: instancePath + '/app/lastSync',
+schemaPath: '#/properties/app/properties/lastSync/type',
+keyword: 'type',
+params: { type: 'number' },
+ message: "Must_be_a_number"}
+if (vErrors === null) {
+vErrors = [err48]
+} else {
+vErrors.push(err48)
+}
+
+}
+}
+} else {
+const err49 = {
+instancePath: instancePath + '/app',
+schemaPath: '#/properties/app/type',
+keyword: 'type',
+params: { type: 'object' },
+message: 'must be object'
+}
+if (vErrors === null) {
+vErrors = [err49]
+} else {
+vErrors.push(err49)
+}
+
+}
+}
+} else {
+const err50 = {
 instancePath,
 schemaPath: '#/type',
 keyword: 'type',
@@ -884,9 +917,9 @@ params: { type: 'object' },
 message: 'must be object'
 }
 if (vErrors === null) {
-vErrors = [err48]
+vErrors = [err50]
 } else {
-vErrors.push(err48)
+vErrors.push(err50)
 }
 
 }

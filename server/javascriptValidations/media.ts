@@ -4,16 +4,15 @@ $id: 'media',
 type: 'object',
 properties: {
 id: {
-default: '019aae7b-ab6b-730e-b242-9f97d3ef2169',
+default: '019ab0ba-1d66-760f-aeb7-5ceaed8cd594',
 format: 'uuid',
 type: 'string'},
 size: { minimum: 0, type: 'integer' },
 data: { maxLength: 8000, type: 'string' },
 appId: { format: 'uuid', type: 'string' },
-lastModified: { type: 'number' },
 touched: { default: false, type: 'boolean' }
 },
-required: ['id', 'size', 'data', 'appId', 'lastModified', 'touched']
+required: ['id', 'size', 'data', 'appId', 'touched']
 }
 const formats2 = /^(?:urn:uuid:)?[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/i
 import ucs2length from 'ajv/dist/runtime/ucs2length';const func4 = (ucs2length as any).default;
@@ -33,7 +32,6 @@ if (
 (data.size === undefined && (missing0 = 'size')) ||
 (data.data === undefined && (missing0 = 'data')) ||
 (data.appId === undefined && (missing0 = 'appId')) ||
-(data.lastModified === undefined && (missing0 = 'lastModified')) ||
 (data.touched === undefined && (missing0 = 'touched'))
 ) {errors.push(
 {
@@ -175,25 +173,8 @@ var valid0 = _errs7 === errors
 var valid0 = true
 }
 if (valid0) {
-if (data.lastModified !== undefined) {
-let data4 = data.lastModified
-const _errs9 = errors
-if (!(typeof data4 == 'number' && isFinite(data4))) {errors.push(
-{
-instancePath: instancePath + '/lastModified',
-schemaPath: '#/properties/lastModified/type',
-keyword: 'type',
-params: { type: 'number' },
- message: "Must_be_a_number"}
-);
-}
-var valid0 = _errs9 === errors
-} else {
-var valid0 = true
-}
-if (valid0) {
 if (data.touched !== undefined) {
-const _errs11 = errors
+const _errs9 = errors
 if (typeof data.touched !== 'boolean') {errors.push(
 {
 instancePath: instancePath + '/touched',
@@ -203,10 +184,9 @@ params: { type: 'boolean' },
  message: "Must_be_a_boolean"}
 );
 }
-var valid0 = _errs11 === errors
+var valid0 = _errs9 === errors
 } else {
 var valid0 = true
-}
 }
 }
 }

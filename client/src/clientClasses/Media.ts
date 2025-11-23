@@ -39,9 +39,6 @@
     private _appId: string = "";
     public get appId():string { return this._appId; }
     public set appId(v:string) {if(this._appId != v){this._appId=v;awesum.setTablePropertyValueById(this.id, 'appId',v,this.table)}}
-    private _lastModified: number = 0;
-    public get lastModified():number { return this._lastModified; }
-    public set lastModified(v:number) {if(this._lastModified != v){this._lastModified=v;awesum.setTablePropertyValueById(this.id, 'lastModified',v,this.table)}}
     private _touched: boolean = false;
     public get touched():boolean { return this._touched; }
     public set touched(v:boolean) {if(this._touched != v){this._touched=v;awesum.setTablePropertyValueById(this.id, 'touched',v,this.table)}}

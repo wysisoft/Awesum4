@@ -26,7 +26,8 @@ isNameGloballyUnique: true,
 transform: ['trim', 'toLowerCase'],
 type: 'string'},
 version: { default: 0, minimum: 0, type: 'integer' },
-lastModified: { default: 1763863931755, type: 'number' },
+touched: { default: false, type: 'boolean' },
+lastModified: { default: 1763901578597, type: 'number' },
 homePageImageType: {
 default: 0,
 minimum: 0,
@@ -50,7 +51,7 @@ type: 'string'},
 enableNarrator: { default: false, type: 'boolean' },
 groups: { default: '', maxLength: 8000, type: 'string' },
 id: {
-default: '019aae7b-ab6b-730e-b242-8d22861a9117',
+default: '019ab0ba-1d65-71b9-aa75-5576dc859e13',
 format: 'uuid',
 minLength: 36,
 type: 'string'},
@@ -61,6 +62,7 @@ required: [
 'name',
 'uniqueName',
 'version',
+'touched',
 'lastModified',
 'homePageImageType',
 'homePageImage',
@@ -117,6 +119,7 @@ if (
 (data0.name === undefined && (missing1 = 'name')) ||
 (data0.uniqueName === undefined && (missing1 = 'uniqueName')) ||
 (data0.version === undefined && (missing1 = 'version')) ||
+(data0.touched === undefined && (missing1 = 'touched')) ||
 (data0.lastModified === undefined &&
 (missing1 = 'lastModified')) ||
 (data0.homePageImageType === undefined &&
@@ -346,10 +349,28 @@ var valid1 = _errs9 === errors
 var valid1 = true
 }
 if (valid1) {
-if (data0.lastModified !== undefined) {
-let data5 = data0.lastModified
+if (data0.touched !== undefined) {
 const _errs11 = errors
-if (!(typeof data5 == 'number' && isFinite(data5))) {errors.push(
+if (typeof data0.touched !== 'boolean') {errors.push(
+{
+instancePath: instancePath + '/app/touched',
+schemaPath: '#/properties/app/properties/touched/type',
+keyword: 'type',
+params: { type: 'boolean' },
+ message: "Must_be_a_boolean"}
+);
+}
+var valid1 = _errs11 === errors
+} else {
+var valid1 = true
+}
+if (valid1) {
+if (data0.lastModified !== undefined) {
+let data6 = data0.lastModified
+const _errs13 = errors
+if (
+!(typeof data6 == 'number' && isFinite(data6))
+) {errors.push(
 {
 instancePath: instancePath + '/app/lastModified',
 schemaPath: '#/properties/app/properties/lastModified/type',
@@ -358,20 +379,20 @@ params: { type: 'number' },
  message: "Must_be_a_number"}
 );
 }
-var valid1 = _errs11 === errors
+var valid1 = _errs13 === errors
 } else {
 var valid1 = true
 }
 if (valid1) {
 if (data0.homePageImageType !== undefined) {
-let data6 = data0.homePageImageType
-const _errs13 = errors
+let data7 = data0.homePageImageType
+const _errs15 = errors
 if (
 !(
-typeof data6 == 'number' &&
-!(data6 % 1) &&
-!isNaN(data6) &&
-isFinite(data6)
+typeof data7 == 'number' &&
+!(data7 % 1) &&
+!isNaN(data7) &&
+isFinite(data7)
 )
 ) {errors.push(
 {
@@ -383,8 +404,11 @@ params: { type: 'integer' },
 );
 }
 if (true) {
-if (typeof data6 == 'number' && isFinite(data6)) {
-if (data6 > 3 || isNaN(data6)) {errors.push(
+if (
+typeof data7 == 'number' &&
+isFinite(data7)
+) {
+if (data7 > 3 || isNaN(data7)) {errors.push(
 {
 instancePath: instancePath + '/app/homePageImageType',
 schemaPath: '#/properties/app/properties/homePageImageType/maximum',
@@ -393,30 +417,33 @@ params: { comparison: '<=', limit: 3 },
  message: "Must_be_less_than_or_equal_to_maximum"}
 );
 } else {
-if (data6 < 0 || isNaN(data6)) {errors.push(
+if (data7 < 0 || isNaN(data7)) {errors.push(
 {
 instancePath: instancePath + '/app/homePageImageType',
 schemaPath: '#/properties/app/properties/homePageImageType/minimum',
 keyword: 'minimum',
-params: { comparison: '>=', limit: 0 },
+params: {
+comparison: '>=',
+limit: 0
+},
  message: "Must_be_greater_than_or_equal_to_0"}
 );
 }
 }
 }
 }
-var valid1 = _errs13 === errors
+var valid1 = _errs15 === errors
 } else {
 var valid1 = true
 }
 if (valid1) {
 if (data0.homePageImage !== undefined) {
-let data7 = data0.homePageImage
-const _errs15 = errors
+let data8 = data0.homePageImage
+const _errs17 = errors
 if (true) {
 if (true) {
-if (typeof data7 === 'string') {
-if (!formats2.test(data7)) {errors.push(
+if (typeof data8 === 'string') {
+if (!formats2.test(data8)) {errors.push(
 {
 instancePath: instancePath + '/app/homePageImage',
 schemaPath: '#/properties/app/properties/homePageImage/format',
@@ -437,24 +464,24 @@ message: 'must be string'
 }
 }
 }
-var valid1 = _errs15 === errors
+var valid1 = _errs17 === errors
 } else {
 var valid1 = true
 }
 if (valid1) {
 if (data0.authenticationType !== undefined) {
-let data8 = data0.authenticationType
-const _errs17 = errors
+let data9 = data0.authenticationType
+const _errs19 = errors
 if (
-typeof data8 == 'string' &&
+typeof data9 == 'string' &&
 data0 !== undefined
 ) {
-data8 = func2(func3(data8))
-data0['authenticationType'] = data8
+data9 = func2(func3(data9))
+data0['authenticationType'] = data9
 }
 if (true) {
-if (typeof data8 === 'string') {
-if (func4(data8) > 100) {errors.push(
+if (typeof data9 === 'string') {
+if (func4(data9) > 100) {errors.push(
 {
 instancePath: instancePath + '/app/authenticationType',
 schemaPath: '#/properties/app/properties/authenticationType/maxLength',
@@ -463,7 +490,7 @@ params: { limit: 100 },
  message: "Must_be_less_than_100_characters"}
 );
 } else {
-if (func4(data8) < 1) {errors.push(
+if (func4(data9) < 1) {errors.push(
 {
 instancePath: instancePath + '/app/authenticationType',
 schemaPath: '#/properties/app/properties/authenticationType/minLength',
@@ -484,24 +511,24 @@ message: 'must be string'
 );
 }
 }
-var valid1 = _errs17 === errors
+var valid1 = _errs19 === errors
 } else {
 var valid1 = true
 }
 if (valid1) {
 if (data0.lang !== undefined) {
-let data9 = data0.lang
-const _errs19 = errors
+let data10 = data0.lang
+const _errs21 = errors
 if (
-typeof data9 == 'string' &&
+typeof data10 == 'string' &&
 data0 !== undefined
 ) {
-data9 = func2(func3(data9))
-data0['lang'] = data9
+data10 = func2(func3(data10))
+data0['lang'] = data10
 }
 if (true) {
-if (typeof data9 === 'string') {
-if (func4(data9) > 100) {errors.push(
+if (typeof data10 === 'string') {
+if (func4(data10) > 100) {errors.push(
 {
 instancePath: instancePath + '/app/lang',
 schemaPath: '#/properties/app/properties/lang/maxLength',
@@ -510,7 +537,7 @@ params: { limit: 100 },
  message: "Must_be_less_than_100_characters"}
 );
 } else {
-if (func4(data9) < 1) {errors.push(
+if (func4(data10) < 1) {errors.push(
 {
 instancePath: instancePath + '/app/lang',
 schemaPath: '#/properties/app/properties/lang/minLength',
@@ -531,13 +558,13 @@ message: 'must be string'
 );
 }
 }
-var valid1 = _errs19 === errors
+var valid1 = _errs21 === errors
 } else {
 var valid1 = true
 }
 if (valid1) {
 if (data0.enableNarrator !== undefined) {
-const _errs21 = errors
+const _errs23 = errors
 if (
 typeof data0.enableNarrator !== 'boolean'
 ) {errors.push(
@@ -549,17 +576,17 @@ params: { type: 'boolean' },
  message: "Must_be_a_boolean"}
 );
 }
-var valid1 = _errs21 === errors
+var valid1 = _errs23 === errors
 } else {
 var valid1 = true
 }
 if (valid1) {
 if (data0.groups !== undefined) {
-let data11 = data0.groups
-const _errs23 = errors
+let data12 = data0.groups
+const _errs25 = errors
 if (true) {
-if (typeof data11 === 'string') {
-if (func4(data11) > 8000) {errors.push(
+if (typeof data12 === 'string') {
+if (func4(data12) > 8000) {errors.push(
 {
 instancePath: instancePath + '/app/groups',
 schemaPath: '#/properties/app/properties/groups/maxLength',
@@ -579,18 +606,18 @@ message: 'must be string'
 );
 }
 }
-var valid1 = _errs23 === errors
+var valid1 = _errs25 === errors
 } else {
 var valid1 = true
 }
 if (valid1) {
 if (data0.id !== undefined) {
-let data12 = data0.id
-const _errs25 = errors
+let data13 = data0.id
+const _errs27 = errors
 if (true) {
 if (true) {
-if (typeof data12 === 'string') {
-if (func4(data12) < 36) {errors.push(
+if (typeof data13 === 'string') {
+if (func4(data13) < 36) {errors.push(
 {
 instancePath: instancePath + '/app/id',
 schemaPath: '#/properties/app/properties/id/minLength',
@@ -599,7 +626,7 @@ params: { limit: 36 },
  message: "Must_be_36_characters"}
 );
 } else {
-if (!formats2.test(data12)) {errors.push(
+if (!formats2.test(data13)) {errors.push(
 {
 instancePath: instancePath + '/app/id',
 schemaPath: '#/properties/app/properties/id/format',
@@ -622,18 +649,18 @@ message: 'must be string'
 }
 }
 }
-var valid1 = _errs25 === errors
+var valid1 = _errs27 === errors
 } else {
 var valid1 = true
 }
 if (valid1) {
 if (data0.lastSync !== undefined) {
-let data13 = data0.lastSync
-const _errs27 = errors
+let data14 = data0.lastSync
+const _errs29 = errors
 if (
 !(
-typeof data13 == 'number' &&
-isFinite(data13)
+typeof data14 == 'number' &&
+isFinite(data14)
 )
 ) {errors.push(
 {
@@ -644,9 +671,10 @@ params: { type: 'number' },
  message: "Must_be_a_number"}
 );
 }
-var valid1 = _errs27 === errors
+var valid1 = _errs29 === errors
 } else {
 var valid1 = true
+}
 }
 }
 }
@@ -678,7 +706,7 @@ var valid0 = true
 }
 if (valid0) {
 if (data.force !== undefined) {
-const _errs29 = errors
+const _errs31 = errors
 if (typeof data.force !== 'boolean') {errors.push(
 {
 instancePath: instancePath + '/force',
@@ -689,7 +717,7 @@ message: 'must be boolean'
 }
 );
 }
-var valid0 = _errs29 === errors
+var valid0 = _errs31 === errors
 } else {
 var valid0 = true
 }

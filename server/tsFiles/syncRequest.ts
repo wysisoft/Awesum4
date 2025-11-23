@@ -8,6 +8,7 @@ export type syncRequest = {
     name: string
     uniqueName: string
     version: number
+    touched: boolean
     lastModified: number
     homePageImageType: number
     homePageImage: string
@@ -119,7 +120,6 @@ export type syncRequest = {
     size: number
     data: string
     appId: string
-    lastModified: number
     touched: boolean
   }
 }

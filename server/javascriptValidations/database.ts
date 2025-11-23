@@ -4,11 +4,11 @@ $id: 'database',
 type: 'object',
 properties: {
 name: { minLength: 1, maxLength: 100, type: 'string' },
-lastModified: { default: 1763863931755, type: 'number' },
+lastModified: { default: 1763901578598, type: 'number' },
 version: { default: 0, minimum: 0, type: 'integer' },
 appId: { format: 'uuid', type: 'string' },
 id: {
-default: '019aae7b-ab6b-730e-b242-91812e9d220a',
+default: '019ab0ba-1d66-760f-aeb7-50ceef4eeb61',
 format: 'uuid',
 type: 'string'},
 order: { default: 0, minimum: 0, type: 'integer' },
