@@ -22,10 +22,12 @@ import { constants } from "../../server/constants";
 import { v7 as uuid } from 'uuid';
 import type { ServerSpellingDatabaseItemInterface } from "../../server/serverInterfaces/ServerSpellingDatabaseItemInterface";
 import type { ServerSpellingDatabaseItemDataInterface } from "../../server/serverInterfaces/ServerSpellingDatabaseItemDataInterface";
+import type { ServerDeletionInterface } from "../../server/serverInterfaces/ServerDeletionInterface";
+import type { ServerInternalInterface } from "../../server/serverInterfaces/ServerInternalInterface";
 export class AwesumDexieDB extends Dexie {
 
-    internal!: Table<any, string>;
-    deletions!: Table<any, string>;
+    internal!: Table<ServerInternalInterface, string>;
+    deletions!: Table<ServerDeletionInterface, string>;
     serverApps!: Table<ServerAppInterface, string>;
     serverDatabases!: Table<ServerDatabaseInterface, string>;
     serverDatabaseUnits!: Table<ServerDatabaseUnitInterface, string>;

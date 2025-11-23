@@ -33,7 +33,7 @@ import { useToast } from "vue-toastification";
 const appVersion = __APP_VERSION__;
 export const awesum = reactive({
   toast: {} as ReturnType<typeof useToast>,
-  touchedObjects: new Map<string, { tableName: string, fieldName: string }>(),
+  touchedObjects: new Map<string, Set<string>>(),
   debugText: "",
   appVersion: appVersion,
   mostRecentGroups: "",
@@ -170,7 +170,10 @@ export const awesum = reactive({
   ) {
     if (table) {
       if (!dontTouch) {
-        this.touchedObjects.set(id, { tableName: table.name, fieldName: propName });
+        if(!this.touchedObjects.has(id)) {
+          this.touchedObjects.set(id, new Set<string>());
+        }
+        this.touchedObjects.get(id)?.add(propName);
       }
       if (propName.includes(".")) {
         var dexiePromise = this.AwesumDexieDB.table(table.name).update(

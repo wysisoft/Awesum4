@@ -13,9 +13,9 @@ export enum audioType {
 
 export enum syncAction {
     add,
-    addAndRedirectToLeader,
     modify,
     delete,
+    receiveChanges,
 }
 
 export enum syncResultType {
@@ -260,6 +260,39 @@ export const types = [
     ),
     Type.Object(
         {
+            id: Type.String({
+                format: "uuid",
+                formatMessage: "Must_be_a_valid_UUID",
+            }),
+            level: Type.Integer({
+                minimum: 0,
+                minimumMessage: "Must_be_greater_than_or_equal_to_0",
+                typeMessage: "Must_be_an_integer",
+                maximum: Math.max(
+                    ...Object.values(ItemLevel).filter((value) =>
+                        typeof value === "number"
+                    ),
+                ),
+                maximumMessage: "Must_be_less_than_or_equal_to_maximum",
+            }),
+        },
+        { $id: "deletion" },
+    ),
+    Type.Object(
+        {
+            id: Type.String({
+                format: "uuid",
+                formatMessage: "Must_be_a_valid_UUID",
+            }),
+            lastModified: Type.Number({
+                default: new Date().getTime(),
+                typeMessage: "Must_be_a_number"
+            }),
+        },
+        { $id: "internal" },
+    ),
+    Type.Object(
+        {
             name: Type.String({
                 minLength: 1,
                 minLengthMessage: "Required",
@@ -308,6 +341,10 @@ export const types = [
                 default: constants.defaultDatabaseBackgroundGuid,
                 format: "uuid",
                 formatMessage: "Must_be_a_valid_UUID",
+            }),
+            touched: Type.Boolean({
+                default: false,
+                typeMessage: "Must_be_a_boolean",
             }),
         },
         { $id: "database" },
@@ -938,7 +975,7 @@ export const types = [
                 formatMessage: "Must_be_a_valid_UUID",
             }),
             touched: Type.Boolean({
-                default: false,
+                default: true,
                 typeMessage: "Must_be_a_boolean",
             }),
 

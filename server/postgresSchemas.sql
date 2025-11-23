@@ -18,6 +18,18 @@
   "lastSync" NUMERIC NOT NULL
 );
 
+DROP TABLE IF EXISTS awesum."Deletion";
+    CREATE TABLE awesum."Deletion" (
+  "id" UUID PRIMARY KEY NOT NULL,
+  "level" INTEGER NOT NULL
+);
+
+DROP TABLE IF EXISTS awesum."Internal";
+    CREATE TABLE awesum."Internal" (
+  "id" UUID PRIMARY KEY NOT NULL,
+  "lastModified" NUMERIC NOT NULL
+);
+
 DROP TABLE IF EXISTS awesum."Database";
     CREATE TABLE awesum."Database" (
   "name" VARCHAR(100) NOT NULL,
@@ -27,7 +39,8 @@ DROP TABLE IF EXISTS awesum."Database";
   "id" UUID PRIMARY KEY NOT NULL,
   "order" INTEGER NOT NULL,
   "homePageIconType" INTEGER NOT NULL,
-  "homePageIcon" UUID NOT NULL
+  "homePageIcon" UUID NOT NULL,
+  "touched" BOOLEAN NOT NULL
 );
 
 DROP TABLE IF EXISTS awesum."DatabaseUnit";

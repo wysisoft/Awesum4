@@ -1,28 +1,28 @@
 'use strict'
-const schema13 = {
-$id: 'deletion',
+const schema14 = {
+$id: 'internal',
 type: 'object',
 properties: {
 id: { format: 'uuid', type: 'string' },
-level: { minimum: 0, maximum: 9, type: 'integer' }
+lastModified: { default: 1763925463810, type: 'number' }
 },
-required: ['id', 'level']
+required: ['id', 'lastModified']
 }
 const formats2 = /^(?:urn:uuid:)?[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/i
 import type { ErrorObject } from 'ajv'
 import * as serverAndClientFunctions from '../serverAndClientFunctions'
-import type { ServerDeletionInterface } from '../serverInterfaces/ServerDeletionInterface'
-export async function validateDeletion(
-data:ServerDeletionInterface,
+import type { ServerInternalInterface } from '../serverInterfaces/ServerInternalInterface'
+export async function validateInternal(
+data:ServerInternalInterface,
 instancePath = "",awaesumUserName?:string): Promise<Array<ErrorObject>> {
-/*# sourceURL="deletion" */ let vErrors = null
+/*# sourceURL="internal" */ let vErrors = null
 let errors: Array<ErrorObject> = []
 if (true) {
 if (data && typeof data == 'object' && !Array.isArray(data)) {
 let missing0
 if (
 (data.id === undefined && (missing0 = 'id')) ||
-(data.level === undefined && (missing0 = 'level'))
+(data.lastModified === undefined && (missing0 = 'lastModified'))
 ) {errors.push(
 {
 instancePath,
@@ -64,47 +64,17 @@ var valid0 = _errs1 === errors
 var valid0 = true
 }
 if (valid0) {
-if (data.level !== undefined) {
-let data1 = data.level
+if (data.lastModified !== undefined) {
+let data1 = data.lastModified
 const _errs3 = errors
-if (
-!(
-typeof data1 == 'number' &&
-!(data1 % 1) &&
-!isNaN(data1) &&
-isFinite(data1)
-)
-) {errors.push(
+if (!(typeof data1 == 'number' && isFinite(data1))) {errors.push(
 {
-instancePath: instancePath + '/level',
-schemaPath: '#/properties/level/type',
+instancePath: instancePath + '/lastModified',
+schemaPath: '#/properties/lastModified/type',
 keyword: 'type',
-params: { type: 'integer' },
- message: "Must_be_an_integer"}
+params: { type: 'number' },
+ message: "Must_be_a_number"}
 );
-}
-if (true) {
-if (typeof data1 == 'number' && isFinite(data1)) {
-if (data1 > 9 || isNaN(data1)) {errors.push(
-{
-instancePath: instancePath + '/level',
-schemaPath: '#/properties/level/maximum',
-keyword: 'maximum',
-params: { comparison: '<=', limit: 9 },
- message: "Must_be_less_than_or_equal_to_maximum"}
-);
-} else {
-if (data1 < 0 || isNaN(data1)) {errors.push(
-{
-instancePath: instancePath + '/level',
-schemaPath: '#/properties/level/minimum',
-keyword: 'minimum',
-params: { comparison: '>=', limit: 0 },
- message: "Must_be_greater_than_or_equal_to_0"}
-);
-}
-}
-}
 }
 var valid0 = _errs3 === errors
 } else {

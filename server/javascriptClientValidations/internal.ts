@@ -1,21 +1,21 @@
 'use strict'
-const schema13 = {
-$id: 'deletion',
+const schema14 = {
+$id: 'internal',
 type: 'object',
 properties: {
 id: { format: 'uuid', type: 'string' },
-level: { minimum: 0, maximum: 9, type: 'integer' }
+lastModified: { default: 1763925463810, type: 'number' }
 },
-required: ['id', 'level']
+required: ['id', 'lastModified']
 }
 const formats2 = /^(?:urn:uuid:)?[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/i
 import type { ErrorObject } from 'ajv'
 import * as serverAndClientFunctions from '../serverAndClientFunctions'
-import type { ServerDeletionInterface } from '../serverInterfaces/ServerDeletionInterface'
-export async function validateDeletion(
-data:ServerDeletionInterface,
+import type { ServerInternalInterface } from '../serverInterfaces/ServerInternalInterface'
+export async function validateInternal(
+data:ServerInternalInterface,
 instancePath = "",awaesumUserName?:string): Promise<Array<ErrorObject>> {
-/*# sourceURL="deletion" */ 
+/*# sourceURL="internal" */ 
 let vErrors: Array<ErrorObject> = []
 if (data && typeof data == 'object' && !Array.isArray(data)) {
 if (data.id === undefined) {
@@ -32,12 +32,12 @@ vErrors.push(err0)
 }
 
 }
-if (data.level === undefined) {
+if (data.lastModified === undefined) {
 const err1 = {
 instancePath,
 schemaPath: '#/required',
 keyword: 'required',
-params: { missingProperty: 'level' },
+params: { missingProperty: 'lastModified' },
  message: "Required"}
 if (vErrors === null) {
 vErrors = [err1]
@@ -79,22 +79,15 @@ vErrors.push(err3)
 
 }
 }
-if (data.level !== undefined) {
-let data1 = data.level
-if (
-!(
-typeof data1 == 'number' &&
-!(data1 % 1) &&
-!isNaN(data1) &&
-isFinite(data1)
-)
-) {
+if (data.lastModified !== undefined) {
+let data1 = data.lastModified
+if (!(typeof data1 == 'number' && isFinite(data1))) {
 const err4 = {
-instancePath: instancePath + '/level',
-schemaPath: '#/properties/level/type',
+instancePath: instancePath + '/lastModified',
+schemaPath: '#/properties/lastModified/type',
 keyword: 'type',
-params: { type: 'integer' },
- message: "Must_be_an_integer"}
+params: { type: 'number' },
+ message: "Must_be_a_number"}
 if (vErrors === null) {
 vErrors = [err4]
 } else {
@@ -102,39 +95,9 @@ vErrors.push(err4)
 }
 
 }
-if (typeof data1 == 'number' && isFinite(data1)) {
-if (data1 > 9 || isNaN(data1)) {
+}
+} else {
 const err5 = {
-instancePath: instancePath + '/level',
-schemaPath: '#/properties/level/maximum',
-keyword: 'maximum',
-params: { comparison: '<=', limit: 9 },
- message: "Must_be_less_than_or_equal_to_maximum"}
-if (vErrors === null) {
-vErrors = [err5]
-} else {
-vErrors.push(err5)
-}
-
-}
-if (data1 < 0 || isNaN(data1)) {
-const err6 = {
-instancePath: instancePath + '/level',
-schemaPath: '#/properties/level/minimum',
-keyword: 'minimum',
-params: { comparison: '>=', limit: 0 },
- message: "Must_be_greater_than_or_equal_to_0"}
-if (vErrors === null) {
-vErrors = [err6]
-} else {
-vErrors.push(err6)
-}
-
-}
-}
-}
-} else {
-const err7 = {
 instancePath,
 schemaPath: '#/type',
 keyword: 'type',
@@ -142,9 +105,9 @@ params: { type: 'object' },
 message: 'must be object'
 }
 if (vErrors === null) {
-vErrors = [err7]
+vErrors = [err5]
 } else {
-vErrors.push(err7)
+vErrors.push(err5)
 }
 
 }

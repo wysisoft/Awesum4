@@ -51,5 +51,8 @@
     private _homePageIcon: string = "";
     public get homePageIcon():string { return this._homePageIcon; }
     public set homePageIcon(v:string) {if(this._homePageIcon != v){this.version++;this.lastModified=new Date().getTime();this._homePageIcon=v;awesum.setTablePropertyValueById(this.id, 'homePageIcon',v,this.table)}}
+    private _touched: boolean = false;
+    public get touched():boolean { return this._touched; }
+    public set touched(v:boolean) {if(this._touched != v){this.version++;this.lastModified=new Date().getTime();this._touched=v;awesum.setTablePropertyValueById(this.id, 'touched',v,this.table)}}
   }
   

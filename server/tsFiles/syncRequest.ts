@@ -28,6 +28,7 @@ export type syncRequest = {
     order: number
     homePageIconType: number
     homePageIcon: string
+    touched: boolean
   }
   databaseUnit?: {
     name: string

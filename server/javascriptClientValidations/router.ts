@@ -1,10 +1,10 @@
 'use strict'
-const schema27 = {
+const schema29 = {
 $id: 'router',
 type: 'object',
 properties: {
 id: {
-default: '019ab0ba-1d66-760f-aeb7-67d4c33d8580',
+default: '019ab226-9302-76ca-991d-a5936b876a58',
 format: 'uuid',
 type: 'string'},
 appId: { format: 'uuid', type: 'string' },
@@ -51,7 +51,7 @@ format: 'regex',
 pattern: '^([0-9]{2}:[0-9]{2})\\|([0-9]+)$',
 type: 'string'},
 version: { default: 0, minimum: 0, type: 'integer' },
-lastModified: { default: 1763901578598, type: 'number' },
+lastModified: { default: 1763925463810, type: 'number' },
 touched: { default: false, type: 'boolean' },
 status: { default: 1, maximum: 2, type: 'integer' }
 },
@@ -75,8 +75,8 @@ required: [
 }
 const formats2 = /^(?:urn:uuid:)?[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/i
 import * as formats from 'ajv-formats/dist/formats'
-const formats94 = formats.fullFormats.regex as any
-const formats96 = /^(?:(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)\.){3}(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)$/
+const formats98 = formats.fullFormats.regex as any
+const formats100 = /^(?:(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)\.){3}(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)$/
 const pattern1 = new RegExp('^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$', 'u')
 const pattern2 = new RegExp('^([0-9]{2}:[0-9]{2})\\|([0-9]+)$', 'u')
 import type { ErrorObject } from 'ajv'
@@ -381,7 +381,7 @@ vErrors.push(err19)
 }
 
 }
-if (!formats94(data2)) {
+if (!formats98(data2)) {
 const err20 = {
 instancePath: instancePath + '/routerMac',
 schemaPath: '#/properties/routerMac/format',
@@ -414,7 +414,7 @@ vErrors.push(err21)
 if (data.ipAddress !== undefined) {
 let data3 = data.ipAddress
 if (typeof data3 === 'string') {
-if (!formats96.test(data3)) {
+if (!formats100.test(data3)) {
 const err22 = {
 instancePath: instancePath + '/ipAddress',
 schemaPath: '#/properties/ipAddress/format',
@@ -461,7 +461,7 @@ vErrors.push(err24)
 }
 
 }
-if (!formats94(data4)) {
+if (!formats98(data4)) {
 const err25 = {
 instancePath: instancePath + '/mondayTimesAndDurations',
 schemaPath: '#/properties/mondayTimesAndDurations/format',
@@ -508,7 +508,7 @@ vErrors.push(err27)
 }
 
 }
-if (!formats94(data5)) {
+if (!formats98(data5)) {
 const err28 = {
 instancePath: instancePath + '/tuesdayTimesAndDurations',
 schemaPath: '#/properties/tuesdayTimesAndDurations/format',
@@ -555,7 +555,7 @@ vErrors.push(err30)
 }
 
 }
-if (!formats94(data6)) {
+if (!formats98(data6)) {
 const err31 = {
 instancePath: instancePath + '/wednesdayTimesAndDurations',
 schemaPath: '#/properties/wednesdayTimesAndDurations/format',
@@ -602,7 +602,7 @@ vErrors.push(err33)
 }
 
 }
-if (!formats94(data7)) {
+if (!formats98(data7)) {
 const err34 = {
 instancePath: instancePath + '/thursdayTimesAndDurations',
 schemaPath: '#/properties/thursdayTimesAndDurations/format',
@@ -649,7 +649,7 @@ vErrors.push(err36)
 }
 
 }
-if (!formats94(data8)) {
+if (!formats98(data8)) {
 const err37 = {
 instancePath: instancePath + '/fridayTimesAndDurations',
 schemaPath: '#/properties/fridayTimesAndDurations/format',
@@ -696,7 +696,7 @@ vErrors.push(err39)
 }
 
 }
-if (!formats94(data9)) {
+if (!formats98(data9)) {
 const err40 = {
 instancePath: instancePath + '/saturdayTimesAndDurations',
 schemaPath: '#/properties/saturdayTimesAndDurations/format',
@@ -743,7 +743,7 @@ vErrors.push(err42)
 }
 
 }
-if (!formats94(data10)) {
+if (!formats98(data10)) {
 const err43 = {
 instancePath: instancePath + '/sundayTimesAndDurations',
 schemaPath: '#/properties/sundayTimesAndDurations/format',

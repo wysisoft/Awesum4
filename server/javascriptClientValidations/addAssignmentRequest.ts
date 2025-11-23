@@ -1,5 +1,5 @@
 'use strict'
-const schema20 = {
+const schema22 = {
 $id: 'addAssignmentRequest',
 type: 'object',
 properties: {

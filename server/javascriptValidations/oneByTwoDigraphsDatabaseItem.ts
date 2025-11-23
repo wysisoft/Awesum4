@@ -1,5 +1,5 @@
 'use strict'
-const schema29 = {
+const schema31 = {
 $id: 'oneByTwoDigraphsDatabaseItem',
 type: 'object',
 properties: {

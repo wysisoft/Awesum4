@@ -1,14 +1,14 @@
 'use strict'
-const schema13 = {
+const schema15 = {
 $id: 'database',
 type: 'object',
 properties: {
 name: { minLength: 1, maxLength: 100, type: 'string' },
-lastModified: { default: 1763901578598, type: 'number' },
+lastModified: { default: 1763925463810, type: 'number' },
 version: { default: 0, minimum: 0, type: 'integer' },
 appId: { format: 'uuid', type: 'string' },
 id: {
-default: '019ab0ba-1d66-760f-aeb7-50ceef4eeb61',
+default: '019ab226-9302-76ca-991d-908ff55977d0',
 format: 'uuid',
 type: 'string'},
 order: { default: 0, minimum: 0, type: 'integer' },
@@ -16,8 +16,8 @@ homePageIconType: { default: 0, minimum: 0, maximum: 3, type: 'integer' },
 homePageIcon: {
 default: '00000000-0000-0000-0000-000000000002',
 format: 'uuid',
-type: 'string'
-}
+type: 'string'},
+touched: { default: false, type: 'boolean' }
 },
 required: [
 'name',
@@ -27,7 +27,8 @@ required: [
 'id',
 'order',
 'homePageIconType',
-'homePageIcon'
+'homePageIcon',
+'touched'
 ]
 }
 import ucs2length from 'ajv/dist/runtime/ucs2length';const func4 = (ucs2length as any).default;
@@ -52,7 +53,8 @@ if (
 (data.order === undefined && (missing0 = 'order')) ||
 (data.homePageIconType === undefined &&
 (missing0 = 'homePageIconType')) ||
-(data.homePageIcon === undefined && (missing0 = 'homePageIcon'))
+(data.homePageIcon === undefined && (missing0 = 'homePageIcon')) ||
+(data.touched === undefined && (missing0 = 'touched'))
 ) {errors.push(
 {
 instancePath,
@@ -334,6 +336,23 @@ message: 'must be string'
 var valid0 = _errs15 === errors
 } else {
 var valid0 = true
+}
+if (valid0) {
+if (data.touched !== undefined) {
+const _errs17 = errors
+if (typeof data.touched !== 'boolean') {errors.push(
+{
+instancePath: instancePath + '/touched',
+schemaPath: '#/properties/touched/type',
+keyword: 'type',
+params: { type: 'boolean' },
+ message: "Must_be_a_boolean"}
+);
+}
+var valid0 = _errs17 === errors
+} else {
+var valid0 = true
+}
 }
 }
 }

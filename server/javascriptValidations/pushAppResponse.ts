@@ -1,5 +1,5 @@
 'use strict'
-const schema32 = {
+const schema34 = {
 $id: 'pushAppResponse',
 type: 'object',
 properties: {
@@ -27,7 +27,7 @@ transform: ['trim', 'toLowerCase'],
 type: 'string'},
 version: { default: 0, minimum: 0, type: 'integer' },
 touched: { default: false, type: 'boolean' },
-lastModified: { default: 1763901578597, type: 'number' },
+lastModified: { default: 1763925463810, type: 'number' },
 homePageImageType: {
 default: 0,
 minimum: 0,
@@ -51,7 +51,7 @@ type: 'string'},
 enableNarrator: { default: false, type: 'boolean' },
 groups: { default: '', maxLength: 8000, type: 'string' },
 id: {
-default: '019ab0ba-1d65-71b9-aa75-5576dc859e13',
+default: '019ab226-9302-76ca-991d-8e57d897bae5',
 format: 'uuid',
 minLength: 36,
 type: 'string'},

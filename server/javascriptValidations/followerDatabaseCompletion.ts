@@ -1,10 +1,10 @@
 'use strict'
-const schema25 = {
+const schema27 = {
 $id: 'followerDatabaseCompletion',
 type: 'object',
 properties: {
 id: {
-default: '019ab0ba-1d66-760f-aeb7-62a7e59a1f9c',
+default: '019ab226-9302-76ca-991d-a1131e94bfa6',
 format: 'uuid',
 type: 'string'},
 followerRequestId: { format: 'uuid', type: 'string' },

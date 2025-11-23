@@ -7,4 +7,5 @@ export type database = {
   order: number
   homePageIconType: number
   homePageIcon: string
+  touched: boolean
 }

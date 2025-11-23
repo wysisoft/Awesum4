@@ -1,5 +1,5 @@
 'use strict'
-const schema22 = {
+const schema24 = {
 $id: 'profileResponse',
 type: 'object',
 properties: {

@@ -28,6 +28,7 @@ export interface AwesumDatabase {
   lastModified: number;
   name: string;
   order: number;
+  touched: boolean;
   version: number;
 }
 
@@ -65,6 +66,11 @@ export interface AwesumDatabaseUnit {
   successVideoUrl: string;
   touched: boolean;
   version: number;
+}
+
+export interface AwesumDeletion {
+  id: string;
+  level: number;
 }
 
 export interface AwesumDnsEntry {
@@ -112,6 +118,11 @@ export interface AwesumFollowerRequest {
   version: number;
 }
 
+export interface AwesumInternal {
+  id: string;
+  lastModified: number;
+}
+
 export interface AwesumMedia {
   appId: string;
   data: string;
@@ -143,10 +154,12 @@ export interface DB {
   "awesum.Database": AwesumDatabase;
   "awesum.DatabaseItem": AwesumDatabaseItem;
   "awesum.DatabaseUnit": AwesumDatabaseUnit;
+  "awesum.Deletion": AwesumDeletion;
   "awesum.DnsEntry": AwesumDnsEntry;
   "awesum.FollowerDatabase": AwesumFollowerDatabase;
   "awesum.FollowerDatabaseCompletion": AwesumFollowerDatabaseCompletion;
   "awesum.FollowerRequest": AwesumFollowerRequest;
+  "awesum.Internal": AwesumInternal;
   "awesum.Media": AwesumMedia;
   "awesum.Router": AwesumRouter;
 }

@@ -1,10 +1,10 @@
 'use strict'
-const schema27 = {
+const schema29 = {
 $id: 'router',
 type: 'object',
 properties: {
 id: {
-default: '019ab0ba-1d66-760f-aeb7-67d4c33d8580',
+default: '019ab226-9302-76ca-991d-a5936b876a58',
 format: 'uuid',
 type: 'string'},
 appId: { format: 'uuid', type: 'string' },
@@ -51,7 +51,7 @@ format: 'regex',
 pattern: '^([0-9]{2}:[0-9]{2})\\|([0-9]+)$',
 type: 'string'},
 version: { default: 0, minimum: 0, type: 'integer' },
-lastModified: { default: 1763901578598, type: 'number' },
+lastModified: { default: 1763925463810, type: 'number' },
 touched: { default: false, type: 'boolean' },
 status: { default: 1, maximum: 2, type: 'integer' }
 },
@@ -75,8 +75,8 @@ required: [
 }
 const formats2 = /^(?:urn:uuid:)?[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/i
 import * as formats from 'ajv-formats/dist/formats'
-const formats94 = formats.fullFormats.regex as any
-const formats96 = /^(?:(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)\.){3}(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)$/
+const formats98 = formats.fullFormats.regex as any
+const formats100 = /^(?:(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)\.){3}(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)$/
 const pattern1 = new RegExp('^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$', 'u')
 const pattern2 = new RegExp('^([0-9]{2}:[0-9]{2})\\|([0-9]+)$', 'u')
 import type { ErrorObject } from 'ajv'
@@ -202,7 +202,7 @@ pattern: '^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$'},
  message: "Must_be_a_valid_MAC_address"}
 );
 } else {
-if (!formats94(data2)) {errors.push(
+if (!formats98(data2)) {errors.push(
 {
 instancePath: instancePath + '/routerMac',
 schemaPath: '#/properties/routerMac/format',
@@ -235,7 +235,7 @@ const _errs7 = errors
 if (true) {
 if (true) {
 if (typeof data3 === 'string') {
-if (!formats96.test(data3)) {errors.push(
+if (!formats100.test(data3)) {errors.push(
 {
 instancePath: instancePath + '/ipAddress',
 schemaPath: '#/properties/ipAddress/format',
@@ -277,7 +277,7 @@ pattern: '^([0-9]{2}:[0-9]{2})\\|([0-9]+)$'},
  message: "Must_be_a_valid_time_and_duration"}
 );
 } else {
-if (!formats94(data4)) {errors.push(
+if (!formats98(data4)) {errors.push(
 {
 instancePath: instancePath + '/mondayTimesAndDurations',
 schemaPath: '#/properties/mondayTimesAndDurations/format',
@@ -320,7 +320,7 @@ pattern: '^([0-9]{2}:[0-9]{2})\\|([0-9]+)$'},
  message: "Must_be_a_valid_time_and_duration"}
 );
 } else {
-if (!formats94(data5)) {errors.push(
+if (!formats98(data5)) {errors.push(
 {
 instancePath: instancePath + '/tuesdayTimesAndDurations',
 schemaPath: '#/properties/tuesdayTimesAndDurations/format',
@@ -363,7 +363,7 @@ pattern: '^([0-9]{2}:[0-9]{2})\\|([0-9]+)$'},
  message: "Must_be_a_valid_time_and_duration"}
 );
 } else {
-if (!formats94(data6)) {errors.push(
+if (!formats98(data6)) {errors.push(
 {
 instancePath: instancePath + '/wednesdayTimesAndDurations',
 schemaPath: '#/properties/wednesdayTimesAndDurations/format',
@@ -406,7 +406,7 @@ pattern: '^([0-9]{2}:[0-9]{2})\\|([0-9]+)$'},
  message: "Must_be_a_valid_time_and_duration"}
 );
 } else {
-if (!formats94(data7)) {errors.push(
+if (!formats98(data7)) {errors.push(
 {
 instancePath: instancePath + '/thursdayTimesAndDurations',
 schemaPath: '#/properties/thursdayTimesAndDurations/format',
@@ -449,7 +449,7 @@ pattern: '^([0-9]{2}:[0-9]{2})\\|([0-9]+)$'},
  message: "Must_be_a_valid_time_and_duration"}
 );
 } else {
-if (!formats94(data8)) {errors.push(
+if (!formats98(data8)) {errors.push(
 {
 instancePath: instancePath + '/fridayTimesAndDurations',
 schemaPath: '#/properties/fridayTimesAndDurations/format',
@@ -492,7 +492,7 @@ pattern: '^([0-9]{2}:[0-9]{2})\\|([0-9]+)$'},
  message: "Must_be_a_valid_time_and_duration"}
 );
 } else {
-if (!formats94(data9)) {errors.push(
+if (!formats98(data9)) {errors.push(
 {
 instancePath: instancePath + '/saturdayTimesAndDurations',
 schemaPath: '#/properties/saturdayTimesAndDurations/format',
@@ -535,7 +535,7 @@ pattern: '^([0-9]{2}:[0-9]{2})\\|([0-9]+)$'},
  message: "Must_be_a_valid_time_and_duration"}
 );
 } else {
-if (!formats94(data10)) {errors.push(
+if (!formats98(data10)) {errors.push(
 {
 instancePath: instancePath + '/sundayTimesAndDurations',
 schemaPath: '#/properties/sundayTimesAndDurations/format',

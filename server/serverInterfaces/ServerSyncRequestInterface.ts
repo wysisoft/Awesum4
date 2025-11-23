@@ -53,6 +53,7 @@ export interface Database {
   order: number;
   homePageIconType: number;
   homePageIcon: string;
+  touched: boolean;
   
 }
 export interface DatabaseUnit {

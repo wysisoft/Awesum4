@@ -28,6 +28,7 @@ export type syncResponse = {
     order: number
     homePageIconType: number
     homePageIcon: string
+    touched: boolean
   }
   databaseUnit?: {
     name: string

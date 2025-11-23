@@ -1,5 +1,5 @@
 'use strict'
-const schema17 = {
+const schema19 = {
 $id: 'oneByOneMathDatabaseItemData',
 type: 'object',
 properties: {

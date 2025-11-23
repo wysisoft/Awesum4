@@ -1,5 +1,5 @@
 'use strict'
-const schema35 = {
+const schema37 = {
 $id: 'unfollowFollowerRequest',
 type: 'object',
 properties: { followerRequestId: { format: 'uuid', type: 'string' } },

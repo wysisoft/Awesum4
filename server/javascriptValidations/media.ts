@@ -1,10 +1,10 @@
 'use strict'
-const schema24 = {
+const schema26 = {
 $id: 'media',
 type: 'object',
 properties: {
 id: {
-default: '019ab0ba-1d66-760f-aeb7-5ceaed8cd594',
+default: '019ab226-9302-76ca-991d-9f916471d3b4',
 format: 'uuid',
 type: 'string'},
 size: { minimum: 0, type: 'integer' },

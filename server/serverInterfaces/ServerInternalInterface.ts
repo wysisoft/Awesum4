@@ -5,15 +5,8 @@
  * and run json-schema-to-typescript to regenerate this file.
  */
 
-export interface ServerDatabaseInterface {
-  name: string;
-  lastModified: number;
-  version: number;
-  appId: string;
+export interface ServerInternalInterface {
   id: string;
-  order: number;
-  homePageIconType: number;
-  homePageIcon: string;
-  touched: boolean;
+  lastModified: number;
   
 }

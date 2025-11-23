@@ -1,5 +1,5 @@
 'use strict'
-const schema40 = {
+const schema42 = {
 $id: 'updateRouterStatusRequest',
 type: 'object',
 properties: {
