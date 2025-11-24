@@ -199,13 +199,7 @@ export default {
         }
 
         var response = await awesum.sync(syncRequests);
-        for(const item of response) {
-            if(item.id) {
-                if(item.level == ItemLevel.app && item.action == syncAction.add && item.values) {
-                    await awesum.putOwnerAppInsideDatabase(item.values as ServerAppInterface);
-                }
-            }
-        }
+        this.viewData = response;
     }
 };
 </script>
@@ -216,74 +210,8 @@ export default {
             }}</h1>
         <div class="content">
             <div v-for="item in viewData">
-                <div v-if="item.deletion">
-                    <div v-if="item.result == syncResultType.deleted">
-
-                    </div>
-                    <div v-if="item.message?.message == '1'">
-
-                    </div>
-                </div>
-                <div v-if="item.app">
-                    <div v-if="item.message?.message == '0'">
-
-                    </div>
-                    <div v-if="item.message?.message == '1'">
-
-                    </div>
-
-                </div>
-                <div v-if="item.database">
-                    <div v-if="item.message?.message == '0'">
-
-                    </div>
-                    <div v-if="item.message?.message == '1'">
-
-                    </div>
-
-                </div>
-                <div v-if="item.databaseUnit">
-                    <div v-if="item.message?.message == '0'">
-
-                    </div>
-                    <div v-if="item.message?.message == '1'">
-
-                    </div>
-
-                </div>
-                <div v-if="item.databaseItem">
-                    <div v-if="item.message?.message == '0'">
-
-                    </div>
-                    <div v-if="item.message?.message == '1'">
-
-                    </div>
-                </div>
-                <div v-if="item.followerRequest">
-                    <div v-if="item.message?.message == '0'">
-
-                    </div>
-                    <div v-if="item.message?.message == '1'">
-
-                    </div>
-                </div>
-                <div v-if="item.followerDatabase">
-                    <div v-if="item.message?.message == '0'">
-
-                    </div>
-                    <div v-if="item.message?.message == '1'">
-
-                    </div>
-                </div>
-                <div v-if="item.followerDatabaseCompletion">
-                    <div v-if="item.message?.message == '0'">
-
-                    </div>
-                    <div v-if="item.message?.message == '1'">
-
-                    </div>
-
-                </div>
+             <div>{{ item.id }} - {{ item.level }} - {{ item.action }} - {{ item.values }}</div>   
+                
             </div>
         </div>
     </div>

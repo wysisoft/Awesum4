@@ -123,6 +123,7 @@ export class AwesumDexieDB extends Dexie {
                     order: 0,
                     homePageIconType: imageType.WebAddress,
                     homePageIcon: awesum.defaultDatabaseBackgroundGuid,
+                    touched: false,
                 } as ServerDatabaseInterface)
 
 
@@ -565,7 +566,8 @@ export class AwesumDexieDB extends Dexie {
                 data: url,
                 id: awesum.defaultAppBackgroundGuid,
                 size: url.length,
-                version: 0
+                version: 0,
+                touched: false,
             } as ServerMediaInterface)
 
             var url = '/defaultDatabaseBackground' + awesum.appVersion + '.webp';
@@ -574,7 +576,8 @@ export class AwesumDexieDB extends Dexie {
                 data: url,
                 id: awesum.defaultDatabaseBackgroundGuid,
                 size: url.length,
-                version: 0
+                version: 0,
+                touched: false,
             } as ServerMediaInterface)
 
             var url = '/successSound' + awesum.appVersion + '.mp3';
@@ -583,7 +586,8 @@ export class AwesumDexieDB extends Dexie {
                 data: url,
                 id: awesum.defaultSuccessSoundGuid,
                 size: url.length,
-                version: 0
+                version: 0,
+                touched: false,
             } as ServerMediaInterface)
 
             var url = '/successVideo' + awesum.appVersion + '.mp4';
