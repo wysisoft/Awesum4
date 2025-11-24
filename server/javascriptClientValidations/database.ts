@@ -4,11 +4,11 @@ $id: 'database',
 type: 'object',
 properties: {
 name: { minLength: 1, maxLength: 100, type: 'string' },
-lastModified: { default: 1763925463810, type: 'number' },
+lastModified: { default: 1763938745147, type: 'number' },
 version: { default: 0, minimum: 0, type: 'integer' },
 appId: { format: 'uuid', type: 'string' },
 id: {
-default: '019ab226-9302-76ca-991d-908ff55977d0',
+default: '019ab2f1-3b3b-7707-bc13-566099db5426',
 format: 'uuid',
 type: 'string'},
 order: { default: 0, minimum: 0, type: 'integer' },
@@ -17,7 +17,7 @@ homePageIcon: {
 default: '00000000-0000-0000-0000-000000000002',
 format: 'uuid',
 type: 'string'},
-touched: { default: false, type: 'boolean' }
+touched: { default: true, type: 'boolean' }
 },
 required: [
 'name',

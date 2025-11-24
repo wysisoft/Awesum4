@@ -164,6 +164,22 @@ export default {
                 syncRequests.push(syncRequest);
             }
         }
+        var deletions = await awesum.AwesumDexieDB.deletions.toArray();
+        for(const deletion of deletions) {
+            var syncRequest = {} as ServerSyncRequestInterface;
+            syncRequest.id = deletion.id;
+            syncRequest.level = deletion.level;
+            syncRequest.action = syncAction.delete;
+            syncRequests.push(syncRequest);
+        }
+        var followerDatabases = await awesum.AwesumDexieDB.serverFollowerDatabases.toArray();
+        for(const followerDatabase of followerDatabases) {
+            var syncRequest = {} as ServerSyncRequestInterface;
+            syncRequest.id = followerDatabase.id;
+            syncRequest.level = ItemLevel.followerDatabase;
+            syncRequest.action = syncAction.receiveChanges;
+            syncRequests.push(syncRequest);
+        }
         var serverMedia = await awesum.AwesumDexieDB.serverMedia.toArray();
         for(const media of serverMedia) {
             if (media.touched) {
@@ -172,6 +188,22 @@ export default {
                 syncRequest.level = ItemLevel.media;
                 syncRequest.action = syncAction.add;
                 syncRequest.values = media
+            }
+            else{
+                var syncRequest = {} as ServerSyncRequestInterface;
+                syncRequest.id = media.id;
+                syncRequest.level = ItemLevel.media;
+                syncRequest.action = syncAction.receiveChanges;
+                syncRequests.push(syncRequest);
+            }
+        }
+
+        var response = await awesum.sync(syncRequests);
+        for(const item of response) {
+            if(item.id) {
+                if(item.level == ItemLevel.app && item.action == syncAction.add && item.values) {
+                    await awesum.putOwnerAppInsideDatabase(item.values as ServerAppInterface);
+                }
             }
         }
     }

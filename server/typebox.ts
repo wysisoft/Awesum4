@@ -74,7 +74,7 @@ export const databaseItemProperties = {
     }),
     lastModified: Type.Number({ typeMessage: "Must_be_a_number" }),
     touched: Type.Boolean({
-        default: false,
+        default: true,
         typeMessage: "Must_be_a_boolean",
     }),
     version: Type.Integer({
@@ -192,7 +192,7 @@ export const types = [
                 typeMessage: "Must_be_an_integer",
             }),
             touched: Type.Boolean({
-                default: false,
+                default: true,
                 typeMessage: "Must_be_a_boolean",
             }),
 
@@ -343,7 +343,7 @@ export const types = [
                 formatMessage: "Must_be_a_valid_UUID",
             }),
             touched: Type.Boolean({
-                default: false,
+                default: true,
                 typeMessage: "Must_be_a_boolean",
             }),
         },
@@ -366,7 +366,7 @@ export const types = [
 
             lastModified: Type.Number({ typeMessage: "Must_be_a_number" }),
             touched: Type.Boolean({
-                default: false,
+                default: true,
                 typeMessage: "Must_be_a_boolean",
             }),
 
@@ -489,7 +489,7 @@ export const types = [
             }),
             lastModified: Type.Number({ typeMessage: "Must_be_a_number" }),
             touched: Type.Boolean({
-                default: false,
+                default: true,
                 typeMessage: "Must_be_a_boolean",
             }),
             version: Type.Integer({
@@ -812,7 +812,7 @@ export const types = [
 
             lastModified: Type.Number({ default: new Date().getTime(), typeMessage: "Must_be_a_number" }),
             touched: Type.Boolean({
-                default: false,
+                default: true,
                 typeMessage: "Must_be_a_boolean",
             }),
             version: Type.Integer({
@@ -904,7 +904,7 @@ export const types = [
 
             lastModified: Type.Number({ default: new Date().getTime(), typeMessage: "Must_be_a_number" }),
             touched: Type.Boolean({
-                default: false,
+                default: true,
                 typeMessage: "Must_be_a_boolean",
             }),
             version: Type.Integer({
@@ -1016,7 +1016,7 @@ export const types = [
             }),
             lastModified: Type.Number({ typeMessage: "Must_be_a_number" }),
             touched: Type.Boolean({
-                default: false,
+                default: true,
                 typeMessage: "Must_be_a_boolean",
             }),
             version: Type.Integer({
@@ -1140,7 +1140,7 @@ export const types = [
                 typeMessage: "Must_be_a_number",
             }),
             touched: Type.Boolean({
-                default: false,
+                default: true,
                 typeMessage: "Must_be_a_boolean",
             }),
             status: Type.Integer({

@@ -4,7 +4,7 @@ $id: 'internal',
 type: 'object',
 properties: {
 id: { format: 'uuid', type: 'string' },
-lastModified: { default: 1763925463810, type: 'number' }
+lastModified: { default: 1763938745147, type: 'number' }
 },
 required: ['id', 'lastModified']
 }

@@ -29,6 +29,7 @@ import type { ServerRouterInterface } from "../../server/serverInterfaces/Server
 import type { ServerSpellingDatabaseItemInterface } from "../../server/serverInterfaces/ServerSpellingDatabaseItemInterface";
 import type { ServerOneByOneMathDatabaseItemInterface } from "../../server/serverInterfaces/ServerOneByOneMathDatabaseItemInterface";
 import { useToast } from "vue-toastification";
+
 //@ts-ignore
 const appVersion = __APP_VERSION__;
 export const awesum = reactive({
@@ -170,7 +171,7 @@ export const awesum = reactive({
   ) {
     if (table) {
       if (!dontTouch) {
-        if(!this.touchedObjects.has(id)) {
+        if (!this.touchedObjects.has(id)) {
           this.touchedObjects.set(id, new Set<string>());
         }
         this.touchedObjects.get(id)?.add(propName);
@@ -461,13 +462,7 @@ export const awesum = reactive({
         awesum.router.push({ path: "/i/LeadersAndFollowers/Leader/" + encodeURI((item.values as ServerFollowerRequestInterface).leaderEmail) });
       }
 
-      if (item.followerRequest) {
-        await awesum.AwesumDexieDB.serverFollowerRequests.put(item.followerRequest);
-        await awesum.refreshServerFollowerRequests();
-        if (item.action == syncAction.addAndRedirectToLeader) {
-          awesum.router.push({ path: "/i/LeadersAndFollowers/Leader/" + encodeURI(item.followerRequest.leaderEmail) });
-        }
-      }
+      
       if (item.followerDatabase) {
         await awesum.AwesumDexieDB.serverFollowerDatabases.put(item.followerDatabase);
         await awesum.refreshCurrentFollowerDatabases();
@@ -498,7 +493,7 @@ export const awesum = reactive({
     }
     return syncResponse;
   },
-  async sync(syncRequest: Array<ServerSyncRequestInterface>) {
+  async sync(syncRequest: Array<ServerSyncRequestInterface>): Promise<ServerSyncResponseInterface[]> {
     var response = await fetch(window.location.origin + "/api/sync", {
       method: "POST",
       headers: new Headers({ "content-type": "application/json" }),
@@ -509,8 +504,9 @@ export const awesum = reactive({
     if (response.status == 200) {
       var responseJson = await response.json() as ServerSyncResponseInterface[];
       await this.processSyncResponse(responseJson);
-
+      return responseJson;
     }
+    return new Array<ServerSyncResponseInterface>();
   },
   async refresh() {
     // // Load all the ids, types, lastModifieds, and versions for all tables into a single object to send to the server

@@ -4,7 +4,7 @@ $id: 'followerDatabaseCompletion',
 type: 'object',
 properties: {
 id: {
-default: '019ab226-9302-76ca-991d-a1131e94bfa6',
+default: '019ab2f1-3b3b-7707-bc13-64a5cb18b319',
 format: 'uuid',
 type: 'string'},
 followerRequestId: { format: 'uuid', type: 'string' },
@@ -13,7 +13,7 @@ itemId: { format: 'uuid', type: 'string' },
 parentItemId: { format: 'uuid', type: 'string' },
 itemLevel: { minimum: 0, maximum: 9, type: 'integer' },
 lastModified: { type: 'number' },
-touched: { default: false, type: 'boolean' },
+touched: { default: true, type: 'boolean' },
 version: { minimum: 0, type: 'integer' }
 },
 required: [

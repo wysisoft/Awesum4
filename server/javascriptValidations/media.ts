@@ -4,13 +4,13 @@ $id: 'media',
 type: 'object',
 properties: {
 id: {
-default: '019ab226-9302-76ca-991d-9f916471d3b4',
+default: '019ab2f1-3b3b-7707-bc13-62cbf154bf1f',
 format: 'uuid',
 type: 'string'},
 size: { minimum: 0, type: 'integer' },
 data: { maxLength: 8000, type: 'string' },
 appId: { format: 'uuid', type: 'string' },
-touched: { default: false, type: 'boolean' }
+touched: { default: true, type: 'boolean' }
 },
 required: ['id', 'size', 'data', 'appId', 'touched']
 }
