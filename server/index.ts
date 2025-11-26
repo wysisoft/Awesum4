@@ -1,14 +1,19 @@
 
 //@bun
-import { types } from './typebox';
+import { getDefault, types } from './typebox';
 import type { ServerAppInterface } from './serverInterfaces/ServerAppInterface';
 
 import { Value } from '@sinclair/typebox/value'
-
+import { ServerFollowerDatabaseInterface } from './serverInterfaces/ServerFollowerDatabaseInterface';
+import { ServerFollowerRequestInterface } from './serverInterfaces/ServerFollowerRequestInterface';
 import { Kysely, PostgresDialect, HandleEmptyInListsPlugin, type HandleEmptyInListsOptions, pushValueIntoList } from 'kysely';
 import { type AwesumApp, type AwesumFollowerRequest, type AwesumFollowerDatabase, type DB, type AwesumFollowerDatabaseCompletion, type AwesumDatabaseUnit, type AwesumDatabaseItem, type AwesumRouter, type AwesumDatabase, type AwesumDnsEntry } from './db/db';
 import { Pool } from 'pg';
 import { constants } from "./constants"
+import { validateDatabase } from './javascriptValidations/database';
+import { validateDatabaseUnit } from './javascriptValidations/databaseUnit';
+import { validateDatabaseItem } from './javascriptValidations/databaseItem';
+import { validateFollowerDatabaseCompletion } from './javascriptValidations/followerDatabaseCompletion';
 
 // Define a custom logger (you can use any logging library you prefer)
 const logger = {
@@ -1015,71 +1020,31 @@ app.post("/api/sync", express.json({ limit: '1mb' }), async (req: express.Reques
     // Process client items to update server
     for (const item of syncRequestArray) {
 
-      if (item.id) {
 
-        if (item.level == ItemLevel.followerDatabase && item.action == syncAction.add && item.values) {
-          var defaultFollowerDatabase = Value.Default(types.filter((x) => x.$id == "followerDatabase")[0], {}) as ServerFollowerDatabaseInterface;
-          for (const key in item.values as any) {
-            defaultFollowerDatabase[key] = (item.values as any)[key];
-          }
-          var validationErrors = await validateFollowerDatabase(defaultFollowerDatabase as ServerFollowerDatabaseInterface);
-          if (validationErrors.length > 0) {
-            for (const error of validationErrors) {
-              syncResponseArray.push({
-                id: item.id,
-                result: syncResultType.failedValidation,
-                message: error.message
-              });
-            }
-          }
 
-          var foundFollowerRequest = foundFollowerRequests[defaultFollowerDatabase.followerRequestId];
-          if (!foundFollowerRequest) {
-            syncResponseArray.push({
-              id: defaultFollowerDatabase.id,
-              result: syncResultType.failedValidation,
-              message: "Follower request not found"
-            });
-            continue;
-          }
-          if (foundFollowerRequest.status != followerRequestStatus.Approved) {
-            syncResponseArray.push({
-              id: defaultFollowerDatabase.id,
-              result: syncResultType.failedValidation,
-              message: "Follower request not approved"
-            });
-            continue;
-          }
-          if (foundFollowerRequest.leaderAppId != foundLeaderAppId) {
-            syncResponseArray.push({
-              id: defaultFollowerDatabase.id,
-              result: syncResultType.failedValidation,
-              message: "Follower database must be initiated by the leader"
-            });
-            continue;
-          }
-
-          await db.insertInto('awesum.FollowerDatabase').values(defaultFollowerDatabase as AwesumFollowerDatabase).execute();
-          syncResponseArray.push({
-            id: defaultFollowerDatabase.id,
-            result: syncResultType.added,
-            action: syncAction.add,
-            values: defaultFollowerDatabase
-          });
-        }
-
+      if (item.action == syncAction.add || item.action == syncAction.modify) {
 
 
         if (item.level == ItemLevel.app
-          && item.action == syncAction.add
-          && !foundApps[item.id]
-          && (item.values as AwesumApp).email == userEmail
         ) {
-          var defaultApp = Value.Default(types.filter((x) => x.$id == "app")[0], {}) as ServerAppInterface;
+
+
+          if ((item.values as AwesumApp).email != userEmail) {
+            syncResponseArray.push({
+              id: item.id,
+              result: syncResultType.failedValidation,
+              message: "App email must be the same as the user email"
+            });
+            continue;
+          }
+
+          var defaultApp = getDefault(Value.Default(types.filter((x) => x.$id == "app")[0],{} )as ServerAppInterface);
           defaultApp.authenticationType = userProvider;
+
           for (const key in item.values as any) {
             defaultApp[key] = (item.values as any)[key];
           }
+
           var validationErrors = await validateApp(defaultApp);
           if (validationErrors.length > 0) {
             for (const error of validationErrors) {
@@ -1091,9 +1056,15 @@ app.post("/api/sync", express.json({ limit: '1mb' }), async (req: express.Reques
             }
           }
           else {
+
             defaultApp.id = item.id;
             defaultApp.lastSync = new Date().getTime();
-            await db.insertInto('awesum.App').values(defaultApp as AwesumApp).execute();
+            await db.insertInto('awesum.App')
+              .values(defaultApp as AwesumApp)
+              .onConflict(oc =>
+                oc.column('id').doUpdateSet(defaultApp as AwesumApp)
+              )
+              .execute();
             syncResponseArray.push(
               {
                 id: defaultApp.id,
@@ -1101,71 +1072,377 @@ app.post("/api/sync", express.json({ limit: '1mb' }), async (req: express.Reques
                 action: syncAction.add,
                 values: defaultApp
               });
+
             res.status(200).send(syncResponseArray);
             return;
           }
         }
 
-        if (item.level == ItemLevel.followerRequest
-          && item.action == syncAction.add
-          && item.values
-        ) {
-          
-          var defaultFollowerRequest = Value.Default(types.filter((x) => x.$id == "followerRequest")[0], {}) as ServerFollowerRequestInterface;
-          for (const key in item.values as any) {
-            defaultFollowerRequest[key] = (item.values as any)[key];
+
+
+        if (item.level == ItemLevel.database) {
+
+          if ((item.values as AwesumDatabase).appId != foundLeaderAppId) {
+            syncResponseArray.push({
+              id: item.id,
+              result: syncResultType.failedValidation,
+              message: "Database must be initiated by the leader"
+            });
+            continue;
           }
-          var validationErrors = await validateFollowerRequest(defaultFollowerRequest as ServerFollowerRequestInterface);
+
+          var validationErrors = await validateDatabase(item.values as AwesumDatabase);
           if (validationErrors.length > 0) {
             for (const error of validationErrors) {
               syncResponseArray.push({
-                id: defaultFollowerRequest.id,
+                id: item.id,
                 result: syncResultType.failedValidation,
                 message: error.message
               });
             }
           }
           else {
-            defaultFollowerRequest.id = item.id;
-            defaultFollowerRequest.followerAppId = await getAppIdFromEmail(defaultFollowerRequest.followerEmail);
-            
-            await db.insertInto('awesum.FollowerRequest').values(defaultFollowerRequest as AwesumFollowerRequest).execute();
+
+            await db
+              .insertInto('awesum.Database')
+              .values(item.values as AwesumDatabase)
+              .onConflict(oc =>
+                oc.column('id').doUpdateSet(item.values as AwesumDatabase)
+              )
+              .execute();
 
             syncResponseArray.push({
-              id: defaultFollowerRequest.id,
-              level: ItemLevel.followerRequest,
-              result: syncResultType.added,
-              action: syncAction.add,
-              values: defaultFollowerRequest
+              id: item.id,
+              level: ItemLevel.database,
+              action: syncAction.modify,
+              result: item.action == syncAction.add ? syncResultType.added : syncResultType.modified,
+              values: {
+                lastModified: (item.values as ServerDatabaseInterface).lastModified,
+              }
             });
+          }
+        }
 
-            const wses = socketConnections.get(defaultFollowerRequest.followerEmail);
-            if (wses) {
-              for (const ws of wses) {
-                if (!(ws as any).macAddress) {
-                  ws.send(JSON.stringify(syncRequestArray));
-                }
+
+
+
+        if (item.level == ItemLevel.databaseUnit) {
+
+          if ((item.values as AwesumDatabaseUnit).appId != foundLeaderAppId) {
+            syncResponseArray.push({
+              id: item.id,
+              result: syncResultType.failedValidation,
+              message: "Database unit must be initiated by the leader"
+            });
+            continue;
+          }
+
+          var validationErrors = await validateDatabaseUnit(item.values as AwesumDatabaseUnit);
+          if (validationErrors.length > 0) {
+            for (const error of validationErrors) {
+              syncResponseArray.push({
+                id: item.id,
+                result: syncResultType.failedValidation,
+                message: error.message
+              });
+            }
+          }
+          else {
+
+            await db
+              .insertInto('awesum.DatabaseUnit')
+              .values(item.values as AwesumDatabaseUnit)
+              .onConflict(oc =>
+                oc.column('id').doUpdateSet(item.values as AwesumDatabaseUnit)
+              )
+              .execute();
+          }
+        }
+
+
+
+        if (item.level == ItemLevel.databaseItem) {
+
+          if ((item.values as AwesumDatabaseItem).appId != foundLeaderAppId) {
+            syncResponseArray.push({
+              id: item.id,
+              result: syncResultType.failedValidation,
+              message: "Database item must be initiated by the leader"
+            });
+            continue;
+          }
+
+          var validationErrors = await validateDatabaseItem(item.values as AwesumDatabaseItem);
+          if (validationErrors.length > 0) {
+            for (const error of validationErrors) {
+              syncResponseArray.push({
+                id: item.id,
+                result: syncResultType.failedValidation,
+                message: error.message
+              });
+            }
+          }
+          else {
+
+            await db
+              .insertInto('awesum.DatabaseItem')
+              .values(item.values as AwesumDatabaseItem)
+              .onConflict(oc =>
+                oc.column('id').doUpdateSet(item.values as AwesumDatabaseItem)
+              )
+              .execute();
+          }
+        }
+
+
+
+
+
+
+
+
+
+
+        if (item.level == ItemLevel.followerDatabaseCompletion) {
+
+          var foundFollowerRequest = foundFollowerRequests[(item.values as AwesumFollowerDatabaseCompletion).followerRequestId];
+          if (!foundFollowerRequest) {
+            syncResponseArray.push({
+              id: item.id,
+              result: syncResultType.failedValidation,
+              message: "Follower request not found for follower database completion"
+            });
+            continue;
+          }
+
+
+
+
+          var validationErrors = await validateFollowerDatabaseCompletion(item.values as AwesumFollowerDatabaseCompletion);
+          if (validationErrors.length > 0) {
+            for (const error of validationErrors) {
+              syncResponseArray.push({
+                id: item.id,
+                result: syncResultType.failedValidation,
+                message: error.message
+              });
+            }
+          }
+          else {
+
+            await db
+              .insertInto('awesum.FollowerDatabaseCompletion')
+              .values(item.values as AwesumFollowerDatabaseCompletion)
+              .onConflict(oc =>
+                oc.column('id').doUpdateSet(item.values as AwesumFollowerDatabaseCompletion)
+              )
+              .execute();
+          }
+        }
+
+        if (item.level == ItemLevel.followerDatabase) {
+          //get all followerRequests as map of id, followerRequest from foundFollowerRequests where leaderAppId is the foundLeaderAppId
+          const followerRequests = Object.values(
+            foundFollowerRequests).filter((f) => f.leaderAppId == foundLeaderAppId
+              && f.status == followerRequestStatus.Approved).reduce((acc, f) => {
+                acc[f.id] = f;
+                return acc;
+              }, {} as { [key: string]: AwesumFollowerRequest });
+
+          var foundFollowerRequest =
+            followerRequests[(item.values as AwesumFollowerDatabase).followerRequestId];
+          if (!foundFollowerRequest) {
+            syncResponseArray.push({
+              id: item.id,
+              result: syncResultType.failedValidation,
+              message: "Follower database must be initiated by the leader"
+            });
+            continue;
+          }
+
+          var validationErrors = await validateFollowerDatabase(item.values as AwesumFollowerDatabase);
+          if (validationErrors.length > 0) {
+            for (const error of validationErrors) {
+              syncResponseArray.push({
+                id: item.id,
+                result: syncResultType.failedValidation,
+                message: error.message
+              });
+            }
+          }
+          else {
+
+            await db
+              .insertInto('awesum.FollowerDatabase')
+              .values(item.values as AwesumFollowerDatabase)
+              .onConflict(oc =>
+                oc.column('id').doUpdateSet(item.values as AwesumFollowerDatabase)
+              )
+              .execute();
+          }
+        }
+
+        if(item.level == ItemLevel.followerRequest){
+          if((item.values as AwesumFollowerRequest).leaderAppId != foundLeaderAppId){
+            syncResponseArray.push({
+              id: item.id,
+              result: syncResultType.failedValidation,
+              message: "Follower request must be initiated by the leader"
+            });
+            continue;
+          }
+          var validationErrors = await validateFollowerRequest(item.values as AwesumFollowerRequest);
+          if (validationErrors.length > 0) {
+            for (const error of validationErrors) {
+              syncResponseArray.push({
+                id: item.id,
+                result: syncResultType.failedValidation,
+                message: error.message
+              });
+            }
+          }
+          else {
+            await db
+              .insertInto('awesum.FollowerRequest')
+              .values(item.values as AwesumFollowerRequest)
+              .onConflict(oc =>
+                oc.column('id').doUpdateSet(item.values as AwesumFollowerRequest)
+              )
+              .execute();
+          }
+        }
+      }
+      else if (item.action == syncAction.delete) {
+        if (item.level == ItemLevel.databaseUnit) {
+          if ((item.values as AwesumDatabaseUnit).appId != foundLeaderAppId) {
+            syncResponseArray.push({
+              id: item.id,
+              result: syncResultType.failedValidation,
+              message: "Database unit must be initiated by the leader"
+            });
+            continue;
+          }
+          await db.deleteFrom('awesum.DatabaseUnit').where('id', '=', item.id).execute();
+        }
+        else if (item.level == ItemLevel.databaseItem) {
+          if ((item.values as AwesumDatabaseItem).appId != foundLeaderAppId) {
+            syncResponseArray.push({
+              id: item.id,
+              result: syncResultType.failedValidation,
+              message: "Database item must be initiated by the leader"
+            });
+            continue;
+          }
+          await db.deleteFrom('awesum.DatabaseItem').where('id', '=', item.id).execute();
+        }
+      }
+      else if (item.action == syncAction.receiveChanges) {
+        if (item.level == ItemLevel.database) {
+          if (!followerDatabaseIds.has(item.id)) {
+            syncResponseArray.push({
+              id: item.id,
+              result: syncResultType.failedValidation,
+              message: "Database must be a follower database"
+            });
+            continue;
+          }
+          else {
+            for (const followerDatabaseId of followerDatabaseIds) {
+              if (followerDatabaseId == item.id) {
+
               }
             }
-
+          }
         }
       }
 
 
-        if (item.level == ItemLevel.followerRequest
-          && item.action == syncAction.modify
-          && foundFollowerRequests[item.id]
-          && item.values
-        ) {
-          const followerRequest = foundFollowerRequests[item.id];
 
+
+
+      if (item.level == ItemLevel.app
+        && item.action == syncAction.delete
+        && foundApps[item.id]) {
+        await DeleteApp(item.id, syncResponseArray, res);
+      }
+
+      if (item.level == ItemLevel.app
+        && item.action == syncAction.receiveChanges
+        && foundApps[item.id] && item.values) {
+        var foundApp = foundApps[item.id];
+
+        if (foundApp.lastModified <= (item.values as AwesumApp).lastModified
+          && foundApp.version > (item.values as AwesumApp).version ||
+          foundApp.lastModified > (item.values as AwesumApp).lastModified
+          && foundApp.version <= (item.values as AwesumApp).version) {
+          //off rails
+        }
+
+        if (foundApp.lastModified > (item.values as AwesumApp).lastModified
+          && foundApp.version > (item.values as AwesumApp).version) {
+          syncResponseArray.push({
+            id: item.id,
+            action: syncAction.modify,
+            values: foundApp
+          });
+        }
+      }
+
+      if (item.level == ItemLevel.database && item.action == syncAction.add) {
+        if (item.action == syncAction.add && item.values) {
+          var defaultDatabase = getDefault(Value.Default(types.filter((x) => x.$id == "database")[0],{} )as ServerDatabaseInterface);
           for (const key in item.values as any) {
-            followerRequest[key] = (item.values as any)[key];
+            defaultDatabase[key] = (item.values as any)[key];
           }
+        }
+      }
 
-          await db.updateTable('awesum.FollowerRequest').set(followerRequest as AwesumFollowerRequest).where('id', '=', followerRequest.id).execute();
 
-          const wses = socketConnections.get(item.values['status'] == followerRequestStatus.Approved ? followerRequest.leaderEmail : followerRequest.followerEmail);
+
+      if (item.level == ItemLevel.followerRequest
+        && item.action == syncAction.add
+        && item.values
+      ) {
+
+        var defaultFollowerRequest = getDefault(Value.Default(types.filter((x) => x.$id == "followerRequest")[0],{} )as ServerFollowerRequestInterface);
+        for (const key in item.values as any) {
+          defaultFollowerRequest[key] = (item.values as any)[key];
+        }
+        var validationErrors = await validateFollowerRequest(defaultFollowerRequest as ServerFollowerRequestInterface);
+        if (validationErrors.length > 0) {
+          for (const error of validationErrors) {
+            syncResponseArray.push({
+              id: defaultFollowerRequest.id,
+              result: syncResultType.failedValidation,
+              message: error.message
+            });
+          }
+        }
+        else {
+          var followerEmail = defaultFollowerRequest.followerEmail;
+          var followerAppId = await getAppIdFromEmail(followerEmail);
+          if (!followerAppId) {
+            syncResponseArray.push({
+              id: defaultFollowerRequest.id,
+              result: syncResultType.failedValidation,
+              message: "Follower email not found"
+            });
+            continue;
+          }
+          defaultFollowerRequest.id = item.id;
+          defaultFollowerRequest.followerAppId = followerAppId
+
+          await db.insertInto('awesum.FollowerRequest').values(defaultFollowerRequest as AwesumFollowerRequest).execute();
+
+          syncResponseArray.push({
+            id: defaultFollowerRequest.id,
+            level: ItemLevel.followerRequest,
+            result: syncResultType.added,
+            action: syncAction.add,
+            values: defaultFollowerRequest
+          });
+
+          const wses = socketConnections.get(defaultFollowerRequest.followerEmail);
           if (wses) {
             for (const ws of wses) {
               if (!(ws as any).macAddress) {
@@ -1173,274 +1450,355 @@ app.post("/api/sync", express.json({ limit: '1mb' }), async (req: express.Reques
               }
             }
           }
+
         }
       }
 
-    //   // Process App
-    //   if (item.app) {
-    //     const app = foundApps[item.app.id];
 
-    //     if (!app &&
-    //       //don't think this is needed
-    //       item.app.email == userEmail) {
+      if (item.level == ItemLevel.followerRequest
+        && item.action == syncAction.modify
+        && foundFollowerRequests[item.id]
+        && item.values
+      ) {
+        const followerRequest = foundFollowerRequests[item.id];
 
-    //       var validationErrors = await validateApp(item.app);
-    //       if (validationErrors.length > 0) {
-    //         for (const error of validationErrors) {
-    //           syncResponseArray.push({
-    //             id: item.app.id,
-    //             result: syncResultType.failedValidation,
-    //             message: error.message
-    //           });
-    //         }
-    //       }
-    //       else {
-    //         item.app.lastSync = new Date().getTime();
-    //         await db.insertInto('awesum.App').values(item.app as AwesumApp).execute();
-    //         syncResponseArray.push(
-    //           {
-    //             app: item.app,
-    //             result: syncResultType.added,
-    //             action: syncAction.add,
-    //           });
-    //       }
-    //     }
-    //     else if (!app) {
-    //       //do nothing here, up to client to delete app
-    //     }
-    //     if (app && (app.lastModified < item.app.lastModified ||
-    //       app.version < item.app.version)) {
-    //       item.app.lastSync = new Date().getTime();
-    //       await db.updateTable('awesum.App').set(item.app as AwesumApp).where('id', '=', app.id).execute();
-    //       syncResponseArray.push(
-    //         {
-    //           id: item.app.id,
-    //           level: ItemLevel.app,
-    //           action: syncAction.modify,
-    //           values:
-    //             {
-    //               lastSync: new Date().getTime()
-    //             } as Partial<AwesumApp>
+        for (const key in item.values as any) {
+          followerRequest[key] = (item.values as any)[key];
+        }
 
-    //         });
-    //     }
-    //   }
+        await db.updateTable('awesum.FollowerRequest').set(followerRequest as AwesumFollowerRequest).where('id', '=', followerRequest.id).execute();
 
-    //   // Process Database
-    //   if (item.database) {
-    //     const database = foundDatabases ? foundDatabases[item.database.id] : null;
+        const wses = socketConnections.get(item.values['status'] == followerRequestStatus.Approved ? followerRequest.leaderEmail : followerRequest.followerEmail);
+        if (wses) {
+          for (const ws of wses) {
+            if (!(ws as any).macAddress) {
+              ws.send(JSON.stringify(syncRequestArray));
+            }
+          }
+        }
+      }
 
-    //     if (
-    //       !database ||
-    //       database.lastModified < item.database.lastModified ||
-    //       database.version < item.database.version
-    //     ) {
-    //       if (!database && item.database.appId == foundLeaderAppId) {
-    //         await db.insertInto('awesum.Database').values(item.database as AwesumDatabase).execute();
-    //       }
-    //       else if (!database) {
-    //         databaseIdsToDelete.add(item.database.id);
+      if (item.level == ItemLevel.followerDatabase && item.action == syncAction.add && item.values) {
+        var defaultFollowerDatabase = getDefault(Value.Default(types.filter((x) => x.$id == "followerDatabase")[0],{} )as ServerFollowerDatabaseInterface);
+        for (const key in item.values as any) {
+          defaultFollowerDatabase[key] = (item.values as any)[key];
+        }
+        var validationErrors = await validateFollowerDatabase(defaultFollowerDatabase as ServerFollowerDatabaseInterface);
+        if (validationErrors.length > 0) {
+          for (const error of validationErrors) {
+            syncResponseArray.push({
+              id: item.id,
+              result: syncResultType.failedValidation,
+              message: error.message
+            });
+          }
+        }
 
-    //         syncResponseArray.push({
-    //           id: item.database.id,
-    //         });
-    //       }
-    //       else {
-    //         Object.assign(database, item.database);
-    //         await db.updateTable('awesum.Database').set(database as AwesumDatabase).where('id', '=', database.id).execute();
-    //       }
-    //     }
-    //   }
+        var foundFollowerRequest = foundFollowerRequests[defaultFollowerDatabase.followerRequestId];
+        if (!foundFollowerRequest) {
+          syncResponseArray.push({
+            id: defaultFollowerDatabase.id,
+            result: syncResultType.failedValidation,
+            message: "Follower request not found"
+          });
+          continue;
+        }
+        if (foundFollowerRequest.status != followerRequestStatus.Approved) {
+          syncResponseArray.push({
+            id: defaultFollowerDatabase.id,
+            result: syncResultType.failedValidation,
+            message: "Follower request not approved"
+          });
+          continue;
+        }
+        if (foundFollowerRequest.leaderAppId != foundLeaderAppId) {
+          syncResponseArray.push({
+            id: defaultFollowerDatabase.id,
+            result: syncResultType.failedValidation,
+            message: "Follower database must be initiated by the leader"
+          });
+          continue;
+        }
 
+        await db.insertInto('awesum.FollowerDatabase').values(defaultFollowerDatabase as AwesumFollowerDatabase).execute();
+        syncResponseArray.push({
+          id: defaultFollowerDatabase.id,
+          result: syncResultType.added,
+          action: syncAction.add,
+          values: defaultFollowerDatabase
+        });
+      }
 
 
-    //   // Process DatabaseUnit
-    //   if (item.databaseUnit) {
-    //     let databaseUnit = foundDatabaseUnit[item.databaseUnit.id] as ServerDatabaseUnitInterface;
-
-    //     if (
-    //       !databaseUnit ||
-    //       (databaseUnit &&
-    //         (databaseUnit.lastModified < item.databaseUnit.lastModified ||
-    //           databaseUnit.version < item.databaseUnit.version))
-    //     ) {
-    //       if (!databaseUnit && !databaseIdsToDelete.has(item.databaseUnit.databaseId)) {
-    //         await db.insertInto('awesum.DatabaseUnit').values(item.databaseUnit as AwesumDatabaseUnit).execute();
-    //       } else if (!databaseUnit) {
-    //         syncResponseArray.push({
-    //           action: syncAction.delete,
-    //           id: item.databaseUnit.id,
-    //         });
-    //       }
-    //       else {
-    //         Object.assign(databaseUnit, item.databaseUnit);
-    //         await db.updateTable('awesum.DatabaseUnit').set(databaseUnit as AwesumDatabaseUnit).where('id', '=', databaseUnit.id).execute();
-    //       }
-    //     }
-    //   }
-
-    //   // Process DatabaseItem
-    //   if (item.databaseItem) {
-    //     const databaseItem = foundDatabaseItem[item.databaseItem.id];
-
-    //     if (
-    //       !databaseItem ||
-    //       (databaseItem &&
-    //         (databaseItem.lastModified < item.databaseItem.lastModified ||
-    //           databaseItem.version < item.databaseItem.version))
-    //     ) {
-    //       if (!databaseItem && !databaseIdsToDelete.has(item.databaseItem.databaseId)) {
-    //         await db.insertInto('awesum.DatabaseItem').values(item.databaseItem as AwesumDatabaseItem).execute();
-    //       } else if (!databaseItem) {
-    //         syncResponseArray.push({
-
-    //           level: ItemLevel.databaseItem,
-    //           action: syncAction.delete,
-    //           id: item.databaseItem.id,
-
-    //         });
-    //       }
-    //       else {
-    //         Object.assign(databaseItem, item.databaseItem);
-    //         await db.updateTable('awesum.DatabaseItem').set(databaseItem as AwesumDatabaseItem).where('id', '=', databaseItem.id).execute();
-    //       }
-    //     }
-    //   }
-
-    //   // Process Router
-    //   if (item.router) {
-    //     const router = foundRouters[item.router.id];
-    //     if (
-    //       !router ||
-    //       (router &&
-    //         (router.lastModified < item.router.lastModified ||
-    //           router.version < item.router.version))
-    //     ) {
-    //       if (!router) {
-    //         await db.insertInto('awesum.Router').values(item.router as AwesumRouter).execute();
-    //         if (!routerMacToEmailMap.has(item.router.routerMac)) {
-    //           routerMacToEmailMap.set(item.router.routerMac, userEmail);
-    //         }
-    //       } else {
-    //         Object.assign(router, item.router);
-    //         await db.updateTable('awesum.Router').set(router as AwesumRouter).where('id', '=', router.id).execute();
-    //       }
-    //     }
-    //   }
-
-    //   if (item.followerRequest) {
-    //     const followerRequest = foundFollowerRequests[item.followerRequest.id];
-    //     if (!followerRequest) {
-    //       var validationErrors = await validateFollowerRequest(item.followerRequest);
-    //       if (validationErrors.length > 0) {
-    //         for (const error of validationErrors) {
-    //           syncResponseArray.push({
-    //             id: item.followerRequest.id,
-    //             result: syncResultType.failedValidation,
-    //             message: error.message
-    //           });
-    //         }
-    //       }
-    //       else {
-    //         var followerAppId = await getAppIdFromEmail(item.followerRequest.followerEmail);
-    //         if (!followerAppId) {
-    //           syncResponseArray.push({
-    //             id: item.followerRequest.id,
-    //             result: syncResultType.failedValidation,
-    //             message: "Follower email not found"
-    //           });
-    //           continue;
-    //         }
-    //         item.followerRequest.followerAppId = followerAppId;
-    //         await db.insertInto('awesum.FollowerRequest').values(item.followerRequest as AwesumFollowerRequest).execute();
-
-    //         const wses = socketConnections.get(item.followerRequest.followerEmail);
-    //         if (wses) {
-    //           for (const ws of wses) {
-    //             if (!(ws as any).macAddress) {
-    //               ws.send(JSON.stringify([{
-    //                 followerRequest: item.followerRequest,
-    //                 action: syncRequestArray.length == 1 ? syncAction.addAndRedirectToLeader : syncAction.add,
-    //               } as ServerSyncResponseInterface
-    //               ]));
-    //             }
-    //           }
-    //         }
-
-    //       }
-    //     }
-    //     else if (!followerRequest) {
-    //       //no idea what to do here
-    //     }
-    //     if (followerRequest && (followerRequest.lastModified < item.followerRequest.lastModified ||
-    //       followerRequest.version < item.followerRequest.version)) {
-
-    //       await db.updateTable('awesum.FollowerRequest').set(item.followerRequest as AwesumFollowerRequest).where('id', '=', followerRequest.id).execute();
 
 
-    //     }
-    //   }
 
-    //   // Process FollowerDatabaseCompletion
-    //   if (item.followerDatabaseCompletion) {
-    //     console.log("Processing FollowerDatabaseCompletion");
-    //     await db.insertInto('awesum.FollowerDatabaseCompletion').values(item.followerDatabaseCompletion as AwesumFollowerDatabaseCompletion).execute();
 
-    //     console.log(foundDatabaseUnit)
-    //     console.log(item.followerDatabaseCompletion.itemId)
-    //     var foundUnit = foundDatabaseUnit[item.followerDatabaseCompletion.itemId];
-    //     if (foundUnit && foundUnit.router) {
-    //       console.log("Found Unit");
-    //       var router = foundRouters[foundUnit.router];
-    //       console.log(foundRouters);
-    //       console.log(foundUnit.router);
-    //       console.log(router);
-    //       if (router) {
-    //         console.log("Router found");
-    //         var email = await getEmailFromAppId(router.appId);
-    //         if (email) {
-    //           console.log("Email found");
-    //           console.log(email);
-    //           console.log(socketConnections);
-    //           var wses1 = socketConnections.get(email);
-    //           if (wses1) {
-    //             for (const ws of wses1) {
-    //               console.log((ws as any).macAddress)
-    //               console.log(router.routerMac)
-    //               if ((ws as any).macAddress == router.routerMac.toLocaleUpperCase()) {
-    //                 console.log("Sending updateRouterStatusRequest");
-    //                 ws.send(JSON.stringify({
-    //                   type: "updateRouterStatusRequest",
-    //                   status: "enabled",
-    //                   remainingTime: foundUnit.routerTimeImmediate ? 0 : foundUnit.routerTime,
-    //                   remainingImmediateTime: foundUnit.routerTimeImmediate ? foundUnit.routerTime : 0,
-    //                   startTime: 0,
-    //                   duration: 0
-    //                 } as ServerUpdateRouterStatusRequestInterface));
-    //               }
-    //             }
-    //           }
-    //         }
-    //       }
-    //     }
+      //   // Process App
+      //   if (item.app) {
+      //     const app = foundApps[item.app.id];
 
-    //     var leaderEmail = foundFollowerRequests[item.followerDatabaseCompletion.followerRequestId].leaderEmail;
-    //     const wses = socketConnections.get(leaderEmail);
-    //     if (wses) {
-    //       for (const ws of wses) {
-    //         if (!(ws as any).macAddress) {
-    //           ws.send(JSON.stringify({ type: syncRequestType, data: item.followerDatabaseCompletion }));
-    //         }
-    //       }
-    //     }
+      //     if (!app &&
+      //       //don't think this is needed
+      //       item.app.email == userEmail) {
 
-    //   }
+      //       var validationErrors = await validateApp(item.app);
+      //       if (validationErrors.length > 0) {
+      //         for (const error of validationErrors) {
+      //           syncResponseArray.push({
+      //             id: item.app.id,
+      //             result: syncResultType.failedValidation,
+      //             message: error.message
+      //           });
+      //         }
+      //       }
+      //       else {
+      //         item.app.lastSync = new Date().getTime();
+      //         await db.insertInto('awesum.App').values(item.app as AwesumApp).execute();
+      //         syncResponseArray.push(
+      //           {
+      //             app: item.app,
+      //             result: syncResultType.added,
+      //             action: syncAction.add,
+      //           });
+      //       }
+      //     }
+      //     else if (!app) {
+      //       //do nothing here, up to client to delete app
+      //     }
+      //     if (app && (app.lastModified < item.app.lastModified ||
+      //       app.version < item.app.version)) {
+      //       item.app.lastSync = new Date().getTime();
+      //       await db.updateTable('awesum.App').set(item.app as AwesumApp).where('id', '=', app.id).execute();
+      //       syncResponseArray.push(
+      //         {
+      //           id: item.app.id,
+      //           level: ItemLevel.app,
+      //           action: syncAction.modify,
+      //           values:
+      //             {
+      //               lastSync: new Date().getTime()
+      //             } as Partial<AwesumApp>
 
-    //   /* // Process FollowerDatabase
-    //   //I can't think if a time where this is needed
-    //   if (item.followerDatabase) {
-        
-    //   } */
+      //         });
+      //     }
+      //   }
+
+      //   // Process Database
+      //   if (item.database) {
+      //     const database = foundDatabases ? foundDatabases[item.database.id] : null;
+
+      //     if (
+      //       !database ||
+      //       database.lastModified < item.database.lastModified ||
+      //       database.version < item.database.version
+      //     ) {
+      //       if (!database && item.database.appId == foundLeaderAppId) {
+      //         await db.insertInto('awesum.Database').values(item.database as AwesumDatabase).execute();
+      //       }
+      //       else if (!database) {
+      //         databaseIdsToDelete.add(item.database.id);
+
+      //         syncResponseArray.push({
+      //           id: item.database.id,
+      //         });
+      //       }
+      //       else {
+      //         Object.assign(database, item.database);
+      //         await db.updateTable('awesum.Database').set(database as AwesumDatabase).where('id', '=', database.id).execute();
+      //       }
+      //     }
+      //   }
+
+
+
+      //   // Process DatabaseUnit
+      //   if (item.databaseUnit) {
+      //     let databaseUnit = foundDatabaseUnit[item.databaseUnit.id] as ServerDatabaseUnitInterface;
+
+      //     if (
+      //       !databaseUnit ||
+      //       (databaseUnit &&
+      //         (databaseUnit.lastModified < item.databaseUnit.lastModified ||
+      //           databaseUnit.version < item.databaseUnit.version))
+      //     ) {
+      //       if (!databaseUnit && !databaseIdsToDelete.has(item.databaseUnit.databaseId)) {
+      //         await db.insertInto('awesum.DatabaseUnit').values(item.databaseUnit as AwesumDatabaseUnit).execute();
+      //       } else if (!databaseUnit) {
+      //         syncResponseArray.push({
+      //           action: syncAction.delete,
+      //           id: item.databaseUnit.id,
+      //         });
+      //       }
+      //       else {
+      //         Object.assign(databaseUnit, item.databaseUnit);
+      //         await db.updateTable('awesum.DatabaseUnit').set(databaseUnit as AwesumDatabaseUnit).where('id', '=', databaseUnit.id).execute();
+      //       }
+      //     }
+      //   }
+
+      //   // Process DatabaseItem
+      //   if (item.databaseItem) {
+      //     const databaseItem = foundDatabaseItem[item.databaseItem.id];
+
+      //     if (
+      //       !databaseItem ||
+      //       (databaseItem &&
+      //         (databaseItem.lastModified < item.databaseItem.lastModified ||
+      //           databaseItem.version < item.databaseItem.version))
+      //     ) {
+      //       if (!databaseItem && !databaseIdsToDelete.has(item.databaseItem.databaseId)) {
+      //         await db.insertInto('awesum.DatabaseItem').values(item.databaseItem as AwesumDatabaseItem).execute();
+      //       } else if (!databaseItem) {
+      //         syncResponseArray.push({
+
+      //           level: ItemLevel.databaseItem,
+      //           action: syncAction.delete,
+      //           id: item.databaseItem.id,
+
+      //         });
+      //       }
+      //       else {
+      //         Object.assign(databaseItem, item.databaseItem);
+      //         await db.updateTable('awesum.DatabaseItem').set(databaseItem as AwesumDatabaseItem).where('id', '=', databaseItem.id).execute();
+      //       }
+      //     }
+      //   }
+
+      //   // Process Router
+      //   if (item.router) {
+      //     const router = foundRouters[item.router.id];
+      //     if (
+      //       !router ||
+      //       (router &&
+      //         (router.lastModified < item.router.lastModified ||
+      //           router.version < item.router.version))
+      //     ) {
+      //       if (!router) {
+      //         await db.insertInto('awesum.Router').values(item.router as AwesumRouter).execute();
+      //         if (!routerMacToEmailMap.has(item.router.routerMac)) {
+      //           routerMacToEmailMap.set(item.router.routerMac, userEmail);
+      //         }
+      //       } else {
+      //         Object.assign(router, item.router);
+      //         await db.updateTable('awesum.Router').set(router as AwesumRouter).where('id', '=', router.id).execute();
+      //       }
+      //     }
+      //   }
+
+      //   if (item.followerRequest) {
+      //     const followerRequest = foundFollowerRequests[item.followerRequest.id];
+      //     if (!followerRequest) {
+      //       var validationErrors = await validateFollowerRequest(item.followerRequest);
+      //       if (validationErrors.length > 0) {
+      //         for (const error of validationErrors) {
+      //           syncResponseArray.push({
+      //             id: item.followerRequest.id,
+      //             result: syncResultType.failedValidation,
+      //             message: error.message
+      //           });
+      //         }
+      //       }
+      //       else {
+      //         var followerAppId = await getAppIdFromEmail(item.followerRequest.followerEmail);
+      //         if (!followerAppId) {
+      //           syncResponseArray.push({
+      //             id: item.followerRequest.id,
+      //             result: syncResultType.failedValidation,
+      //             message: "Follower email not found"
+      //           });
+      //           continue;
+      //         }
+      //         item.followerRequest.followerAppId = followerAppId;
+      //         await db.insertInto('awesum.FollowerRequest').values(item.followerRequest as AwesumFollowerRequest).execute();
+
+      //         const wses = socketConnections.get(item.followerRequest.followerEmail);
+      //         if (wses) {
+      //           for (const ws of wses) {
+      //             if (!(ws as any).macAddress) {
+      //               ws.send(JSON.stringify([{
+      //                 followerRequest: item.followerRequest,
+      //                 action: syncRequestArray.length == 1 ? syncAction.addAndRedirectToLeader : syncAction.add,
+      //               } as ServerSyncResponseInterface
+      //               ]));
+      //             }
+      //           }
+      //         }
+
+      //       }
+      //     }
+      //     else if (!followerRequest) {
+      //       //no idea what to do here
+      //     }
+      //     if (followerRequest && (followerRequest.lastModified < item.followerRequest.lastModified ||
+      //       followerRequest.version < item.followerRequest.version)) {
+
+      //       await db.updateTable('awesum.FollowerRequest').set(item.followerRequest as AwesumFollowerRequest).where('id', '=', followerRequest.id).execute();
+
+
+      //     }
+      //   }
+
+      //   // Process FollowerDatabaseCompletion
+      //   if (item.followerDatabaseCompletion) {
+      //     console.log("Processing FollowerDatabaseCompletion");
+      //     await db.insertInto('awesum.FollowerDatabaseCompletion').values(item.followerDatabaseCompletion as AwesumFollowerDatabaseCompletion).execute();
+
+      //     console.log(foundDatabaseUnit)
+      //     console.log(item.followerDatabaseCompletion.itemId)
+      //     var foundUnit = foundDatabaseUnit[item.followerDatabaseCompletion.itemId];
+      //     if (foundUnit && foundUnit.router) {
+      //       console.log("Found Unit");
+      //       var router = foundRouters[foundUnit.router];
+      //       console.log(foundRouters);
+      //       console.log(foundUnit.router);
+      //       console.log(router);
+      //       if (router) {
+      //         console.log("Router found");
+      //         var email = await getEmailFromAppId(router.appId);
+      //         if (email) {
+      //           console.log("Email found");
+      //           console.log(email);
+      //           console.log(socketConnections);
+      //           var wses1 = socketConnections.get(email);
+      //           if (wses1) {
+      //             for (const ws of wses1) {
+      //               console.log((ws as any).macAddress)
+      //               console.log(router.routerMac)
+      //               if ((ws as any).macAddress == router.routerMac.toLocaleUpperCase()) {
+      //                 console.log("Sending updateRouterStatusRequest");
+      //                 ws.send(JSON.stringify({
+      //                   type: "updateRouterStatusRequest",
+      //                   status: "enabled",
+      //                   remainingTime: foundUnit.routerTimeImmediate ? 0 : foundUnit.routerTime,
+      //                   remainingImmediateTime: foundUnit.routerTimeImmediate ? foundUnit.routerTime : 0,
+      //                   startTime: 0,
+      //                   duration: 0
+      //                 } as ServerUpdateRouterStatusRequestInterface));
+      //               }
+      //             }
+      //           }
+      //         }
+      //       }
+      //     }
+
+      //     var leaderEmail = foundFollowerRequests[item.followerDatabaseCompletion.followerRequestId].leaderEmail;
+      //     const wses = socketConnections.get(leaderEmail);
+      //     if (wses) {
+      //       for (const ws of wses) {
+      //         if (!(ws as any).macAddress) {
+      //           ws.send(JSON.stringify({ type: syncRequestType, data: item.followerDatabaseCompletion }));
+      //         }
+      //       }
+      //     }
+
+      //   }
+
+      //   /* // Process FollowerDatabase
+      //   //I can't think if a time where this is needed
+      //   if (item.followerDatabase) {
+
+      //   } */
     }
     res.status(200).json(syncResponseArray);
     return;

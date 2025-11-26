@@ -1,8 +1,6 @@
 <script lang="ts">
-import { v7 as uuidv7, validate } from 'uuid';
+import { getDefault, types,imageType, syncAction, ItemLevel } from '../../../server/typebox';
 import { Value } from '@sinclair/typebox/value'
-import { types,imageType, syncAction, ItemLevel } from '../../../server/typebox';
-
 import { I18nGlobal } from '@/i18nGlobal';
 import { resources } from '@/resources/Resources';
 import { reactive, ref } from 'vue'
@@ -26,7 +24,7 @@ export default {
   },
   setup() {
 
-  let payload = Value.Default(types.filter((x) => x.$id == "followerRequest")[0], {}) as ServerFollowerRequestInterface;
+  let payload = getDefault(Value.Default(types.filter((x) => x.$id == "followerRequest")[0],{} )as ServerFollowerRequestInterface);
     payload.followerEmail = '';
     payload.followerName = '';
 

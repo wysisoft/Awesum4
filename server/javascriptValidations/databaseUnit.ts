@@ -5,7 +5,7 @@ type: 'object',
 properties: {
 name: { minLength: 1, maxLength: 100, type: 'string' },
 order: { minimum: 0, type: 'integer' },
-lastModified: { type: 'number' },
+lastModified: { default: 0, type: 'number' },
 touched: { default: true, type: 'boolean' },
 version: { minimum: 0, type: 'integer' },
 id: { format: 'uuid', type: 'string' },

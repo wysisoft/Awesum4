@@ -6,7 +6,7 @@
  */
 
 export interface ServerSyncRequestInterface {
-  id?: string;
+  id: string;
   level?: number;
   values?: {
     /**
@@ -139,13 +139,10 @@ export interface Router {
 export interface FollowerDatabaseCompletion {
   id: string;
   followerRequestId: string;
-  description: string;
   itemId: string;
   parentItemId: string;
   itemLevel: number;
   lastModified: number;
-  touched: boolean;
-  version: number;
   
 }
 export interface Media {

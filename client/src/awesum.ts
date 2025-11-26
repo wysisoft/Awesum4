@@ -1,4 +1,5 @@
 import { reactive, shallowRef } from "vue";
+import { getDefault } from "../../server/typebox";
 import { AwesumDexieGlobalDB } from "./awesumDexieGlobalDB";
 import { ClientApp } from "./clientClasses/App";
 import type { AwesumDexieDB as AwesumDexieDB } from "./awesumDexieDB";
@@ -29,6 +30,7 @@ import type { ServerRouterInterface } from "../../server/serverInterfaces/Server
 import type { ServerSpellingDatabaseItemInterface } from "../../server/serverInterfaces/ServerSpellingDatabaseItemInterface";
 import type { ServerOneByOneMathDatabaseItemInterface } from "../../server/serverInterfaces/ServerOneByOneMathDatabaseItemInterface";
 import { useToast } from "vue-toastification";
+import type { Server } from "http";
 
 //@ts-ignore
 const appVersion = __APP_VERSION__;
@@ -379,10 +381,7 @@ export const awesum = reactive({
     request: any,
   ): Promise<boolean> {
     if (val) {
-      var defaultApp = Value.Default(
-        types.filter((x) => x.$id == "app")[0],
-        {},
-      ) as ServerAppInterface;
+      var defaultApp = getDefault(Value.Default(types.filter((x) => x.$id == "app")[0],{} )as ServerAppInterface);
       defaultApp.uniqueName = val;
 
 
@@ -411,6 +410,191 @@ export const awesum = reactive({
     await this.AwesumDexieDB.serverApps.put(app);
     awesum.ownerApp = new ClientApp(app, this.AwesumDexieDB.serverApps);
     await awesum.refreshServerApps();
+    await awesum.refreshServerFollowerRequests();
+  },
+  async getFullSyncRequests(): Promise<ServerSyncRequestInterface[]> {
+    debugger;
+    var syncRequests = new Array<ServerSyncRequestInterface>();
+    if (awesum.ownerApp.touched) {
+      var syncRequest = {} as ServerSyncRequestInterface;
+      syncRequest.id = awesum.ownerApp.id;
+      syncRequest.level = ItemLevel.app;
+      syncRequest.action = syncAction.modify;
+      syncRequest.values = {};
+      var touchedProps = awesum.touchedObjects.get(awesum.ownerApp.id);
+      if (touchedProps) {
+        for (const touchedProp of touchedProps) {
+          (syncRequest.values as any)[touchedProp] = (awesum.ownerApp as any)[touchedProp];
+        }
+      }
+      syncRequests.push(syncRequest);
+    }
+    else {
+      var syncRequest = {} as ServerSyncRequestInterface;
+      syncRequest.id = awesum.ownerApp.id;
+      syncRequest.level = ItemLevel.app;
+      syncRequest.action = syncAction.receiveChanges;
+      syncRequest.values = {
+        lastModified: awesum.ownerApp.lastModified,
+        version: awesum.ownerApp.version,
+      }
+      syncRequests.push(syncRequest);
+    }
+    for (const database of awesum.currentDatabases) {
+      var syncRequest = {} as ServerSyncRequestInterface;
+      syncRequest.id = database.id;
+      syncRequest.level = ItemLevel.database;
+      syncRequest.values = {};
+      syncRequests.push(syncRequest);
+      if (database.lastModified == 0) {
+        syncRequest.action = syncAction.add;
+        syncRequest.values = awesum.toPOJO(database);
+        (syncRequest.values as ServerDatabaseInterface).lastModified = new Date().getTime();
+      }
+      else if (database.touched) {
+        syncRequest.action = syncAction.modify;
+        var touchedProps = awesum.touchedObjects.get(database.id);
+        if (touchedProps) {
+          for (const touchedProp of touchedProps) {
+            (syncRequest.values as any)[touchedProp] = (database as any)[touchedProp];
+          }
+        }
+      }
+      else {
+        syncRequest.action = syncAction.receiveChanges;
+        syncRequest.values = {
+          lastModified: database.lastModified,
+          version: database.version,
+        }
+      }
+    }
+    for (const databaseUnit of awesum.currentDatabaseUnits) {
+      var syncRequest = {} as ServerSyncRequestInterface;
+      syncRequest.id = databaseUnit.id;
+      syncRequest.level = ItemLevel.databaseUnit;
+      syncRequest.values = {};
+      syncRequests.push(syncRequest);
+      if (databaseUnit.lastModified == 0) {
+        syncRequest.action = syncAction.add;
+        syncRequest.values = awesum.toPOJO(databaseUnit);
+        (syncRequest.values as ServerDatabaseUnitInterface).lastModified = new Date().getTime();
+      }
+      else if (databaseUnit.touched) {
+        var touchedProps = awesum.touchedObjects.get(databaseUnit.id);
+        if (touchedProps) {
+          for (const touchedProp of touchedProps) {
+            (syncRequest.values as any)[touchedProp] = (databaseUnit as any)[touchedProp];
+          }
+        }
+      }
+      else {
+        syncRequest.action = syncAction.receiveChanges;
+        syncRequest.values = {
+          lastModified: databaseUnit.lastModified,
+          version: databaseUnit.version,
+        }
+      }
+    }
+    for (const databaseItem of awesum.currentDatabaseItems) {
+      var syncRequest = {} as ServerSyncRequestInterface;
+      syncRequest.id = databaseItem.id;
+      syncRequest.level = ItemLevel.databaseItem;
+      syncRequest.values = {};
+      syncRequests.push(syncRequest);
+      if (databaseItem.lastModified == 0) {
+        syncRequest.action = syncAction.add;
+        syncRequest.values = awesum.toPOJO(databaseItem);
+        (syncRequest.values as ServerDatabaseItemInterface).lastModified = new Date().getTime();
+      }
+      else if (databaseItem.touched) {
+        var touchedProps = awesum.touchedObjects.get(databaseItem.id);
+        if (touchedProps) {
+          for (const touchedProp of touchedProps) {
+            for (const touchedProp of touchedProps) {
+              (syncRequest.values as any)[touchedProp] = (databaseItem as any)[touchedProp];
+            }
+          }
+        }
+      }
+      else {
+        syncRequest.action = syncAction.receiveChanges;
+        syncRequest.values = {
+          lastModified: databaseItem.lastModified,
+          version: databaseItem.version,
+        }
+      }
+    }
+    for (const followerRequest of awesum.followerRequests) {
+      if(followerRequest.leaderAppId == awesum.ownerApp.id && followerRequest.followerAppId == awesum.ownerApp.id){
+        continue;
+      }
+      var syncRequest = {} as ServerSyncRequestInterface;
+      syncRequest.id = followerRequest.id;
+      syncRequest.level = ItemLevel.followerRequest;
+      syncRequest.values = {};
+      syncRequests.push(syncRequest);
+      if (followerRequest.lastModified == 0) {
+        syncRequest.action = syncAction.add;
+        syncRequest.values = awesum.toPOJO(followerRequest);
+        (syncRequest.values as ServerFollowerRequestInterface).lastModified = new Date().getTime();
+      }
+      else if (followerRequest.touched) {
+        var touchedProps = awesum.touchedObjects.get(followerRequest.id);
+        if (touchedProps) {
+          for (const touchedProp of touchedProps) {
+                  (syncRequest.values as any)[touchedProp] = (followerRequest as any)[touchedProp];
+          }
+        }
+      }
+      else {
+        syncRequest.action = syncAction.receiveChanges;
+        syncRequest.values = {
+          lastModified: followerRequest.lastModified,
+          version: followerRequest.version,
+        }
+      }
+    }
+    var deletions = await awesum.AwesumDexieDB.deletions.toArray();
+    for (const deletion of deletions) {
+      var syncRequest = {} as ServerSyncRequestInterface;
+      syncRequest.id = deletion.id;
+      syncRequest.level = deletion.level;
+      syncRequest.action = syncAction.delete;
+      syncRequests.push(syncRequest);
+    }
+    var followerDatabases = await awesum.AwesumDexieDB.serverFollowerDatabases.toArray();
+    for (const followerDatabase of followerDatabases) {
+      var syncRequest = {} as ServerSyncRequestInterface;
+      syncRequest.id = followerDatabase.id;
+      syncRequest.level = ItemLevel.followerDatabase;
+      syncRequest.action = syncAction.receiveChanges;
+      syncRequests.push(syncRequest);
+    }
+    var serverMedia = await awesum.AwesumDexieDB.serverMedia.toArray();
+    for (const media of serverMedia) {
+      if (media.id == awesum.defaultSuccessSoundGuid
+        || media.id == awesum.defaultSuccessImageGuid
+        || media.id == awesum.defaultSuccessVideoGuid
+        || media.id == awesum.defaultAppBackgroundGuid
+        || media.id == awesum.defaultDatabaseBackgroundGuid
+        || media.id == awesum.emptyImageGuid
+        || media.id == awesum.ttsGuid) {
+        continue;
+      }
+      var syncRequest = {} as ServerSyncRequestInterface;
+      syncRequest.id = media.id;
+      syncRequest.level = ItemLevel.media;
+      syncRequest.values = {};
+      syncRequests.push(syncRequest);
+      if (media.touched) {
+        syncRequest.action = syncAction.add;
+        syncRequest.values = media;
+      }
+      else {
+        syncRequest.action = syncAction.receiveChanges;
+      }
+    }
+    return syncRequests;
   },
   toPOJO<T>(complexObj: T): T {
     const simpleObject = {} as any;
@@ -428,68 +612,96 @@ export const awesum = reactive({
   },
   async processSyncResponse(syncResponse: ServerSyncResponseInterface[]): Promise<ServerSyncResponseInterface[]> {
     for (const item of syncResponse) {
-      if (item.id) {
-        if (item.level == ItemLevel.followerDatabase && item.action == syncAction.add && item.values) {
-          await awesum.AwesumDexieDB.serverFollowerDatabases.put(item.values as ServerFollowerDatabaseInterface);
-          await awesum.refreshCurrentFollowerDatabases();
-          awesum.router.push({ path: awesum.getDynamicUrl(awesum.currentDatabase, awesum.router.currentRoute) });
-        }
-        if (item.level == ItemLevel.app && item.action == syncAction.add && item.values) {
+      if (item.action == syncAction.add || item.action == syncAction.modify) {
+        if (item.level == ItemLevel.app) {
+          (item.values as ServerAppInterface).touched = false;
+          this.touchedObjects.delete(item.id);
           await this.putOwnerAppInsideDatabase(item.values as ServerAppInterface);
-        }
-        if (item.level == ItemLevel.app && item.action == syncAction.modify && item.values) {
-          for (const key in item.values as Record<string, any>) {
-            this.setTablePropertyValueById(item.id, key, (item.values as Record<string, any>)[key], this.AwesumDexieDB.serverApps, true);
+
+          var ownFollowerRequest = awesum.followerRequests.find((x) => x.leaderAppId == this.ownerApp.id && x.followerAppId == this.ownerApp.id);
+          if (!ownFollowerRequest) {
+            var defaultFollowerRequest = getDefault(Value.Default(types.filter((x) => x.$id == "followerRequest")[0],{} )as ServerFollowerRequestInterface);
+            defaultFollowerRequest.leaderAppId = awesum.ownerApp.id;
+            defaultFollowerRequest.followerAppId = awesum.ownerApp.id;
+            defaultFollowerRequest.followerName = awesum.ownerApp.name;
+            defaultFollowerRequest.leaderName = awesum.ownerApp.name;
+            defaultFollowerRequest.followerEmail = awesum.ownerApp.email;
+            defaultFollowerRequest.leaderEmail = awesum.ownerApp.email;
+            await awesum.AwesumDexieDB.serverFollowerRequests.put(defaultFollowerRequest);
+            await awesum.refreshServerFollowerRequests();
           }
         }
-        if (item.level == ItemLevel.followerRequest &&
-          item.action == syncAction.modify && item.values) {
-          for (const key in item.values as Record<string, any>) {
-            this.setTablePropertyValueById(item.id, key, (item.values as Record<string, any>)[key], this.AwesumDexieDB.serverFollowerRequests, true);
+        if (item.level == ItemLevel.database) {
+          (item.values as ServerDatabaseInterface).touched = false;
+          this.touchedObjects.delete(item.id);
+          for(const key in item.values as Record<string, any>){
+            this.setTablePropertyValueById(item.id, key, (item.values as Record<string, any>)[key], this.AwesumDexieDB.serverDatabases, true);
           }
-          this.toast.success('Hello, world! This is a toast message.');
-
+          await this.refreshCurrentDatabases();
         }
       }
-      if (item.app && item.result == syncResultType.added) {
-        await awesum.putOwnerAppInsideDatabase(item.app as ServerAppInterface);
-      }
+      //if (item.id) {
+      //   if (item.level == ItemLevel.followerDatabase && item.action == syncAction.add && item.values) {
+      //     await awesum.AwesumDexieDB.serverFollowerDatabases.put(item.values as ServerFollowerDatabaseInterface);
+      //     await awesum.refreshCurrentFollowerDatabases();
+      //     awesum.router.push({ path: awesum.getDynamicUrl(awesum.currentDatabase, awesum.router.currentRoute) });
+      //   }
+      //   if (item.level == ItemLevel.app && item.action == syncAction.add && item.values) {
+      //     await this.putOwnerAppInsideDatabase(item.values as ServerAppInterface);
+      //   }
+      //   if (item.level == ItemLevel.app && item.action == syncAction.modify && item.values) {
+      //     for (const key in item.values as Record<string, any>) {
+      //       this.setTablePropertyValueById(item.id, key, (item.values as Record<string, any>)[key], this.AwesumDexieDB.serverApps, true);
+      //     }
+      //   }
+      //   if (item.level == ItemLevel.followerRequest &&
+      //     item.action == syncAction.modify && item.values) {
+      //     for (const key in item.values as Record<string, any>) {
+      //       this.setTablePropertyValueById(item.id, key, (item.values as Record<string, any>)[key], this.AwesumDexieDB.serverFollowerRequests, true);
+      //     }
+      //     this.toast.success('Hello, world! This is a toast message.');
 
-      if (item.id && item.level == ItemLevel.followerRequest && item.action == syncAction.add && item.values) {
-        await awesum.AwesumDexieDB.serverFollowerRequests.put(item.values as ServerFollowerRequestInterface);
-        await awesum.refreshServerFollowerRequests();
+      //   }
+      // }
+      // if (item.app && item.result == syncResultType.added) {
+      //   await awesum.putOwnerAppInsideDatabase(item.app as ServerAppInterface);
+      // }
 
-        awesum.router.push({ path: "/i/LeadersAndFollowers/Leader/" + encodeURI((item.values as ServerFollowerRequestInterface).leaderEmail) });
-      }
+      // if (item.id && item.level == ItemLevel.followerRequest && item.action == syncAction.add && item.values) {
+      //   await awesum.AwesumDexieDB.serverFollowerRequests.put(item.values as ServerFollowerRequestInterface);
+      //   await awesum.refreshServerFollowerRequests();
 
-      
-      if (item.followerDatabase) {
-        await awesum.AwesumDexieDB.serverFollowerDatabases.put(item.followerDatabase);
-        await awesum.refreshCurrentFollowerDatabases();
-      }
-      if (item.app) {
-        if (item.app.email == awesum.serverEmail) {
-          await awesum.putOwnerAppInsideDatabase(item.app as ServerAppInterface);
-        }
-        else {
-          await awesum.AwesumDexieDB.serverApps.put(item.app as ServerAppInterface);
-          await awesum.refreshServerApps();
-        }
-      }
-      if (item.database) {
-        await awesum.AwesumDexieDB.serverDatabases.put(item.database);
-      }
+      //   awesum.router.push({ path: "/i/LeadersAndFollowers/Leader/" + encodeURI((item.values as ServerFollowerRequestInterface).leaderEmail) });
+      // }
 
-      if (item.databaseUnit) {
-        await awesum.AwesumDexieDB.serverDatabaseUnits.put(item.databaseUnit);
-      }
-      if (item.databaseItem) {
-        (item.databaseItem as any).data = JSON.parse(item.databaseItem.dataText);
-        await awesum.AwesumDexieDB.serverDatabaseItems.put(item.databaseItem);
-      }
-      if (item.followerDatabaseCompletion) {
-        await awesum.AwesumDexieDB.serverFollowerDatabaseCompletions.put(item.followerDatabaseCompletion);
-      }
+
+      // if (item.followerDatabase) {
+      //   await awesum.AwesumDexieDB.serverFollowerDatabases.put(item.followerDatabase);
+      //   await awesum.refreshCurrentFollowerDatabases();
+      // }
+      // if (item.app) {
+      //   if (item.app.email == awesum.serverEmail) {
+      //     await awesum.putOwnerAppInsideDatabase(item.app as ServerAppInterface);
+      //   }
+      //   else {
+      //     await awesum.AwesumDexieDB.serverApps.put(item.app as ServerAppInterface);
+      //     await awesum.refreshServerApps();
+      //   }
+      // }
+      // if (item.database) {
+      //   await awesum.AwesumDexieDB.serverDatabases.put(item.database);
+      // }
+
+      // if (item.databaseUnit) {
+      //   await awesum.AwesumDexieDB.serverDatabaseUnits.put(item.databaseUnit);
+      // }
+      // if (item.databaseItem) {
+      //   (item.databaseItem as any).data = JSON.parse(item.databaseItem.dataText);
+      //   await awesum.AwesumDexieDB.serverDatabaseItems.put(item.databaseItem);
+      // }
+      // if (item.followerDatabaseCompletion) {
+      //   await awesum.AwesumDexieDB.serverFollowerDatabaseCompletions.put(item.followerDatabaseCompletion);
+      // }
     }
     return syncResponse;
   },
@@ -500,8 +712,9 @@ export const awesum = reactive({
       body: JSON.stringify(syncRequest),
       credentials: "include",
     }) as Response;
-
+    
     if (response.status == 200) {
+      
       var responseJson = await response.json() as ServerSyncResponseInterface[];
       await this.processSyncResponse(responseJson);
       return responseJson;

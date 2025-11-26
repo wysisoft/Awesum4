@@ -1,4 +1,6 @@
 <script lang="ts">
+import { Value } from '@sinclair/typebox/value';
+import { types } from '../../../server/typebox';
 import { ref } from 'vue';
 import EditTextComponent from '@/components/EditTextComponent.vue';
 import EditImageComponent from '@/components/EditImageComponent.vue';
@@ -13,6 +15,7 @@ import { followerRequestStatus } from '../../../server/typebox';
 import { type ServerFollowerRequestInterface } from '../../../server/serverInterfaces/ServerFollowerRequestInterface';
 import { type ServerFollowerDatabaseInterface } from '../../../server/serverInterfaces/ServerFollowerDatabaseInterface';
 import { awesum } from '@/awesum';
+import { getDefault } from '../../../server/typebox';
 
 export default {
   setup() {
@@ -90,74 +93,33 @@ export default {
       var localFollowerRequest = await this.$awesum.AwesumDexieDB.serverFollowerRequests.filter((x) => x.followerAppId == this.$awesum.ownerApp.id && x.leaderAppId == this.$awesum.ownerApp.id).first();
       await this.$awesum.AwesumDexieDB.serverFollowerDatabases.filter((x) => x.databaseId == this.currentDatabase.id && x.followerRequestId != localFollowerRequest?.id).delete();
       await this.$awesum.refreshCurrentFollowerDatabases();
-      
+
     },
     async addDatabase() {
-      //change to not use linq
-      var maxOrder = this.$awesum.currentDatabases.length == 0 ? 0 : this.$awesum.currentDatabases.reduce((max, database) => Math.max(max, database.order), 0);
-      var databaseId = uuid();
-      await this.$awesum.AwesumDexieDB.serverDatabases.add({
-        //id: maxId + 1,
-        // name: 'Local' + (maxOrder + 1).toString(),
-        id: databaseId,
-        // appId: this.$awesum.awesum.currentServerApp.id,
-        // lastModified: new Date().toISOString(),
-        // appUniqueId: this.$awesum.currentServerApp.uniqueId,
-        // deleted: false,
-        // version: 0,
-        // order: maxOrder + 1,
-        // loginid: '',
-        // groupName: ''
-        appId: this.$awesum.currentApp.id,
-        name: 'Local' + (maxOrder + 1).toString(),
-        created: new Date().getTime(),
-        lastModified: new Date().getTime(),
-        order: maxOrder + 1,
-        touched: true,
-        version: 0,
-        homePageIcon: this.$awesum.defaultDatabaseBackgroundGuid,
-        homePageIconType: imageType.WebAddress
-      } as ServerDatabaseInterface);
+      var defaultDatabase = getDefault(Value.Default(types.filter((x) => x.$id == "database")[0], {}) as ServerDatabaseInterface);
+      defaultDatabase.appId = this.$awesum.ownerApp.id;
+      //if there are no databases, set order to 0, otherwise set order to the highest order + 1
+      defaultDatabase.order = this.$awesum.currentDatabases.length == 0 ? 0 : this.$awesum.currentDatabases.reduce((max, database) => Math.max(max, database.order), 0) + 1;
+      defaultDatabase.name = 'Database ' + (defaultDatabase.order).toString();
+      await this.$awesum.AwesumDexieDB.serverDatabases.add(defaultDatabase);
 
       await this.$awesum.refreshCurrentDatabases();
 
-      //add followerRequest to own database
-      var followerRequestId = uuid();
-      await this.$awesum.AwesumDexieDB.serverFollowerRequests.add({
-        leaderAppId: this.$awesum.currentApp.id,
-        followerAppId: this.$awesum.currentApp.id,
-        id: followerRequestId,
-        followerName: this.$awesum.currentApp.name,
-        leaderName: this.$awesum.currentApp.name,
-        followerEmail: this.$awesum.currentApp.email,
-        leaderEmail: this.$awesum.currentApp.email,
-        initiatedByFollower: false,
-        lastModified: new Date().getTime(),
-        version: 0,
-        status: followerRequestStatus.Pending,
-        groups: ''
-      } as ServerFollowerRequestInterface);
+      var ownFollowerRequest = awesum.followerRequests.find((x) => x.leaderAppId == this.$awesum.ownerApp.id && x.followerAppId == this.$awesum.ownerApp.id);
+      if (!ownFollowerRequest) {
+        alert('No follower request found');
+      }
 
-      await this.$awesum.refreshServerFollowerRequests();
+      var followerDatabase = getDefault(Value.Default(types.filter((x) => x.$id == "followerDatabase")[0], {}) as ServerFollowerDatabaseInterface);
+      followerDatabase.followerRequestId = ownFollowerRequest?.id;
+      followerDatabase.databaseId = defaultDatabase.id;
+
 
       //add followerDatabase to own database
-      await this.$awesum.AwesumDexieDB.serverFollowerDatabases.add({
-        followerRequestId: followerRequestId,
-        id: uuid(),
-        databaseId: databaseId,
-        touched: true,
-        created: new Date().getTime(),
-        lastModified: new Date().getTime(),
-        version: 0,
-      } as ServerFollowerDatabaseInterface);
+      await this.$awesum.AwesumDexieDB.serverFollowerDatabases.add(followerDatabase);
 
-      if (this.$awesum.currentApp.id == this.$awesum.ownerApp.id) {
-        await this.$awesum.AwesumDexieDB.serverFollowerDatabases.add({
-          followerRequestId: followerRequestId,
-          id: uuid(),
-          databaseId: databaseId,
-        } as ServerFollowerDatabaseInterface);
-      }
+
+
 
 
     }
@@ -201,7 +163,7 @@ export default {
 
       <h2 style="font-size:3.5svmin;margin-top:1svmin;">{{ $t($resources.App_Settings.key) }}</h2>
 
-      <EditTextComponent  style="margin-left:2svmin;" :labelWidth="'16.5svmin'" :inputWidth="'99%'" :required="true"
+      <EditTextComponent style="margin-left:2svmin;" :labelWidth="'16.5svmin'" :inputWidth="'99%'" :required="true"
         :forbiddenChars="'/'" :requiresEditAndSave="true" :redirectUrlAfterSave="'/' + $t($resources.Settings.key)"
         :parentObject="$awesum.currentApp" :displayName="'Name'" :propertyName="'name'"
         :validation-function="validateApp" />

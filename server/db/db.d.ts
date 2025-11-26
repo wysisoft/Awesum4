@@ -90,15 +90,12 @@ export interface AwesumFollowerDatabase {
 }
 
 export interface AwesumFollowerDatabaseCompletion {
-  description: string;
   followerRequestId: string;
   id: string;
   itemId: string;
   itemLevel: number;
   lastModified: number;
   parentItemId: string;
-  touched: boolean;
-  version: number;
 }
 
 export interface AwesumFollowerRequest {

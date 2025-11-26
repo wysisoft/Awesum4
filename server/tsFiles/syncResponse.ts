@@ -1,5 +1,5 @@
 export type syncResponse = {
-  id?: string
+  id: string
   level?: number
   values?: Record<string, any>
   action?: number
@@ -91,13 +91,10 @@ export type syncResponse = {
   followerDatabaseCompletion?: {
     id: string
     followerRequestId: string
-    description: string
     itemId: string
     parentItemId: string
     itemLevel: number
     lastModified: number
-    touched: boolean
-    version: number
   }
   router?: {
     id: string

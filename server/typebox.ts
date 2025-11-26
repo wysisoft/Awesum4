@@ -1,6 +1,7 @@
 import { Type, type Static, type TSchema } from "@sinclair/typebox";
 import { v7 as uuidv7, validate } from 'uuid';
 import { constants } from "./constants";
+import { Value } from "@sinclair/typebox/value";
 
 
 export enum audioType {
@@ -72,7 +73,10 @@ export const databaseItemProperties = {
         format: "uuid",
         formatMessage: "Must_be_a_valid_UUID",
     }),
-    lastModified: Type.Number({ typeMessage: "Must_be_a_number" }),
+    lastModified: Type.Number({
+        default: 0,
+        typeMessage: "Must_be_a_number"
+    }),
     touched: Type.Boolean({
         default: true,
         typeMessage: "Must_be_a_boolean",
@@ -192,7 +196,7 @@ export const types = [
                 typeMessage: "Must_be_an_integer",
             }),
             touched: Type.Boolean({
-                default: true,
+                default: false,
                 typeMessage: "Must_be_a_boolean",
             }),
 
@@ -285,7 +289,7 @@ export const types = [
                 formatMessage: "Must_be_a_valid_UUID",
             }),
             lastModified: Type.Number({
-                default: new Date().getTime(),
+                default: 0,
                 typeMessage: "Must_be_a_number"
             }),
         },
@@ -301,7 +305,7 @@ export const types = [
             }),
 
             lastModified: Type.Number({
-                default: new Date().getTime(),
+                default: 0,
                 typeMessage: "Must_be_a_number"
             }),
             version: Type.Integer({
@@ -364,7 +368,10 @@ export const types = [
                 typeMessage: "Must_be_an_integer",
             }),
 
-            lastModified: Type.Number({ typeMessage: "Must_be_a_number" }),
+            lastModified: Type.Number({
+                default: 0,
+                typeMessage: "Must_be_a_number"
+            }),
             touched: Type.Boolean({
                 default: true,
                 typeMessage: "Must_be_a_boolean",
@@ -487,7 +494,10 @@ export const types = [
                 format: "uuid",
                 formatMessage: "Must_be_a_valid_UUID",
             }),
-            lastModified: Type.Number({ typeMessage: "Must_be_a_number" }),
+            lastModified: Type.Number({
+                default: 0,
+                typeMessage: "Must_be_a_number"
+            }),
             touched: Type.Boolean({
                 default: true,
                 typeMessage: "Must_be_a_boolean",
@@ -810,7 +820,10 @@ export const types = [
                 formatMessage: "Must_be_a_valid_UUID",
             }),
 
-            lastModified: Type.Number({ default: new Date().getTime(), typeMessage: "Must_be_a_number" }),
+            lastModified: Type.Number({
+                default: 0,
+                typeMessage: "Must_be_a_number"
+            }),
             touched: Type.Boolean({
                 default: true,
                 typeMessage: "Must_be_a_boolean",
@@ -902,7 +915,10 @@ export const types = [
                 typeMessage: "Must_be_a_boolean",
             }),
 
-            lastModified: Type.Number({ default: new Date().getTime(), typeMessage: "Must_be_a_number" }),
+            lastModified: Type.Number({
+                default: 0,
+                typeMessage: "Must_be_a_number"
+            }),
             touched: Type.Boolean({
                 default: true,
                 typeMessage: "Must_be_a_boolean",
@@ -993,10 +1009,6 @@ export const types = [
                 format: "uuid",
                 formatMessage: "Must_be_a_valid_UUID",
             }),
-            description: Type.String({
-                maxLength: 1000,
-                maxLengthMessage: "Must_be_less_than_1000_characters",
-            }),
             itemId: Type.String({
                 format: "uuid",
                 formatMessage: "Must_be_a_valid_UUID",
@@ -1014,15 +1026,9 @@ export const types = [
                 maximumMessage: "Must_be_less_than_or_equal_to_maximum",
                 typeMessage: "Must_be_an_integer",
             }),
-            lastModified: Type.Number({ typeMessage: "Must_be_a_number" }),
-            touched: Type.Boolean({
-                default: true,
-                typeMessage: "Must_be_a_boolean",
-            }),
-            version: Type.Integer({
-                minimum: 0,
-                minimumMessage: "Must_be_greater_than_or_equal_to_0",
-                typeMessage: "Must_be_an_integer",
+            lastModified: Type.Number({
+                default: 0,
+                typeMessage: "Must_be_a_number"
             }),
         },
         { $id: "followerDatabaseCompletion" },
@@ -1136,7 +1142,7 @@ export const types = [
             }),
 
             lastModified: Type.Number({
-                default: new Date().getTime(),
+                default: 0,
                 typeMessage: "Must_be_a_number",
             }),
             touched: Type.Boolean({
@@ -1202,12 +1208,12 @@ types.push(
 types.push(
     Type.Object(
         {
-            id: Type.Optional(
+            id:
                 Type.String({
                     format: "uuid",
                     formatMessage: "Must_be_a_valid_UUID",
                 }),
-            ),
+
             level: Type.Optional(
                 Type.Integer({
                     minimum: 0,
@@ -1267,12 +1273,12 @@ types.push(
 types.push(
     Type.Object(
         {
-            id: Type.Optional(
+            id: 
                 Type.String({
                     format: "uuid",
                     formatMessage: "Must_be_a_valid_UUID",
                 }),
-            ),
+            
             level: Type.Optional(
                 Type.Integer({
                     minimum: 0,
@@ -1478,3 +1484,10 @@ types.push(
     ) as any,
 );
 
+
+export function getDefault<T extends { id: string }>(type:T) :T {
+    
+        type.id = uuidv7();
+    
+    return type;
+};

@@ -74,6 +74,7 @@ export default {
 
       var response = await awesum.sync([
         {
+          id: this.$awesum.ownerApp?.id,
           level: ItemLevel.app,
           action:syncAction.delete
         },
@@ -94,7 +95,7 @@ export default {
 
 
 
-      <div v-if="$awesum.serverEmail">
+      <div v-if="$awesum.ownerApp.id">
         <h2 style="font-size:3.5svmin;">{{ $t($resources.Awesum_Barcode.key) }}</h2>
         <div style="margin-left:1svmin;margin-bottom:1svmin;">
           <QRCodeVue3 :myclass="'QRCodeVue3'" :ButtonName="''" :imgclass="''" :margin="0"
@@ -260,5 +261,6 @@ export default {
 :deep(.QRCodeVue3) img {
   border: .1svmin solid #000000;
   border-radius: 1svmin;
+  width: 20svmin;
 }
 </style>

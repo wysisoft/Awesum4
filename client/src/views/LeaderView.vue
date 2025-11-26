@@ -37,7 +37,6 @@ export default {
             lastModified: follower.lastModified,
             version: follower.version
           } as Partial<ServerFollowerRequestInterface>
-          
         },
       ]);
 

@@ -8,14 +8,14 @@ default: '00000000-0000-0000-0000-000000000000',
 format: 'uuid',
 type: 'string'},
 id: {
-default: '019ab2f1-3b3b-7707-bc13-59ad70fda7fb',
+default: '019ac0a9-2f8b-756d-9d9c-3638f65d8bc2',
 format: 'uuid',
 type: 'string'},
 databaseId: {
 default: '00000000-0000-0000-0000-000000000000',
 format: 'uuid',
 type: 'string'},
-lastModified: { default: 1763938745147, type: 'number' },
+lastModified: { default: 0, type: 'number' },
 touched: { default: true, type: 'boolean' },
 version: { default: 0, minimum: 0, type: 'integer' }
 },

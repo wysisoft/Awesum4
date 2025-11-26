@@ -4,7 +4,7 @@ $id: 'router',
 type: 'object',
 properties: {
 id: {
-default: '019ab2f1-3b3b-7707-bc13-68462bc69e8d',
+default: '019ac0a9-2f8b-756d-9d9c-47a9611f46c8',
 format: 'uuid',
 type: 'string'},
 appId: { format: 'uuid', type: 'string' },
@@ -51,7 +51,7 @@ format: 'regex',
 pattern: '^([0-9]{2}:[0-9]{2})\\|([0-9]+)$',
 type: 'string'},
 version: { default: 0, minimum: 0, type: 'integer' },
-lastModified: { default: 1763938745147, type: 'number' },
+lastModified: { default: 0, type: 'number' },
 touched: { default: true, type: 'boolean' },
 status: { default: 1, maximum: 2, type: 'integer' }
 },

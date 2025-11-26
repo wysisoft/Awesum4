@@ -1,4 +1,5 @@
 <script lang="ts">
+import { getDefault } from '../../../server/typebox';
 import { I18nGlobal } from '@/i18nGlobal';
 import { resources } from '@/resources/Resources';
 import { reactive, ref, computed } from 'vue'
@@ -21,12 +22,13 @@ export default {
   },
   setup() {
     //awesum.serverApp.groups is a comma separated string of groups
-    let addAssignmentPayload = Value.Default(types.filter((x) => x.$id == "followerDatabase")[0], {}) as ServerFollowerDatabaseInterface;
+    let addAssignmentPayload = getDefault(Value.Default(types.filter((x) => x.$id == "followerDatabase")[0],{} )as ServerFollowerDatabaseInterface);
 
     let users = ref({});
     let groups = ref({});
     let assignmentType = ref<'user' | 'group'>('user');
     let selectedUserOrGroup = ref('');
+    let existingAssignments = ref<Array<{followerDatabase: ServerFollowerDatabaseInterface, displayName: string, isGroup: boolean}>>([]);
 
     const isSelectionValid = computed(() => {
       return selectedUserOrGroup.value !== '';
@@ -38,7 +40,8 @@ export default {
       groups,
       assignmentType,
       selectedUserOrGroup,
-      isSelectionValid
+      isSelectionValid,
+      existingAssignments
     };
   },
   async beforeCreate() {
@@ -54,8 +57,51 @@ export default {
         (this.groups as any)[group] = group;
       }
     }
+    await this.loadExistingAssignments();
   },
   methods: {
+    async loadExistingAssignments() {
+      var followerDatabases = await this.$awesum.AwesumDexieDB.serverFollowerDatabases
+        .where("databaseId").equals(this.$awesum.currentDatabase.id)
+        .toArray() as ServerFollowerDatabaseInterface[];
+      
+      var assignments: Array<{followerDatabase: ServerFollowerDatabaseInterface, displayName: string, isGroup: boolean}> = [];
+      
+      for (const followerDatabase of followerDatabases) {
+        // Check if it's a group (followerRequestId matches a group name)
+        const groupNames = this.$awesum.ownerApp.groups.split(',').map(g => g.trim()).filter(g => g);
+        const isGroup = groupNames.includes(followerDatabase.followerRequestId);
+        
+        if (isGroup) {
+          assignments.push({
+            followerDatabase,
+            displayName: `Group - ${followerDatabase.followerRequestId}`,
+            isGroup: true
+          });
+        } else {
+          // Look up the followerRequest to get user info
+          const followerRequest = await this.$awesum.AwesumDexieDB.serverFollowerRequests
+            .where("id").equals(followerDatabase.followerRequestId)
+            .first() as ServerFollowerRequestInterface | undefined;
+          
+          if (followerRequest) {
+            assignments.push({
+              followerDatabase,
+              displayName: `User - ${followerRequest.followerName} (${followerRequest.followerEmail})`,
+              isGroup: false
+            });
+          } else {
+            assignments.push({
+              followerDatabase,
+              displayName: `Unknown - ${followerDatabase.followerRequestId}`,
+              isGroup: false
+            });
+          }
+        }
+      }
+      
+      this.existingAssignments = assignments;
+    },
     setAssignmentType(type: 'user' | 'group') {
       this.assignmentType = type;
       this.selectedUserOrGroup = ''; // Reset selection when switching types
@@ -78,6 +124,8 @@ export default {
         alert('not implemented yet');
       }
 
+      await this.loadExistingAssignments();
+      
       this.$awesum.router.push({
         path: awesum.getDynamicUrl(this.$awesum.currentDatabase as ServerDatabaseInterface, this.$awesum.router.currentRoute)
       });

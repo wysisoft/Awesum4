@@ -128,7 +128,8 @@ function generateClientClasses(typeObject: TSchema, id: string) {
     var columns: string[] = [];
     for (const [key, field] of Object.entries(typeObject.properties)) {
       if (
-        key == "id" || key == "version" || key == "lastModified" || id == "media"
+        key == "id" || key == "version" || key == "lastModified" || id == "media" || 
+        (id == "followerDatabaseCompletion" )
       ) {
         clientClass += `
     private _${key}: ${getJavascriptType(field as TSchema)} = ${getJavascriptDefaultValue(field as TSchema)

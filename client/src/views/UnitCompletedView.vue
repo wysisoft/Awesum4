@@ -1,7 +1,7 @@
 <script lang="ts">
 import type { ServerDatabaseItemInterface } from '../../../server/serverInterfaces/ServerDatabaseItemInterface';
 import type { ServerFollowerDatabaseCompletionInterface } from '../../../server/serverInterfaces/ServerFollowerDatabaseCompletionInterface';
-import {  followerRequestStatus, ItemLevel, successVideoType,imageType,audioType } from '../../../server/typebox';
+import {  followerRequestStatus, ItemLevel, successVideoType,imageType,audioType, syncAction } from '../../../server/typebox';
 import type { ServerSyncRequestInterface } from '../../../server/serverInterfaces/ServerSyncRequestInterface';
 import type { ServerSyncResponseInterface } from '../../../server/serverInterfaces/ServerSyncResponseInterface';
 import { resources } from '@/resources/Resources';
@@ -461,7 +461,10 @@ export default {
       var allData = Array<ServerSyncRequestInterface>();
 
       allData.push({
-        followerDatabaseCompletion: completionData,
+        id: completionData.id,
+        level: ItemLevel.followerDatabaseCompletion,
+        values: completionData,
+        action: syncAction.add,
       });
 
       await this.$awesum.sync(allData);

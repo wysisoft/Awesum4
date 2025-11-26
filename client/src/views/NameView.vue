@@ -16,11 +16,12 @@ import { validateApp } from '../../../server/javascriptClientValidations/app';
 import type { ServerSyncRequestInterface } from '../../../server/serverInterfaces/ServerSyncRequestInterface';
 import { validateSyncRequest } from '../../../server/javascriptClientValidations/syncRequest';
 import type { ServerSyncResponseInterface } from '../../../server/serverInterfaces/ServerSyncResponseInterface';
+import { getDefault } from '../../../server/typebox';
 export default {
   setup() {
 
-    let payload = Value.Default(types.filter((x) => x.$id == "app")[0], {}) as ServerAppInterface;
-    payload.name = "";
+    let payload = getDefault(Value.Default(types.filter((x) => x.$id == "app")[0],{} )as ServerAppInterface);
+    payload.name = ""
 
     return {
       payload,
@@ -53,7 +54,7 @@ export default {
         return;
       }
 
-      if(awesum.ownerApp.id){
+      if(awesum.ownerApp.lastModified > 0){
         await awesum.sync([{
           id: awesum.ownerApp.id,
           level: ItemLevel.app,
@@ -61,6 +62,8 @@ export default {
           values: {
             name: this.payload.name,
             uniqueName: this.payload.uniqueName,
+            lastModified: awesum.ownerApp.lastModified,
+            version: awesum.ownerApp.version,
           }
         }]);
       }
@@ -72,7 +75,7 @@ export default {
           values: {
             name: this.payload.name,
             uniqueName: this.payload.uniqueName,
-            email: this.payload.email,
+            email: this.payload.email
           }
         }]);
       }

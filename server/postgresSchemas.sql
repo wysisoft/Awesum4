@@ -122,13 +122,10 @@ DROP TABLE IF EXISTS awesum."FollowerDatabaseCompletion";
     CREATE TABLE awesum."FollowerDatabaseCompletion" (
   "id" UUID PRIMARY KEY NOT NULL,
   "followerRequestId" UUID NOT NULL,
-  "description" VARCHAR(1000) NOT NULL,
   "itemId" UUID NOT NULL,
   "parentItemId" UUID NOT NULL,
   "itemLevel" INTEGER NOT NULL,
-  "lastModified" NUMERIC NOT NULL,
-  "touched" BOOLEAN NOT NULL,
-  "version" INTEGER NOT NULL
+  "lastModified" NUMERIC NOT NULL
 );
 
 DROP TABLE IF EXISTS awesum."Router";

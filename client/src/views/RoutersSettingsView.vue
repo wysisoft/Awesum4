@@ -11,6 +11,7 @@ import { itemType } from '../../../server/typebox';
 import type { ServerRouterInterface } from '../../../server/serverInterfaces/ServerRouterInterface';
 import { types } from '../../../server/typebox';
 import { Value } from '@sinclair/typebox/value'
+import { getDefault } from '../../../server/typebox';
 
 export default {
   components: {
@@ -18,7 +19,7 @@ export default {
     EditTextComponent
   },
   setup() {
-    let currentRouter = Value.Default(types.filter((x) => x.$id == "router")[0], {}) as ServerRouterInterface;
+    let currentRouter = getDefault(Value.Default(types.filter((x) => x.$id == "router")[0],{} )as ServerRouterInterface);
     return {
       showModal: ref(false),
       currentRouter
