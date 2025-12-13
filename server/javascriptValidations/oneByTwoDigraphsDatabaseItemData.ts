@@ -1,5 +1,5 @@
 'use strict'
-const schema18 = {
+const schema20 = {
 $id: 'oneByTwoDigraphsDatabaseItemData',
 type: 'object',
 properties: {
@@ -76,7 +76,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: missing0 },
- message: "Required"}
+ message: "Required"
+}
 );
 } else {
 if (data.leftDigraphs !== undefined) {
@@ -90,7 +91,8 @@ instancePath: instancePath + '/leftDigraphs',
 schemaPath: '#/properties/leftDigraphs/maxLength',
 keyword: 'maxLength',
 params: { limit: 364 },
- message: "Must_be_less_than_364_characters"}
+ message: "Must_be_less_than_364_characters"
+}
 );
 }
 } else {errors.push(
@@ -120,7 +122,8 @@ instancePath: instancePath + '/rightDigraphs',
 schemaPath: '#/properties/rightDigraphs/maxLength',
 keyword: 'maxLength',
 params: { limit: 364 },
- message: "Must_be_less_than_364_characters"}
+ message: "Must_be_less_than_364_characters"
+}
 );
 }
 } else {errors.push(
@@ -151,7 +154,8 @@ instancePath: instancePath + '/image',
 schemaPath: '#/properties/image/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 );
 }
 } else {errors.push(
@@ -183,7 +187,8 @@ instancePath: instancePath + '/sound',
 schemaPath: '#/properties/sound/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 );
 }
 } else {errors.push(
@@ -214,7 +219,8 @@ instancePath: instancePath + '/text',
 schemaPath: '#/properties/text/maxLength',
 keyword: 'maxLength',
 params: { limit: 14 },
- message: "Must_be_less_than_14_characters"}
+ message: "Must_be_less_than_14_characters"
+}
 );
 } else {
 if (func4(data4) < 1) {errors.push(
@@ -223,7 +229,8 @@ instancePath: instancePath + '/text',
 schemaPath: '#/properties/text/minLength',
 keyword: 'minLength',
 params: { limit: 1 },
- message: "Required"}
+ message: "Required"
+}
 );
 }
 }
@@ -259,7 +266,8 @@ instancePath: instancePath + '/imageType',
 schemaPath: '#/properties/imageType/type',
 keyword: 'type',
 params: { type: 'integer' },
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 );
 }
 if (true) {
@@ -270,7 +278,8 @@ instancePath: instancePath + '/imageType',
 schemaPath: '#/properties/imageType/maximum',
 keyword: 'maximum',
 params: { comparison: '<=', limit: 3 },
- message: "Must_be_less_than_or_equal_to_maximum"}
+ message: "Must_be_less_than_or_equal_to_maximum"
+}
 );
 } else {
 if (data5 < 0 || isNaN(data5)) {errors.push(
@@ -279,7 +288,8 @@ instancePath: instancePath + '/imageType',
 schemaPath: '#/properties/imageType/minimum',
 keyword: 'minimum',
 params: { comparison: '>=', limit: 0 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 );
 }
 }
@@ -301,7 +311,8 @@ instancePath: instancePath + '/visualHint',
 schemaPath: '#/properties/visualHint/maxLength',
 keyword: 'maxLength',
 params: { limit: 100 },
- message: "Must_be_less_than_100_characters"}
+ message: "Must_be_less_than_100_characters"
+}
 );
 } else {
 if (func4(data6) < 1) {errors.push(
@@ -310,7 +321,8 @@ instancePath: instancePath + '/visualHint',
 schemaPath: '#/properties/visualHint/minLength',
 keyword: 'minLength',
 params: { limit: 1 },
- message: "Required"}
+ message: "Required"
+}
 );
 }
 }
@@ -346,7 +358,8 @@ instancePath: instancePath + '/audioType',
 schemaPath: '#/properties/audioType/type',
 keyword: 'type',
 params: { type: 'integer' },
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 );
 }
 if (true) {
@@ -357,7 +370,8 @@ instancePath: instancePath + '/audioType',
 schemaPath: '#/properties/audioType/maximum',
 keyword: 'maximum',
 params: { comparison: '<=', limit: 4 },
- message: "Must_be_less_than_or_equal_to_maximum"}
+ message: "Must_be_less_than_or_equal_to_maximum"
+}
 );
 } else {
 if (data7 < 0 || isNaN(data7)) {errors.push(
@@ -366,7 +380,8 @@ instancePath: instancePath + '/audioType',
 schemaPath: '#/properties/audioType/minimum',
 keyword: 'minimum',
 params: { comparison: '>=', limit: 0 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 );
 }
 }
@@ -389,7 +404,8 @@ instancePath: instancePath + '/successSound',
 schemaPath: '#/properties/successSound/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 );
 }
 } else {errors.push(
@@ -425,7 +441,8 @@ instancePath: instancePath + '/successSoundType',
 schemaPath: '#/properties/successSoundType/type',
 keyword: 'type',
 params: { type: 'integer' },
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 );
 }
 if (true) {
@@ -436,7 +453,8 @@ instancePath: instancePath + '/successSoundType',
 schemaPath: '#/properties/successSoundType/maximum',
 keyword: 'maximum',
 params: { comparison: '<=', limit: 4 },
- message: "Must_be_less_than_or_equal_to_maximum"}
+ message: "Must_be_less_than_or_equal_to_maximum"
+}
 );
 } else {
 if (data9 < 0 || isNaN(data9)) {errors.push(
@@ -445,7 +463,8 @@ instancePath: instancePath + '/successSoundType',
 schemaPath: '#/properties/successSoundType/minimum',
 keyword: 'minimum',
 params: { comparison: '>=', limit: 0 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 );
 }
 }
@@ -468,7 +487,8 @@ instancePath: instancePath + '/successImage',
 schemaPath: '#/properties/successImage/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 );
 }
 } else {errors.push(
@@ -504,7 +524,8 @@ instancePath: instancePath + '/successImageType',
 schemaPath: '#/properties/successImageType/type',
 keyword: 'type',
 params: { type: 'integer' },
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 );
 }
 if (true) {
@@ -521,7 +542,8 @@ params: {
 comparison: '<=',
 limit: 3
 },
- message: "Must_be_less_than_or_equal_to_maximum"}
+ message: "Must_be_less_than_or_equal_to_maximum"
+}
 );
 } else {
 if (data11 < 0 || isNaN(data11)) {errors.push(
@@ -533,7 +555,8 @@ params: {
 comparison: '>=',
 limit: 0
 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 );
 }
 }
@@ -555,7 +578,8 @@ instancePath: instancePath + '/successAnimations',
 schemaPath: '#/properties/successAnimations/maxLength',
 keyword: 'maxLength',
 params: { limit: 100 },
- message: "Must_be_less_than_100_characters"}
+ message: "Must_be_less_than_100_characters"
+}
 );
 }
 } else {errors.push(
@@ -590,7 +614,8 @@ instancePath: instancePath + '/successImageTime',
 schemaPath: '#/properties/successImageTime/type',
 keyword: 'type',
 params: { type: 'integer' },
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 );
 }
 if (true) {
@@ -607,7 +632,8 @@ params: {
 comparison: '>=',
 limit: 0
 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 );
 }
 }

@@ -25,18 +25,16 @@ export default {
   methods: {
     async approve(follower: ServerFollowerRequestInterface) {
 
-    
+      follower.status = followerRequestStatus.Approved;
+
+      await awesum.waitForDexie();
 
       await awesum.sync([
         {
           id: follower.id,
           level: ItemLevel.followerRequest,
           action: syncAction.modify,
-          values: {
-            status: followerRequestStatus.Approved,
-            lastModified: follower.lastModified,
-            version: follower.version
-          } as Partial<ServerFollowerRequestInterface>
+          values: awesum.pick(follower, ['status', 'lastModified', 'version'])
         },
       ]);
 
@@ -45,14 +43,22 @@ export default {
       });
     },
     async reject(follower: ServerFollowerRequestInterface) {
-      var response = await fetch(window.location.origin + "/api/rejectLeader?leaderEmail=" + follower.leaderEmail, {
-        method: 'GET',
-        credentials: "include",
-      });
+      follower.status = followerRequestStatus.Rejected;
 
-      if (response.ok) {
-        this.$awesum.AwesumDexieDB.serverFollowerRequests.delete(follower.id);
-      }
+      await awesum.waitForDexie();
+
+      await awesum.sync([
+        {
+          id: follower.id,
+          level: ItemLevel.followerRequest,
+          action: syncAction.modify,
+          values: awesum.pick(follower, ['status', 'lastModified', 'version'])
+        },
+      ]);
+
+      this.$router.push({
+        path: '/i/LeadersAndFollowers?order=[["1","desc"]]&activeView=leaders'
+      });
     },
   }
 };

@@ -45,7 +45,7 @@ export default {
     awesum.toast = toast;
     const { isFullscreen, toggle } = useFullscreen()
 
-
+const modifications = ref(new Map<string, any>());
 
     
 
@@ -58,13 +58,16 @@ export default {
       I18nGlobal,
       resources,
       currentElement,
-      currentElementDisplay
+      currentElementDisplay,
+      modifications
     };
   },
   components: {
     Breadcrumb
   },
-  beforeCreate() {
+  async beforeCreate() {
+
+    
 
   },
   mounted() {
@@ -92,7 +95,8 @@ export default {
       return false;
     },
     beforeEnter(el: any) {
-      if (!this.$router.options.history.state.back) {
+      if (this.$router.options.history.length  == 0) {
+        debugger;
         return;
       }
       // Called before the new component enters
@@ -198,11 +202,22 @@ export default {
           <button class="btn btn-link" @click="$router.push(href)">
             <ChRefresh />
             <span>{{ $t($resources.Sync.key) }}</span>
+            <div v-if="$awesum.updatesToSync.length > 0" style="
+    font-size: 1vmin;
+    position: absolute;
+    color: black;
+    border: .1vmin solid black;
+    padding: .5vmin;
+    background: red;
+    left: 16vmin;
+">
+  <span>{{ $awesum.updatesToSync.length }} </span>
+</div>
           </button>
         </router-link>
 
-        <div v-if="$awesum.touchedObjects.size > 0">
-          <span>{{ $awesum.touchedObjects.size }} </span>
+        <div v-if="modifications.size > 0">
+          <span>{{ modifications.size }} </span>
         </div>
 
         <button class="btn btn-link" @click="toggleFullScreen" role="link">

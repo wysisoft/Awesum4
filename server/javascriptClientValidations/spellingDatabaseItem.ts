@@ -1,5 +1,5 @@
 'use strict'
-const schema30 = {
+const schema32 = {
 $id: 'spellingDatabaseItem',
 type: 'object',
 properties: {
@@ -94,7 +94,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'data' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err0]
 } else {
@@ -108,7 +109,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'itemType' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err1]
 } else {
@@ -122,7 +124,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'order' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err2]
 } else {
@@ -136,7 +139,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'unitId' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err3]
 } else {
@@ -150,7 +154,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'appId' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err4]
 } else {
@@ -164,7 +169,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'lastModified' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err5]
 } else {
@@ -178,7 +184,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'touched' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err6]
 } else {
@@ -192,7 +199,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'version' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err7]
 } else {
@@ -206,7 +214,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'databaseId' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err8]
 } else {
@@ -220,7 +229,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'id' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err9]
 } else {
@@ -234,7 +244,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'dataText' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err10]
 } else {
@@ -449,7 +460,8 @@ instancePath: instancePath + '/data/letters',
 schemaPath: '#/properties/data/properties/letters/maxLength',
 keyword: 'maxLength',
 params: { limit: 364 },
- message: "Must_be_less_than_364_characters"}
+ message: "Must_be_less_than_364_characters"
+}
 if (vErrors === null) {
 vErrors = [err24]
 } else {
@@ -482,7 +494,8 @@ instancePath: instancePath + '/data/image',
 schemaPath: '#/properties/data/properties/image/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 if (vErrors === null) {
 vErrors = [err26]
 } else {
@@ -515,7 +528,8 @@ instancePath: instancePath + '/data/sound',
 schemaPath: '#/properties/data/properties/sound/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 if (vErrors === null) {
 vErrors = [err28]
 } else {
@@ -548,7 +562,8 @@ instancePath: instancePath + '/data/text',
 schemaPath: '#/properties/data/properties/text/maxLength',
 keyword: 'maxLength',
 params: { limit: 14 },
- message: "Must_be_less_than_14_characters"}
+ message: "Must_be_less_than_14_characters"
+}
 if (vErrors === null) {
 vErrors = [err30]
 } else {
@@ -562,7 +577,8 @@ instancePath: instancePath + '/data/text',
 schemaPath: '#/properties/data/properties/text/minLength',
 keyword: 'minLength',
 params: { limit: 1 },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err31]
 } else {
@@ -601,7 +617,8 @@ instancePath: instancePath + '/data/imageType',
 schemaPath: '#/properties/data/properties/imageType/type',
 keyword: 'type',
 params: { type: 'integer' },
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 if (vErrors === null) {
 vErrors = [err33]
 } else {
@@ -616,7 +633,8 @@ instancePath: instancePath + '/data/imageType',
 schemaPath: '#/properties/data/properties/imageType/maximum',
 keyword: 'maximum',
 params: { comparison: '<=', limit: 3 },
- message: "Must_be_less_than_or_equal_to_maximum"}
+ message: "Must_be_less_than_or_equal_to_maximum"
+}
 if (vErrors === null) {
 vErrors = [err34]
 } else {
@@ -630,7 +648,8 @@ instancePath: instancePath + '/data/imageType',
 schemaPath: '#/properties/data/properties/imageType/minimum',
 keyword: 'minimum',
 params: { comparison: '>=', limit: 0 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 if (vErrors === null) {
 vErrors = [err35]
 } else {
@@ -649,7 +668,8 @@ instancePath: instancePath + '/data/visualHint',
 schemaPath: '#/properties/data/properties/visualHint/maxLength',
 keyword: 'maxLength',
 params: { limit: 100 },
- message: "Must_be_less_than_100_characters"}
+ message: "Must_be_less_than_100_characters"
+}
 if (vErrors === null) {
 vErrors = [err36]
 } else {
@@ -663,7 +683,8 @@ instancePath: instancePath + '/data/visualHint',
 schemaPath: '#/properties/data/properties/visualHint/minLength',
 keyword: 'minLength',
 params: { limit: 1 },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err37]
 } else {
@@ -702,7 +723,8 @@ instancePath: instancePath + '/data/audioType',
 schemaPath: '#/properties/data/properties/audioType/type',
 keyword: 'type',
 params: { type: 'integer' },
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 if (vErrors === null) {
 vErrors = [err39]
 } else {
@@ -717,7 +739,8 @@ instancePath: instancePath + '/data/audioType',
 schemaPath: '#/properties/data/properties/audioType/maximum',
 keyword: 'maximum',
 params: { comparison: '<=', limit: 4 },
- message: "Must_be_less_than_or_equal_to_maximum"}
+ message: "Must_be_less_than_or_equal_to_maximum"
+}
 if (vErrors === null) {
 vErrors = [err40]
 } else {
@@ -731,7 +754,8 @@ instancePath: instancePath + '/data/audioType',
 schemaPath: '#/properties/data/properties/audioType/minimum',
 keyword: 'minimum',
 params: { comparison: '>=', limit: 0 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 if (vErrors === null) {
 vErrors = [err41]
 } else {
@@ -750,7 +774,8 @@ instancePath: instancePath + '/data/successSound',
 schemaPath: '#/properties/data/properties/successSound/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 if (vErrors === null) {
 vErrors = [err42]
 } else {
@@ -789,7 +814,8 @@ instancePath: instancePath + '/data/successSoundType',
 schemaPath: '#/properties/data/properties/successSoundType/type',
 keyword: 'type',
 params: { type: 'integer' },
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 if (vErrors === null) {
 vErrors = [err44]
 } else {
@@ -804,7 +830,8 @@ instancePath: instancePath + '/data/successSoundType',
 schemaPath: '#/properties/data/properties/successSoundType/maximum',
 keyword: 'maximum',
 params: { comparison: '<=', limit: 4 },
- message: "Must_be_less_than_or_equal_to_maximum"}
+ message: "Must_be_less_than_or_equal_to_maximum"
+}
 if (vErrors === null) {
 vErrors = [err45]
 } else {
@@ -818,7 +845,8 @@ instancePath: instancePath + '/data/successSoundType',
 schemaPath: '#/properties/data/properties/successSoundType/minimum',
 keyword: 'minimum',
 params: { comparison: '>=', limit: 0 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 if (vErrors === null) {
 vErrors = [err46]
 } else {
@@ -837,7 +865,8 @@ instancePath: instancePath + '/data/successImage',
 schemaPath: '#/properties/data/properties/successImage/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 if (vErrors === null) {
 vErrors = [err47]
 } else {
@@ -876,7 +905,8 @@ instancePath: instancePath + '/data/successImageType',
 schemaPath: '#/properties/data/properties/successImageType/type',
 keyword: 'type',
 params: { type: 'integer' },
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 if (vErrors === null) {
 vErrors = [err49]
 } else {
@@ -891,7 +921,8 @@ instancePath: instancePath + '/data/successImageType',
 schemaPath: '#/properties/data/properties/successImageType/maximum',
 keyword: 'maximum',
 params: { comparison: '<=', limit: 3 },
- message: "Must_be_less_than_or_equal_to_maximum"}
+ message: "Must_be_less_than_or_equal_to_maximum"
+}
 if (vErrors === null) {
 vErrors = [err50]
 } else {
@@ -905,7 +936,8 @@ instancePath: instancePath + '/data/successImageType',
 schemaPath: '#/properties/data/properties/successImageType/minimum',
 keyword: 'minimum',
 params: { comparison: '>=', limit: 0 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 if (vErrors === null) {
 vErrors = [err51]
 } else {
@@ -924,7 +956,8 @@ instancePath: instancePath + '/data/successAnimations',
 schemaPath: '#/properties/data/properties/successAnimations/maxLength',
 keyword: 'maxLength',
 params: { limit: 100 },
- message: "Must_be_less_than_100_characters"}
+ message: "Must_be_less_than_100_characters"
+}
 if (vErrors === null) {
 vErrors = [err52]
 } else {
@@ -963,7 +996,8 @@ instancePath: instancePath + '/data/successImageTime',
 schemaPath: '#/properties/data/properties/successImageTime/type',
 keyword: 'type',
 params: { type: 'integer' },
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 if (vErrors === null) {
 vErrors = [err54]
 } else {
@@ -978,7 +1012,8 @@ instancePath: instancePath + '/data/successImageTime',
 schemaPath: '#/properties/data/properties/successImageTime/minimum',
 keyword: 'minimum',
 params: { comparison: '>=', limit: 0 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 if (vErrors === null) {
 vErrors = [err55]
 } else {
@@ -1019,7 +1054,8 @@ instancePath: instancePath + '/itemType',
 schemaPath: '#/properties/itemType/type',
 keyword: 'type',
 params: { type: 'integer' },
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 if (vErrors === null) {
 vErrors = [err57]
 } else {
@@ -1034,7 +1070,8 @@ instancePath: instancePath + '/itemType',
 schemaPath: '#/properties/itemType/maximum',
 keyword: 'maximum',
 params: { comparison: '<=', limit: 5 },
- message: "Must_be_less_than_or_equal_to_maximum"}
+ message: "Must_be_less_than_or_equal_to_maximum"
+}
 if (vErrors === null) {
 vErrors = [err58]
 } else {
@@ -1048,7 +1085,8 @@ instancePath: instancePath + '/itemType',
 schemaPath: '#/properties/itemType/minimum',
 keyword: 'minimum',
 params: { comparison: '>=', limit: 0 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 if (vErrors === null) {
 vErrors = [err59]
 } else {
@@ -1073,7 +1111,8 @@ instancePath: instancePath + '/order',
 schemaPath: '#/properties/order/type',
 keyword: 'type',
 params: { type: 'integer' },
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 if (vErrors === null) {
 vErrors = [err60]
 } else {
@@ -1088,7 +1127,8 @@ instancePath: instancePath + '/order',
 schemaPath: '#/properties/order/minimum',
 keyword: 'minimum',
 params: { comparison: '>=', limit: 0 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 if (vErrors === null) {
 vErrors = [err61]
 } else {
@@ -1107,7 +1147,8 @@ instancePath: instancePath + '/unitId',
 schemaPath: '#/properties/unitId/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 if (vErrors === null) {
 vErrors = [err62]
 } else {
@@ -1140,7 +1181,8 @@ instancePath: instancePath + '/appId',
 schemaPath: '#/properties/appId/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 if (vErrors === null) {
 vErrors = [err64]
 } else {
@@ -1172,7 +1214,8 @@ instancePath: instancePath + '/lastModified',
 schemaPath: '#/properties/lastModified/type',
 keyword: 'type',
 params: { type: 'number' },
- message: "Must_be_a_number"}
+ message: "Must_be_a_number"
+}
 if (vErrors === null) {
 vErrors = [err66]
 } else {
@@ -1188,7 +1231,8 @@ instancePath: instancePath + '/touched',
 schemaPath: '#/properties/touched/type',
 keyword: 'type',
 params: { type: 'boolean' },
- message: "Must_be_a_boolean"}
+ message: "Must_be_a_boolean"
+}
 if (vErrors === null) {
 vErrors = [err67]
 } else {
@@ -1212,7 +1256,8 @@ instancePath: instancePath + '/version',
 schemaPath: '#/properties/version/type',
 keyword: 'type',
 params: { type: 'integer' },
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 if (vErrors === null) {
 vErrors = [err68]
 } else {
@@ -1227,7 +1272,8 @@ instancePath: instancePath + '/version',
 schemaPath: '#/properties/version/minimum',
 keyword: 'minimum',
 params: { comparison: '>=', limit: 0 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 if (vErrors === null) {
 vErrors = [err69]
 } else {
@@ -1246,7 +1292,8 @@ instancePath: instancePath + '/databaseId',
 schemaPath: '#/properties/databaseId/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 if (vErrors === null) {
 vErrors = [err70]
 } else {
@@ -1279,7 +1326,8 @@ instancePath: instancePath + '/id',
 schemaPath: '#/properties/id/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 if (vErrors === null) {
 vErrors = [err72]
 } else {
@@ -1312,7 +1360,8 @@ instancePath: instancePath + '/dataText',
 schemaPath: '#/properties/dataText/maxLength',
 keyword: 'maxLength',
 params: { limit: 8000 },
- message: "Must_be_less_than_8000_characters"}
+ message: "Must_be_less_than_8000_characters"
+}
 if (vErrors === null) {
 vErrors = [err74]
 } else {

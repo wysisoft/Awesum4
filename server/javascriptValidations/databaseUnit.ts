@@ -1,5 +1,5 @@
 'use strict'
-const schema16 = {
+const schema18 = {
 $id: 'databaseUnit',
 type: 'object',
 properties: {
@@ -14,14 +14,20 @@ databaseId: { format: 'uuid', type: 'string' },
 successVideoType: { default: 0, minimum: 0, maximum: 2, type: 'integer' },
 successVideoUrl: { maxLength: 100, type: 'string' },
 successAnimations: { default: 'Fireworks', maxLength: 100, type: 'string' },
-successSound: { format: 'uuid', type: 'string' },
+successSound: {
+default: '00000000-0000-0000-0000-000000000005',
+format: 'uuid',
+type: 'string'},
 successSoundType: { default: 2, minimum: 0, maximum: 4, type: 'integer' },
 homePageImageType: { default: 0, minimum: 0, maximum: 3, type: 'integer' },
 homePageImage: {
 default: '00000000-0000-0000-0000-000000000002',
 format: 'uuid',
 type: 'string'},
-router: { format: 'uuid', type: 'string' },
+router: {
+default: '00000000-0000-0000-0000-000000000000',
+format: 'uuid',
+type: 'string'},
 routerTime: { type: 'number' },
 routerTimeImmediate: { default: false, type: 'boolean' },
 points: { default: 0, minimum: 0, type: 'integer' }
@@ -93,7 +99,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: missing0 },
- message: "Required"}
+ message: "Required"
+}
 );
 } else {
 if (data.name !== undefined) {
@@ -107,7 +114,8 @@ instancePath: instancePath + '/name',
 schemaPath: '#/properties/name/maxLength',
 keyword: 'maxLength',
 params: { limit: 100 },
- message: "Must_be_less_than_100_characters"}
+ message: "Must_be_less_than_100_characters"
+}
 );
 } else {
 if (func4(data0) < 1) {errors.push(
@@ -116,7 +124,8 @@ instancePath: instancePath + '/name',
 schemaPath: '#/properties/name/minLength',
 keyword: 'minLength',
 params: { limit: 1 },
- message: "Required"}
+ message: "Required"
+}
 );
 }
 }
@@ -152,7 +161,8 @@ instancePath: instancePath + '/order',
 schemaPath: '#/properties/order/type',
 keyword: 'type',
 params: { type: 'integer' },
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 );
 }
 if (true) {
@@ -163,7 +173,8 @@ instancePath: instancePath + '/order',
 schemaPath: '#/properties/order/minimum',
 keyword: 'minimum',
 params: { comparison: '>=', limit: 0 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 );
 }
 }
@@ -182,7 +193,8 @@ instancePath: instancePath + '/lastModified',
 schemaPath: '#/properties/lastModified/type',
 keyword: 'type',
 params: { type: 'number' },
- message: "Must_be_a_number"}
+ message: "Must_be_a_number"
+}
 );
 }
 var valid0 = _errs5 === errors
@@ -198,7 +210,8 @@ instancePath: instancePath + '/touched',
 schemaPath: '#/properties/touched/type',
 keyword: 'type',
 params: { type: 'boolean' },
- message: "Must_be_a_boolean"}
+ message: "Must_be_a_boolean"
+}
 );
 }
 var valid0 = _errs7 === errors
@@ -222,7 +235,8 @@ instancePath: instancePath + '/version',
 schemaPath: '#/properties/version/type',
 keyword: 'type',
 params: { type: 'integer' },
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 );
 }
 if (true) {
@@ -233,7 +247,8 @@ instancePath: instancePath + '/version',
 schemaPath: '#/properties/version/minimum',
 keyword: 'minimum',
 params: { comparison: '>=', limit: 0 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 );
 }
 }
@@ -255,7 +270,8 @@ instancePath: instancePath + '/id',
 schemaPath: '#/properties/id/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 );
 }
 } else {errors.push(
@@ -287,7 +303,8 @@ instancePath: instancePath + '/appId',
 schemaPath: '#/properties/appId/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 );
 }
 } else {errors.push(
@@ -319,7 +336,8 @@ instancePath: instancePath + '/databaseId',
 schemaPath: '#/properties/databaseId/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 );
 }
 } else {errors.push(
@@ -355,7 +373,8 @@ instancePath: instancePath + '/successVideoType',
 schemaPath: '#/properties/successVideoType/type',
 keyword: 'type',
 params: { type: 'integer' },
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 );
 }
 if (true) {
@@ -366,7 +385,8 @@ instancePath: instancePath + '/successVideoType',
 schemaPath: '#/properties/successVideoType/maximum',
 keyword: 'maximum',
 params: { comparison: '<=', limit: 2 },
- message: "Must_be_less_than_or_equal_to_maximum"}
+ message: "Must_be_less_than_or_equal_to_maximum"
+}
 );
 } else {
 if (data8 < 0 || isNaN(data8)) {errors.push(
@@ -375,7 +395,8 @@ instancePath: instancePath + '/successVideoType',
 schemaPath: '#/properties/successVideoType/minimum',
 keyword: 'minimum',
 params: { comparison: '>=', limit: 0 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 );
 }
 }
@@ -397,7 +418,8 @@ instancePath: instancePath + '/successVideoUrl',
 schemaPath: '#/properties/successVideoUrl/maxLength',
 keyword: 'maxLength',
 params: { limit: 100 },
- message: "Must_be_less_than_100_characters"}
+ message: "Must_be_less_than_100_characters"
+}
 );
 }
 } else {errors.push(
@@ -427,7 +449,8 @@ instancePath: instancePath + '/successAnimations',
 schemaPath: '#/properties/successAnimations/maxLength',
 keyword: 'maxLength',
 params: { limit: 100 },
- message: "Must_be_less_than_100_characters"}
+ message: "Must_be_less_than_100_characters"
+}
 );
 }
 } else {errors.push(
@@ -458,7 +481,8 @@ instancePath: instancePath + '/successSound',
 schemaPath: '#/properties/successSound/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 );
 }
 } else {errors.push(
@@ -494,7 +518,8 @@ instancePath: instancePath + '/successSoundType',
 schemaPath: '#/properties/successSoundType/type',
 keyword: 'type',
 params: { type: 'integer' },
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 );
 }
 if (true) {
@@ -511,7 +536,8 @@ params: {
 comparison: '<=',
 limit: 4
 },
- message: "Must_be_less_than_or_equal_to_maximum"}
+ message: "Must_be_less_than_or_equal_to_maximum"
+}
 );
 } else {
 if (data12 < 0 || isNaN(data12)) {errors.push(
@@ -523,7 +549,8 @@ params: {
 comparison: '>=',
 limit: 0
 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 );
 }
 }
@@ -550,7 +577,8 @@ instancePath: instancePath + '/homePageImageType',
 schemaPath: '#/properties/homePageImageType/type',
 keyword: 'type',
 params: { type: 'integer' },
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 );
 }
 if (true) {
@@ -567,7 +595,8 @@ params: {
 comparison: '<=',
 limit: 3
 },
- message: "Must_be_less_than_or_equal_to_maximum"}
+ message: "Must_be_less_than_or_equal_to_maximum"
+}
 );
 } else {
 if (data13 < 0 || isNaN(data13)) {errors.push(
@@ -579,7 +608,8 @@ params: {
 comparison: '>=',
 limit: 0
 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 );
 }
 }
@@ -602,7 +632,8 @@ instancePath: instancePath + '/homePageImage',
 schemaPath: '#/properties/homePageImage/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 );
 }
 } else {errors.push(
@@ -634,7 +665,8 @@ instancePath: instancePath + '/router',
 schemaPath: '#/properties/router/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 );
 }
 } else {errors.push(
@@ -668,7 +700,8 @@ instancePath: instancePath + '/routerTime',
 schemaPath: '#/properties/routerTime/type',
 keyword: 'type',
 params: { type: 'number' },
- message: "Must_be_a_number"}
+ message: "Must_be_a_number"
+}
 );
 }
 var valid0 = _errs33 === errors
@@ -688,7 +721,8 @@ instancePath: instancePath + '/routerTimeImmediate',
 schemaPath: '#/properties/routerTimeImmediate/type',
 keyword: 'type',
 params: { type: 'boolean' },
- message: "Must_be_a_boolean"}
+ message: "Must_be_a_boolean"
+}
 );
 }
 var valid0 = _errs35 === errors
@@ -712,7 +746,8 @@ instancePath: instancePath + '/points',
 schemaPath: '#/properties/points/type',
 keyword: 'type',
 params: { type: 'integer' },
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 );
 }
 if (true) {
@@ -732,7 +767,8 @@ params: {
 comparison: '>=',
 limit: 0
 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 );
 }
 }

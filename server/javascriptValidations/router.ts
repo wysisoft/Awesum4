@@ -1,10 +1,10 @@
 'use strict'
-const schema29 = {
+const schema31 = {
 $id: 'router',
 type: 'object',
 properties: {
 id: {
-default: '019ac0a9-2f8b-756d-9d9c-47a9611f46c8',
+default: '019b148f-9161-730a-bb36-c950c8751e4c',
 format: 'uuid',
 type: 'string'},
 appId: { format: 'uuid', type: 'string' },
@@ -75,8 +75,8 @@ required: [
 }
 const formats2 = /^(?:urn:uuid:)?[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/i
 import * as formats from 'ajv-formats/dist/formats'
-const formats98 = formats.fullFormats.regex as any
-const formats100 = /^(?:(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)\.){3}(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)$/
+const formats100 = formats.fullFormats.regex as any
+const formats102 = /^(?:(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)\.){3}(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)$/
 const pattern1 = new RegExp('^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$', 'u')
 const pattern2 = new RegExp('^([0-9]{2}:[0-9]{2})\\|([0-9]+)$', 'u')
 import type { ErrorObject } from 'ajv'
@@ -119,7 +119,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: missing0 },
- message: "Required"}
+ message: "Required"
+}
 );
 } else {
 if (data.id !== undefined) {
@@ -134,7 +135,8 @@ instancePath: instancePath + '/id',
 schemaPath: '#/properties/id/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 );
 }
 } else {errors.push(
@@ -166,7 +168,8 @@ instancePath: instancePath + '/appId',
 schemaPath: '#/properties/appId/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 );
 }
 } else {errors.push(
@@ -199,16 +202,18 @@ schemaPath: '#/properties/routerMac/pattern',
 keyword: 'pattern',
 params: {
 pattern: '^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$'},
- message: "Must_be_a_valid_MAC_address"}
+ message: "Must_be_a_valid_MAC_address"
+}
 );
 } else {
-if (!formats98(data2)) {errors.push(
+if (!formats100(data2)) {errors.push(
 {
 instancePath: instancePath + '/routerMac',
 schemaPath: '#/properties/routerMac/format',
 keyword: 'format',
 params: { format: 'regex' },
- message: "Must_be_a_valid_MAC_address"}
+ message: "Must_be_a_valid_MAC_address"
+}
 );
 }
 }
@@ -235,13 +240,14 @@ const _errs7 = errors
 if (true) {
 if (true) {
 if (typeof data3 === 'string') {
-if (!formats100.test(data3)) {errors.push(
+if (!formats102.test(data3)) {errors.push(
 {
 instancePath: instancePath + '/ipAddress',
 schemaPath: '#/properties/ipAddress/format',
 keyword: 'format',
 params: { format: 'ipv4' },
- message: "Must_be_a_valid_IP_address"}
+ message: "Must_be_a_valid_IP_address"
+}
 );
 }
 } else {errors.push(
@@ -274,16 +280,18 @@ schemaPath: '#/properties/mondayTimesAndDurations/pattern',
 keyword: 'pattern',
 params: {
 pattern: '^([0-9]{2}:[0-9]{2})\\|([0-9]+)$'},
- message: "Must_be_a_valid_time_and_duration"}
+ message: "Must_be_a_valid_time_and_duration"
+}
 );
 } else {
-if (!formats98(data4)) {errors.push(
+if (!formats100(data4)) {errors.push(
 {
 instancePath: instancePath + '/mondayTimesAndDurations',
 schemaPath: '#/properties/mondayTimesAndDurations/format',
 keyword: 'format',
 params: { format: 'regex' },
- message: "Must_be_a_valid_time_and_duration"}
+ message: "Must_be_a_valid_time_and_duration"
+}
 );
 }
 }
@@ -317,16 +325,18 @@ schemaPath: '#/properties/tuesdayTimesAndDurations/pattern',
 keyword: 'pattern',
 params: {
 pattern: '^([0-9]{2}:[0-9]{2})\\|([0-9]+)$'},
- message: "Must_be_a_valid_time_and_duration"}
+ message: "Must_be_a_valid_time_and_duration"
+}
 );
 } else {
-if (!formats98(data5)) {errors.push(
+if (!formats100(data5)) {errors.push(
 {
 instancePath: instancePath + '/tuesdayTimesAndDurations',
 schemaPath: '#/properties/tuesdayTimesAndDurations/format',
 keyword: 'format',
 params: { format: 'regex' },
- message: "Must_be_a_valid_time_and_duration"}
+ message: "Must_be_a_valid_time_and_duration"
+}
 );
 }
 }
@@ -360,16 +370,18 @@ schemaPath: '#/properties/wednesdayTimesAndDurations/pattern',
 keyword: 'pattern',
 params: {
 pattern: '^([0-9]{2}:[0-9]{2})\\|([0-9]+)$'},
- message: "Must_be_a_valid_time_and_duration"}
+ message: "Must_be_a_valid_time_and_duration"
+}
 );
 } else {
-if (!formats98(data6)) {errors.push(
+if (!formats100(data6)) {errors.push(
 {
 instancePath: instancePath + '/wednesdayTimesAndDurations',
 schemaPath: '#/properties/wednesdayTimesAndDurations/format',
 keyword: 'format',
 params: { format: 'regex' },
- message: "Must_be_a_valid_time_and_duration"}
+ message: "Must_be_a_valid_time_and_duration"
+}
 );
 }
 }
@@ -403,16 +415,18 @@ schemaPath: '#/properties/thursdayTimesAndDurations/pattern',
 keyword: 'pattern',
 params: {
 pattern: '^([0-9]{2}:[0-9]{2})\\|([0-9]+)$'},
- message: "Must_be_a_valid_time_and_duration"}
+ message: "Must_be_a_valid_time_and_duration"
+}
 );
 } else {
-if (!formats98(data7)) {errors.push(
+if (!formats100(data7)) {errors.push(
 {
 instancePath: instancePath + '/thursdayTimesAndDurations',
 schemaPath: '#/properties/thursdayTimesAndDurations/format',
 keyword: 'format',
 params: { format: 'regex' },
- message: "Must_be_a_valid_time_and_duration"}
+ message: "Must_be_a_valid_time_and_duration"
+}
 );
 }
 }
@@ -446,16 +460,18 @@ schemaPath: '#/properties/fridayTimesAndDurations/pattern',
 keyword: 'pattern',
 params: {
 pattern: '^([0-9]{2}:[0-9]{2})\\|([0-9]+)$'},
- message: "Must_be_a_valid_time_and_duration"}
+ message: "Must_be_a_valid_time_and_duration"
+}
 );
 } else {
-if (!formats98(data8)) {errors.push(
+if (!formats100(data8)) {errors.push(
 {
 instancePath: instancePath + '/fridayTimesAndDurations',
 schemaPath: '#/properties/fridayTimesAndDurations/format',
 keyword: 'format',
 params: { format: 'regex' },
- message: "Must_be_a_valid_time_and_duration"}
+ message: "Must_be_a_valid_time_and_duration"
+}
 );
 }
 }
@@ -489,16 +505,18 @@ schemaPath: '#/properties/saturdayTimesAndDurations/pattern',
 keyword: 'pattern',
 params: {
 pattern: '^([0-9]{2}:[0-9]{2})\\|([0-9]+)$'},
- message: "Must_be_a_valid_time_and_duration"}
+ message: "Must_be_a_valid_time_and_duration"
+}
 );
 } else {
-if (!formats98(data9)) {errors.push(
+if (!formats100(data9)) {errors.push(
 {
 instancePath: instancePath + '/saturdayTimesAndDurations',
 schemaPath: '#/properties/saturdayTimesAndDurations/format',
 keyword: 'format',
 params: { format: 'regex' },
- message: "Must_be_a_valid_time_and_duration"}
+ message: "Must_be_a_valid_time_and_duration"
+}
 );
 }
 }
@@ -532,16 +550,18 @@ schemaPath: '#/properties/sundayTimesAndDurations/pattern',
 keyword: 'pattern',
 params: {
 pattern: '^([0-9]{2}:[0-9]{2})\\|([0-9]+)$'},
- message: "Must_be_a_valid_time_and_duration"}
+ message: "Must_be_a_valid_time_and_duration"
+}
 );
 } else {
-if (!formats98(data10)) {errors.push(
+if (!formats100(data10)) {errors.push(
 {
 instancePath: instancePath + '/sundayTimesAndDurations',
 schemaPath: '#/properties/sundayTimesAndDurations/format',
 keyword: 'format',
 params: { format: 'regex' },
- message: "Must_be_a_valid_time_and_duration"}
+ message: "Must_be_a_valid_time_and_duration"
+}
 );
 }
 }
@@ -578,7 +598,8 @@ instancePath: instancePath + '/version',
 schemaPath: '#/properties/version/type',
 keyword: 'type',
 params: { type: 'integer' },
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 );
 }
 if (true) {
@@ -595,7 +616,8 @@ params: {
 comparison: '>=',
 limit: 0
 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 );
 }
 }
@@ -619,7 +641,8 @@ instancePath: instancePath + '/lastModified',
 schemaPath: '#/properties/lastModified/type',
 keyword: 'type',
 params: { type: 'number' },
- message: "Must_be_a_number"}
+ message: "Must_be_a_number"
+}
 );
 }
 var valid0 = _errs25 === errors
@@ -635,7 +658,8 @@ instancePath: instancePath + '/touched',
 schemaPath: '#/properties/touched/type',
 keyword: 'type',
 params: { type: 'boolean' },
- message: "Must_be_a_boolean"}
+ message: "Must_be_a_boolean"
+}
 );
 }
 var valid0 = _errs27 === errors
@@ -659,7 +683,8 @@ instancePath: instancePath + '/status',
 schemaPath: '#/properties/status/type',
 keyword: 'type',
 params: { type: 'integer' },
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 );
 }
 if (true) {
@@ -676,7 +701,8 @@ params: {
 comparison: '<=',
 limit: 2
 },
- message: "Must_be_less_than_or_equal_to_maximum"}
+ message: "Must_be_less_than_or_equal_to_maximum"
+}
 );
 }
 }

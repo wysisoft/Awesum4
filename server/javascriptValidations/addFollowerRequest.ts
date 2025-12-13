@@ -1,5 +1,5 @@
 'use strict'
-const schema28 = {
+const schema30 = {
 $id: 'addFollowerRequest',
 type: 'object',
 properties: {
@@ -42,7 +42,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: missing0 },
- message: "Required"}
+ message: "Required"
+}
 );
 } else {
 if (data.groups !== undefined) {
@@ -56,7 +57,8 @@ instancePath: instancePath + '/groups',
 schemaPath: '#/properties/groups/maxLength',
 keyword: 'maxLength',
 params: { limit: 8000 },
- message: "Must_be_less_than_8000_characters"}
+ message: "Must_be_less_than_8000_characters"
+}
 );
 } else {
 if (func4(data0) < 1) {errors.push(
@@ -65,7 +67,8 @@ instancePath: instancePath + '/groups',
 schemaPath: '#/properties/groups/minLength',
 keyword: 'minLength',
 params: { limit: 1 },
- message: "Required"}
+ message: "Required"
+}
 );
 }
 }
@@ -97,7 +100,8 @@ instancePath: instancePath + '/leaderAppId',
 schemaPath: '#/properties/leaderAppId/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 );
 }
 } else {errors.push(
@@ -129,7 +133,8 @@ instancePath: instancePath + '/followerEmail',
 schemaPath: '#/properties/followerEmail/maxLength',
 keyword: 'maxLength',
 params: { limit: 100 },
- message: "Must_be_less_than_100_characters"}
+ message: "Must_be_less_than_100_characters"
+}
 );
 } else {
 if (func4(data2) < 1) {errors.push(
@@ -138,7 +143,8 @@ instancePath: instancePath + '/followerEmail',
 schemaPath: '#/properties/followerEmail/minLength',
 keyword: 'minLength',
 params: { limit: 1 },
- message: "Required"}
+ message: "Required"
+}
 );
 } else {
 if (!formats0.test(data2)) {errors.push(
@@ -147,7 +153,8 @@ instancePath: instancePath + '/followerEmail',
 schemaPath: '#/properties/followerEmail/format',
 keyword: 'format',
 params: { format: 'email' },
- message: "Must_be_a_valid_email"}
+ message: "Must_be_a_valid_email"
+}
 );
 } else {
 if (
@@ -160,7 +167,8 @@ instancePath: instancePath + '/followerEmail',
 schemaPath: '#/properties/followerEmail/doesEmailExist',
 keyword: 'doesEmailExist',
 params: {},
- message: "Email_does_not_exist"}
+ message: "Email_does_not_exist"
+}
 );
 } else {
 if (
@@ -174,7 +182,8 @@ instancePath: instancePath + '/followerEmail',
 schemaPath: '#/properties/followerEmail/emailIsNotUser',
 keyword: 'emailIsNotUser',
 params: {},
- message: "Email_cannot_be_your_email"}
+ message: "Email_cannot_be_your_email"
+}
 );
 }
 }
@@ -206,7 +215,8 @@ instancePath: instancePath + '/initiatedByFollower',
 schemaPath: '#/properties/initiatedByFollower/type',
 keyword: 'type',
 params: { type: 'boolean' },
- message: "Must_be_a_boolean"}
+ message: "Must_be_a_boolean"
+}
 );
 }
 var valid0 = _errs7 === errors

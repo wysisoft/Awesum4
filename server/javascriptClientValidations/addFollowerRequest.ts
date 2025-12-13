@@ -1,5 +1,5 @@
 'use strict'
-const schema28 = {
+const schema30 = {
 $id: 'addFollowerRequest',
 type: 'object',
 properties: {
@@ -34,7 +34,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'groups' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err0]
 } else {
@@ -48,7 +49,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'leaderAppId' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err1]
 } else {
@@ -62,7 +64,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'followerEmail' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err2]
 } else {
@@ -76,7 +79,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'initiatedByFollower' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err3]
 } else {
@@ -93,7 +97,8 @@ instancePath: instancePath + '/groups',
 schemaPath: '#/properties/groups/maxLength',
 keyword: 'maxLength',
 params: { limit: 8000 },
- message: "Must_be_less_than_8000_characters"}
+ message: "Must_be_less_than_8000_characters"
+}
 if (vErrors === null) {
 vErrors = [err4]
 } else {
@@ -107,7 +112,8 @@ instancePath: instancePath + '/groups',
 schemaPath: '#/properties/groups/minLength',
 keyword: 'minLength',
 params: { limit: 1 },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err5]
 } else {
@@ -140,7 +146,8 @@ instancePath: instancePath + '/leaderAppId',
 schemaPath: '#/properties/leaderAppId/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 if (vErrors === null) {
 vErrors = [err7]
 } else {
@@ -173,7 +180,8 @@ instancePath: instancePath + '/followerEmail',
 schemaPath: '#/properties/followerEmail/maxLength',
 keyword: 'maxLength',
 params: { limit: 100 },
- message: "Must_be_less_than_100_characters"}
+ message: "Must_be_less_than_100_characters"
+}
 if (vErrors === null) {
 vErrors = [err9]
 } else {
@@ -187,7 +195,8 @@ instancePath: instancePath + '/followerEmail',
 schemaPath: '#/properties/followerEmail/minLength',
 keyword: 'minLength',
 params: { limit: 1 },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err10]
 } else {
@@ -201,7 +210,8 @@ instancePath: instancePath + '/followerEmail',
 schemaPath: '#/properties/followerEmail/format',
 keyword: 'format',
 params: { format: 'email' },
- message: "Must_be_a_valid_email"}
+ message: "Must_be_a_valid_email"
+}
 if (vErrors === null) {
 vErrors = [err11]
 } else {
@@ -215,7 +225,8 @@ instancePath: instancePath + '/followerEmail',
 schemaPath: '#/properties/followerEmail/doesEmailExist',
 keyword: 'doesEmailExist',
 params: {},
- message: "Email_does_not_exist"}
+ message: "Email_does_not_exist"
+}
 if (vErrors === null) {
 vErrors = [err12]
 } else {
@@ -234,7 +245,8 @@ instancePath: instancePath + '/followerEmail',
 schemaPath: '#/properties/followerEmail/emailIsNotUser',
 keyword: 'emailIsNotUser',
 params: {},
- message: "Email_cannot_be_your_email"}
+ message: "Email_cannot_be_your_email"
+}
 if (vErrors === null) {
 vErrors = [err13]
 } else {
@@ -265,7 +277,8 @@ instancePath: instancePath + '/initiatedByFollower',
 schemaPath: '#/properties/initiatedByFollower/type',
 keyword: 'type',
 params: { type: 'boolean' },
- message: "Must_be_a_boolean"}
+ message: "Must_be_a_boolean"
+}
 if (vErrors === null) {
 vErrors = [err15]
 } else {

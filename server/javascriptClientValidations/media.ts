@@ -1,10 +1,10 @@
 'use strict'
-const schema26 = {
+const schema28 = {
 $id: 'media',
 type: 'object',
 properties: {
 id: {
-default: '019ac0a9-2f8b-756d-9d9c-3cce4af8d47a',
+default: '019b148f-9161-730a-bb36-c04f452fdfc0',
 format: 'uuid',
 type: 'string'},
 size: { minimum: 0, type: 'integer' },
@@ -31,7 +31,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'id' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err0]
 } else {
@@ -45,7 +46,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'size' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err1]
 } else {
@@ -59,7 +61,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'data' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err2]
 } else {
@@ -73,7 +76,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'appId' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err3]
 } else {
@@ -87,7 +91,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'touched' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err4]
 } else {
@@ -104,7 +109,8 @@ instancePath: instancePath + '/id',
 schemaPath: '#/properties/id/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 if (vErrors === null) {
 vErrors = [err5]
 } else {
@@ -143,7 +149,8 @@ instancePath: instancePath + '/size',
 schemaPath: '#/properties/size/type',
 keyword: 'type',
 params: { type: 'integer' },
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 if (vErrors === null) {
 vErrors = [err7]
 } else {
@@ -158,7 +165,8 @@ instancePath: instancePath + '/size',
 schemaPath: '#/properties/size/minimum',
 keyword: 'minimum',
 params: { comparison: '>=', limit: 0 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 if (vErrors === null) {
 vErrors = [err8]
 } else {
@@ -177,7 +185,8 @@ instancePath: instancePath + '/data',
 schemaPath: '#/properties/data/maxLength',
 keyword: 'maxLength',
 params: { limit: 8000 },
- message: "Must_be_less_than_8000_characters"}
+ message: "Must_be_less_than_8000_characters"
+}
 if (vErrors === null) {
 vErrors = [err9]
 } else {
@@ -210,7 +219,8 @@ instancePath: instancePath + '/appId',
 schemaPath: '#/properties/appId/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 if (vErrors === null) {
 vErrors = [err11]
 } else {
@@ -241,7 +251,8 @@ instancePath: instancePath + '/touched',
 schemaPath: '#/properties/touched/type',
 keyword: 'type',
 params: { type: 'boolean' },
- message: "Must_be_a_boolean"}
+ message: "Must_be_a_boolean"
+}
 if (vErrors === null) {
 vErrors = [err13]
 } else {

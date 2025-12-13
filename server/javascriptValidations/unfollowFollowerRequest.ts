@@ -1,5 +1,5 @@
 'use strict'
-const schema37 = {
+const schema39 = {
 $id: 'unfollowFollowerRequest',
 type: 'object',
 properties: { followerRequestId: { format: 'uuid', type: 'string' } },
@@ -26,7 +26,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: missing0 },
- message: "Required"}
+ message: "Required"
+}
 );
 } else {
 if (data.followerRequestId !== undefined) {
@@ -41,7 +42,8 @@ instancePath: instancePath + '/followerRequestId',
 schemaPath: '#/properties/followerRequestId/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 );
 }
 } else {errors.push(

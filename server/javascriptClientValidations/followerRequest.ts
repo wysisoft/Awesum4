@@ -1,5 +1,5 @@
 'use strict'
-const schema23 = {
+const schema25 = {
 $id: 'followerRequest',
 type: 'object',
 properties: {
@@ -12,7 +12,7 @@ default: '00000000-0000-0000-0000-000000000000',
 format: 'uuid',
 type: 'string'},
 id: {
-default: '019ac0a9-2f8b-756d-9d9c-3b6844b953ba',
+default: '019b148f-9161-730a-bb36-beb69d63cb33',
 format: 'uuid',
 type: 'string'},
 followerName: {
@@ -82,7 +82,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'leaderAppId' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err0]
 } else {
@@ -96,7 +97,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'followerAppId' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err1]
 } else {
@@ -110,7 +112,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'id' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err2]
 } else {
@@ -124,7 +127,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'followerName' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err3]
 } else {
@@ -138,7 +142,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'leaderName' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err4]
 } else {
@@ -152,7 +157,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'followerEmail' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err5]
 } else {
@@ -166,7 +172,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'leaderEmail' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err6]
 } else {
@@ -180,7 +187,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'initiatedByFollower' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err7]
 } else {
@@ -194,7 +202,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'lastModified' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err8]
 } else {
@@ -208,7 +217,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'touched' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err9]
 } else {
@@ -222,7 +232,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'version' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err10]
 } else {
@@ -236,7 +247,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'status' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err11]
 } else {
@@ -250,7 +262,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'groups' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err12]
 } else {
@@ -264,7 +277,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'points' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err13]
 } else {
@@ -281,7 +295,8 @@ instancePath: instancePath + '/leaderAppId',
 schemaPath: '#/properties/leaderAppId/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 if (vErrors === null) {
 vErrors = [err14]
 } else {
@@ -314,7 +329,8 @@ instancePath: instancePath + '/followerAppId',
 schemaPath: '#/properties/followerAppId/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 if (vErrors === null) {
 vErrors = [err16]
 } else {
@@ -347,7 +363,8 @@ instancePath: instancePath + '/id',
 schemaPath: '#/properties/id/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 if (vErrors === null) {
 vErrors = [err18]
 } else {
@@ -380,7 +397,8 @@ instancePath: instancePath + '/followerName',
 schemaPath: '#/properties/followerName/maxLength',
 keyword: 'maxLength',
 params: { limit: 100 },
- message: "Must_be_less_than_100_characters"}
+ message: "Must_be_less_than_100_characters"
+}
 if (vErrors === null) {
 vErrors = [err20]
 } else {
@@ -394,7 +412,8 @@ instancePath: instancePath + '/followerName',
 schemaPath: '#/properties/followerName/minLength',
 keyword: 'minLength',
 params: { limit: 1 },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err21]
 } else {
@@ -427,7 +446,8 @@ instancePath: instancePath + '/leaderName',
 schemaPath: '#/properties/leaderName/maxLength',
 keyword: 'maxLength',
 params: { limit: 100 },
- message: "Must_be_less_than_100_characters"}
+ message: "Must_be_less_than_100_characters"
+}
 if (vErrors === null) {
 vErrors = [err23]
 } else {
@@ -441,7 +461,8 @@ instancePath: instancePath + '/leaderName',
 schemaPath: '#/properties/leaderName/minLength',
 keyword: 'minLength',
 params: { limit: 1 },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err24]
 } else {
@@ -474,7 +495,8 @@ instancePath: instancePath + '/followerEmail',
 schemaPath: '#/properties/followerEmail/maxLength',
 keyword: 'maxLength',
 params: { limit: 100 },
- message: "Must_be_less_than_100_characters"}
+ message: "Must_be_less_than_100_characters"
+}
 if (vErrors === null) {
 vErrors = [err26]
 } else {
@@ -488,7 +510,8 @@ instancePath: instancePath + '/followerEmail',
 schemaPath: '#/properties/followerEmail/minLength',
 keyword: 'minLength',
 params: { limit: 1 },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err27]
 } else {
@@ -502,7 +525,8 @@ instancePath: instancePath + '/followerEmail',
 schemaPath: '#/properties/followerEmail/format',
 keyword: 'format',
 params: { format: 'email' },
- message: "Must_be_a_valid_email"}
+ message: "Must_be_a_valid_email"
+}
 if (vErrors === null) {
 vErrors = [err28]
 } else {
@@ -516,7 +540,8 @@ instancePath: instancePath + '/followerEmail',
 schemaPath: '#/properties/followerEmail/doesEmailExist',
 keyword: 'doesEmailExist',
 params: {},
- message: "Email_does_not_exist"}
+ message: "Email_does_not_exist"
+}
 if (vErrors === null) {
 vErrors = [err29]
 } else {
@@ -549,7 +574,8 @@ instancePath: instancePath + '/leaderEmail',
 schemaPath: '#/properties/leaderEmail/maxLength',
 keyword: 'maxLength',
 params: { limit: 100 },
- message: "Must_be_less_than_100_characters"}
+ message: "Must_be_less_than_100_characters"
+}
 if (vErrors === null) {
 vErrors = [err31]
 } else {
@@ -563,7 +589,8 @@ instancePath: instancePath + '/leaderEmail',
 schemaPath: '#/properties/leaderEmail/minLength',
 keyword: 'minLength',
 params: { limit: 1 },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err32]
 } else {
@@ -577,7 +604,8 @@ instancePath: instancePath + '/leaderEmail',
 schemaPath: '#/properties/leaderEmail/format',
 keyword: 'format',
 params: { format: 'email' },
- message: "Must_be_a_valid_email"}
+ message: "Must_be_a_valid_email"
+}
 if (vErrors === null) {
 vErrors = [err33]
 } else {
@@ -591,7 +619,8 @@ instancePath: instancePath + '/leaderEmail',
 schemaPath: '#/properties/leaderEmail/doesEmailExist',
 keyword: 'doesEmailExist',
 params: {},
- message: "Email_does_not_exist"}
+ message: "Email_does_not_exist"
+}
 if (vErrors === null) {
 vErrors = [err34]
 } else {
@@ -622,7 +651,8 @@ instancePath: instancePath + '/initiatedByFollower',
 schemaPath: '#/properties/initiatedByFollower/type',
 keyword: 'type',
 params: { type: 'boolean' },
- message: "Must_be_a_boolean"}
+ message: "Must_be_a_boolean"
+}
 if (vErrors === null) {
 vErrors = [err36]
 } else {
@@ -639,7 +669,8 @@ instancePath: instancePath + '/lastModified',
 schemaPath: '#/properties/lastModified/type',
 keyword: 'type',
 params: { type: 'number' },
- message: "Must_be_a_number"}
+ message: "Must_be_a_number"
+}
 if (vErrors === null) {
 vErrors = [err37]
 } else {
@@ -655,7 +686,8 @@ instancePath: instancePath + '/touched',
 schemaPath: '#/properties/touched/type',
 keyword: 'type',
 params: { type: 'boolean' },
- message: "Must_be_a_boolean"}
+ message: "Must_be_a_boolean"
+}
 if (vErrors === null) {
 vErrors = [err38]
 } else {
@@ -679,7 +711,8 @@ instancePath: instancePath + '/version',
 schemaPath: '#/properties/version/type',
 keyword: 'type',
 params: { type: 'integer' },
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 if (vErrors === null) {
 vErrors = [err39]
 } else {
@@ -694,7 +727,8 @@ instancePath: instancePath + '/version',
 schemaPath: '#/properties/version/minimum',
 keyword: 'minimum',
 params: { comparison: '>=', limit: 0 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 if (vErrors === null) {
 vErrors = [err40]
 } else {
@@ -719,7 +753,8 @@ instancePath: instancePath + '/status',
 schemaPath: '#/properties/status/type',
 keyword: 'type',
 params: { type: 'integer' },
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 if (vErrors === null) {
 vErrors = [err41]
 } else {
@@ -734,7 +769,8 @@ instancePath: instancePath + '/status',
 schemaPath: '#/properties/status/maximum',
 keyword: 'maximum',
 params: { comparison: '<=', limit: 2 },
- message: "Must_be_less_than_or_equal_to_maximum"}
+ message: "Must_be_less_than_or_equal_to_maximum"
+}
 if (vErrors === null) {
 vErrors = [err42]
 } else {
@@ -748,7 +784,8 @@ instancePath: instancePath + '/status',
 schemaPath: '#/properties/status/minimum',
 keyword: 'minimum',
 params: { comparison: '>=', limit: 0 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 if (vErrors === null) {
 vErrors = [err43]
 } else {
@@ -767,7 +804,8 @@ instancePath: instancePath + '/groups',
 schemaPath: '#/properties/groups/maxLength',
 keyword: 'maxLength',
 params: { limit: 8000 },
- message: "Must_be_less_than_8000_characters"}
+ message: "Must_be_less_than_8000_characters"
+}
 if (vErrors === null) {
 vErrors = [err44]
 } else {
@@ -806,7 +844,8 @@ instancePath: instancePath + '/points',
 schemaPath: '#/properties/points/type',
 keyword: 'type',
 params: { type: 'integer' },
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 if (vErrors === null) {
 vErrors = [err46]
 } else {
@@ -821,7 +860,8 @@ instancePath: instancePath + '/points',
 schemaPath: '#/properties/points/minimum',
 keyword: 'minimum',
 params: { comparison: '>=', limit: 0 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 if (vErrors === null) {
 vErrors = [err47]
 } else {

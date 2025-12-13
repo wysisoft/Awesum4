@@ -26,6 +26,7 @@ export enum syncResultType {
     deleteNotFoundOnServer,
     failedValidation,
     versionAndLastModifiedMismatch,
+    attemptToModifyPreviousVersion,
     noChange,
     error,
     redirectToLeader
@@ -285,6 +286,22 @@ export const types = [
     Type.Object(
         {
             id: Type.String({
+            })
+        },
+        { $id: "modification" },
+    ),
+    Type.Object(
+        {
+            id: Type.String({
+                format: "uuid",
+                formatMessage: "Must_be_a_valid_UUID",
+            }),
+        },
+        { $id: "addition" },
+    ),
+    Type.Object(
+        {
+            id: Type.String({
                 format: "uuid",
                 formatMessage: "Must_be_a_valid_UUID",
             }),
@@ -416,6 +433,7 @@ export const types = [
                 maxLengthMessage: "Must_be_less_than_100_characters",
             }),
             successSound: Type.String({
+                default: constants.defaultSuccessSoundGuid,
                 format: "uuid",
                 formatMessage: "Must_be_a_valid_UUID",
             }),
@@ -449,6 +467,7 @@ export const types = [
                 formatMessage: "Must_be_a_valid_UUID",
             }),
             router: Type.String({
+                default: constants.emptyGuid,
                 format: "uuid",
                 formatMessage: "Must_be_a_valid_UUID",
             }),
@@ -833,6 +852,36 @@ export const types = [
                 minimum: 0,
                 minimumMessage: "Must_be_greater_than_or_equal_to_0",
                 typeMessage: "Must_be_an_integer",
+            }),
+            databaseVersion: Type.Integer({
+                default: 0,
+                minimum: 0,
+                minimumMessage: "Must_be_greater_than_or_equal_to_0",
+                typeMessage: "Must_be_an_integer",
+            }),
+            databaseLastModified: Type.Number({
+                default: 0,
+                typeMessage: "Must_be_a_number",
+            }),
+            unitVersion: Type.Integer({
+                default: 0,
+                minimum: 0,
+                minimumMessage: "Must_be_greater_than_or_equal_to_0",
+                typeMessage: "Must_be_an_integer",
+            }),
+            unitLastModified: Type.Number({
+                default: 0,
+                typeMessage: "Must_be_a_number",
+            }),
+            itemVersion: Type.Integer({
+                default: 0,
+                minimum: 0,
+                minimumMessage: "Must_be_greater_than_or_equal_to_0",
+                typeMessage: "Must_be_an_integer",
+            }),
+            itemLastModified: Type.Number({
+                default: 0,
+                typeMessage: "Must_be_a_number",
             }),
         },
         { $id: "followerDatabase" },
@@ -1273,12 +1322,12 @@ types.push(
 types.push(
     Type.Object(
         {
-            id: 
+            id:
                 Type.String({
                     format: "uuid",
                     formatMessage: "Must_be_a_valid_UUID",
                 }),
-            
+
             level: Type.Optional(
                 Type.Integer({
                     minimum: 0,
@@ -1485,9 +1534,8 @@ types.push(
 );
 
 
-export function getDefault<T extends { id: string }>(type:T) :T {
-    
-        type.id = uuidv7();
-    
+export function getDefault<T extends { id: string, lastModified: number }>(type: T): T {
+    type.id = uuidv7();
+    type.lastModified = Date.now();
     return type;
 };

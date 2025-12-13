@@ -1,5 +1,5 @@
 'use strict'
-const schema40 = {
+const schema42 = {
 $id: 'getRouterStatusResponse',
 type: 'object',
 properties: {
@@ -41,7 +41,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: missing0 },
- message: "Required"}
+ message: "Required"
+}
 );
 } else {
 if (data.status !== undefined) {
@@ -52,7 +53,8 @@ instancePath: instancePath + '/status',
 schemaPath: '#/properties/status/type',
 keyword: 'type',
 params: { type: 'string' },
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 );
 }
 var valid0 = _errs1 === errors

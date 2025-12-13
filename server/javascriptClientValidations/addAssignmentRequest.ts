@@ -1,5 +1,5 @@
 'use strict'
-const schema22 = {
+const schema24 = {
 $id: 'addAssignmentRequest',
 type: 'object',
 properties: {
@@ -26,7 +26,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'group' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err0]
 } else {
@@ -40,7 +41,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'followerRequestId' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err1]
 } else {
@@ -54,7 +56,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'databaseId' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err2]
 } else {
@@ -71,7 +74,8 @@ instancePath: instancePath + '/group',
 schemaPath: '#/properties/group/maxLength',
 keyword: 'maxLength',
 params: { limit: 100 },
- message: "Must_be_less_than_100_characters"}
+ message: "Must_be_less_than_100_characters"
+}
 if (vErrors === null) {
 vErrors = [err3]
 } else {
@@ -104,7 +108,8 @@ instancePath: instancePath + '/followerRequestId',
 schemaPath: '#/properties/followerRequestId/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 if (vErrors === null) {
 vErrors = [err5]
 } else {
@@ -137,7 +142,8 @@ instancePath: instancePath + '/databaseId',
 schemaPath: '#/properties/databaseId/minLength',
 keyword: 'minLength',
 params: { limit: 1 },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err7]
 } else {
@@ -151,7 +157,8 @@ instancePath: instancePath + '/databaseId',
 schemaPath: '#/properties/databaseId/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 if (vErrors === null) {
 vErrors = [err8]
 } else {

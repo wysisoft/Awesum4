@@ -88,8 +88,6 @@ let groups = reactive({value:''});
         return;
       }
 
-      await awesum.AwesumDexieDB.serverFollowerRequests.add(this.payload);
-
       var syncRequest:Array<ServerSyncRequestInterface> = [];
       syncRequest.push({
         action: syncAction.add,

@@ -12,6 +12,7 @@ async function launchWithRecorder() {
   const browser = await chromium.launchPersistentContext('UserDataDir', {
     headless: false,
     viewport: { width: 0, height: 0 },
+    devtools: true,
     args: [
       '--no-first-run',
       '--disable-session-crashed-bubble', // ⚡ hides the restore popup

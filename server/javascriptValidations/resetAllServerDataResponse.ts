@@ -1,5 +1,5 @@
 'use strict'
-const schema25 = {
+const schema27 = {
 $id: 'resetAllServerDataResponse',
 type: 'object',
 properties: {
@@ -28,7 +28,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: missing0 },
- message: "Required"}
+ message: "Required"
+}
 );
 } else {
 if (data.appFound !== undefined) {

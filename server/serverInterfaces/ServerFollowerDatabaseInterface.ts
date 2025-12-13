@@ -12,5 +12,11 @@ export interface ServerFollowerDatabaseInterface {
   lastModified: number;
   touched: boolean;
   version: number;
+  databaseVersion: number;
+  databaseLastModified: number;
+  unitVersion: number;
+  unitLastModified: number;
+  itemVersion: number;
+  itemLastModified: number;
   
 }

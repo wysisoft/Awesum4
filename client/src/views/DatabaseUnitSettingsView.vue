@@ -560,7 +560,7 @@ export default {
 <style>
 #itemTypeSelect .multiselect__placeholder {
   font-size: 2svmin ;
-  padding-top: 1svmin;
+  padding-top: 1.3svmin;
   color:black;
 }
 #itemTypeSelect .multiselect__input {

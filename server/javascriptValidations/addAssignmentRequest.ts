@@ -1,5 +1,5 @@
 'use strict'
-const schema22 = {
+const schema24 = {
 $id: 'addAssignmentRequest',
 type: 'object',
 properties: {
@@ -33,7 +33,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: missing0 },
- message: "Required"}
+ message: "Required"
+}
 );
 } else {
 if (data.group !== undefined) {
@@ -47,7 +48,8 @@ instancePath: instancePath + '/group',
 schemaPath: '#/properties/group/maxLength',
 keyword: 'maxLength',
 params: { limit: 100 },
- message: "Must_be_less_than_100_characters"}
+ message: "Must_be_less_than_100_characters"
+}
 );
 }
 } else {errors.push(
@@ -78,7 +80,8 @@ instancePath: instancePath + '/followerRequestId',
 schemaPath: '#/properties/followerRequestId/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 );
 }
 } else {errors.push(
@@ -110,7 +113,8 @@ instancePath: instancePath + '/databaseId',
 schemaPath: '#/properties/databaseId/minLength',
 keyword: 'minLength',
 params: { limit: 1 },
- message: "Required"}
+ message: "Required"
+}
 );
 } else {
 if (!formats2.test(data2)) {errors.push(
@@ -119,7 +123,8 @@ instancePath: instancePath + '/databaseId',
 schemaPath: '#/properties/databaseId/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 );
 }
 }

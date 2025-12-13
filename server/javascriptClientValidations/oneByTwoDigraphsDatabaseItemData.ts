@@ -1,5 +1,5 @@
 'use strict'
-const schema18 = {
+const schema20 = {
 $id: 'oneByTwoDigraphsDatabaseItemData',
 type: 'object',
 properties: {
@@ -56,7 +56,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'leftDigraphs' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err0]
 } else {
@@ -70,7 +71,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'rightDigraphs' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err1]
 } else {
@@ -84,7 +86,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'image' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err2]
 } else {
@@ -98,7 +101,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'sound' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err3]
 } else {
@@ -112,7 +116,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'text' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err4]
 } else {
@@ -126,7 +131,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'imageType' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err5]
 } else {
@@ -140,7 +146,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'visualHint' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err6]
 } else {
@@ -154,7 +161,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'audioType' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err7]
 } else {
@@ -168,7 +176,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'successSound' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err8]
 } else {
@@ -182,7 +191,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'successSoundType' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err9]
 } else {
@@ -196,7 +206,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'successImage' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err10]
 } else {
@@ -210,7 +221,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'successImageType' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err11]
 } else {
@@ -224,7 +236,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'successAnimations' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err12]
 } else {
@@ -238,7 +251,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'successImageTime' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err13]
 } else {
@@ -255,7 +269,8 @@ instancePath: instancePath + '/leftDigraphs',
 schemaPath: '#/properties/leftDigraphs/maxLength',
 keyword: 'maxLength',
 params: { limit: 364 },
- message: "Must_be_less_than_364_characters"}
+ message: "Must_be_less_than_364_characters"
+}
 if (vErrors === null) {
 vErrors = [err14]
 } else {
@@ -288,7 +303,8 @@ instancePath: instancePath + '/rightDigraphs',
 schemaPath: '#/properties/rightDigraphs/maxLength',
 keyword: 'maxLength',
 params: { limit: 364 },
- message: "Must_be_less_than_364_characters"}
+ message: "Must_be_less_than_364_characters"
+}
 if (vErrors === null) {
 vErrors = [err16]
 } else {
@@ -321,7 +337,8 @@ instancePath: instancePath + '/image',
 schemaPath: '#/properties/image/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 if (vErrors === null) {
 vErrors = [err18]
 } else {
@@ -354,7 +371,8 @@ instancePath: instancePath + '/sound',
 schemaPath: '#/properties/sound/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 if (vErrors === null) {
 vErrors = [err20]
 } else {
@@ -387,7 +405,8 @@ instancePath: instancePath + '/text',
 schemaPath: '#/properties/text/maxLength',
 keyword: 'maxLength',
 params: { limit: 14 },
- message: "Must_be_less_than_14_characters"}
+ message: "Must_be_less_than_14_characters"
+}
 if (vErrors === null) {
 vErrors = [err22]
 } else {
@@ -401,7 +420,8 @@ instancePath: instancePath + '/text',
 schemaPath: '#/properties/text/minLength',
 keyword: 'minLength',
 params: { limit: 1 },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err23]
 } else {
@@ -440,7 +460,8 @@ instancePath: instancePath + '/imageType',
 schemaPath: '#/properties/imageType/type',
 keyword: 'type',
 params: { type: 'integer' },
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 if (vErrors === null) {
 vErrors = [err25]
 } else {
@@ -455,7 +476,8 @@ instancePath: instancePath + '/imageType',
 schemaPath: '#/properties/imageType/maximum',
 keyword: 'maximum',
 params: { comparison: '<=', limit: 3 },
- message: "Must_be_less_than_or_equal_to_maximum"}
+ message: "Must_be_less_than_or_equal_to_maximum"
+}
 if (vErrors === null) {
 vErrors = [err26]
 } else {
@@ -469,7 +491,8 @@ instancePath: instancePath + '/imageType',
 schemaPath: '#/properties/imageType/minimum',
 keyword: 'minimum',
 params: { comparison: '>=', limit: 0 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 if (vErrors === null) {
 vErrors = [err27]
 } else {
@@ -488,7 +511,8 @@ instancePath: instancePath + '/visualHint',
 schemaPath: '#/properties/visualHint/maxLength',
 keyword: 'maxLength',
 params: { limit: 100 },
- message: "Must_be_less_than_100_characters"}
+ message: "Must_be_less_than_100_characters"
+}
 if (vErrors === null) {
 vErrors = [err28]
 } else {
@@ -502,7 +526,8 @@ instancePath: instancePath + '/visualHint',
 schemaPath: '#/properties/visualHint/minLength',
 keyword: 'minLength',
 params: { limit: 1 },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err29]
 } else {
@@ -541,7 +566,8 @@ instancePath: instancePath + '/audioType',
 schemaPath: '#/properties/audioType/type',
 keyword: 'type',
 params: { type: 'integer' },
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 if (vErrors === null) {
 vErrors = [err31]
 } else {
@@ -556,7 +582,8 @@ instancePath: instancePath + '/audioType',
 schemaPath: '#/properties/audioType/maximum',
 keyword: 'maximum',
 params: { comparison: '<=', limit: 4 },
- message: "Must_be_less_than_or_equal_to_maximum"}
+ message: "Must_be_less_than_or_equal_to_maximum"
+}
 if (vErrors === null) {
 vErrors = [err32]
 } else {
@@ -570,7 +597,8 @@ instancePath: instancePath + '/audioType',
 schemaPath: '#/properties/audioType/minimum',
 keyword: 'minimum',
 params: { comparison: '>=', limit: 0 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 if (vErrors === null) {
 vErrors = [err33]
 } else {
@@ -589,7 +617,8 @@ instancePath: instancePath + '/successSound',
 schemaPath: '#/properties/successSound/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 if (vErrors === null) {
 vErrors = [err34]
 } else {
@@ -628,7 +657,8 @@ instancePath: instancePath + '/successSoundType',
 schemaPath: '#/properties/successSoundType/type',
 keyword: 'type',
 params: { type: 'integer' },
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 if (vErrors === null) {
 vErrors = [err36]
 } else {
@@ -643,7 +673,8 @@ instancePath: instancePath + '/successSoundType',
 schemaPath: '#/properties/successSoundType/maximum',
 keyword: 'maximum',
 params: { comparison: '<=', limit: 4 },
- message: "Must_be_less_than_or_equal_to_maximum"}
+ message: "Must_be_less_than_or_equal_to_maximum"
+}
 if (vErrors === null) {
 vErrors = [err37]
 } else {
@@ -657,7 +688,8 @@ instancePath: instancePath + '/successSoundType',
 schemaPath: '#/properties/successSoundType/minimum',
 keyword: 'minimum',
 params: { comparison: '>=', limit: 0 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 if (vErrors === null) {
 vErrors = [err38]
 } else {
@@ -676,7 +708,8 @@ instancePath: instancePath + '/successImage',
 schemaPath: '#/properties/successImage/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 if (vErrors === null) {
 vErrors = [err39]
 } else {
@@ -715,7 +748,8 @@ instancePath: instancePath + '/successImageType',
 schemaPath: '#/properties/successImageType/type',
 keyword: 'type',
 params: { type: 'integer' },
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 if (vErrors === null) {
 vErrors = [err41]
 } else {
@@ -730,7 +764,8 @@ instancePath: instancePath + '/successImageType',
 schemaPath: '#/properties/successImageType/maximum',
 keyword: 'maximum',
 params: { comparison: '<=', limit: 3 },
- message: "Must_be_less_than_or_equal_to_maximum"}
+ message: "Must_be_less_than_or_equal_to_maximum"
+}
 if (vErrors === null) {
 vErrors = [err42]
 } else {
@@ -744,7 +779,8 @@ instancePath: instancePath + '/successImageType',
 schemaPath: '#/properties/successImageType/minimum',
 keyword: 'minimum',
 params: { comparison: '>=', limit: 0 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 if (vErrors === null) {
 vErrors = [err43]
 } else {
@@ -763,7 +799,8 @@ instancePath: instancePath + '/successAnimations',
 schemaPath: '#/properties/successAnimations/maxLength',
 keyword: 'maxLength',
 params: { limit: 100 },
- message: "Must_be_less_than_100_characters"}
+ message: "Must_be_less_than_100_characters"
+}
 if (vErrors === null) {
 vErrors = [err44]
 } else {
@@ -802,7 +839,8 @@ instancePath: instancePath + '/successImageTime',
 schemaPath: '#/properties/successImageTime/type',
 keyword: 'type',
 params: { type: 'integer' },
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 if (vErrors === null) {
 vErrors = [err46]
 } else {
@@ -817,7 +855,8 @@ instancePath: instancePath + '/successImageTime',
 schemaPath: '#/properties/successImageTime/minimum',
 keyword: 'minimum',
 params: { comparison: '>=', limit: 0 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 if (vErrors === null) {
 vErrors = [err47]
 } else {

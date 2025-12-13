@@ -1,5 +1,5 @@
 'use strict'
-const schema35 = {
+const schema37 = {
 $id: 'syncRequest',
 type: 'object',
 properties: {
@@ -30,8 +30,8 @@ isNameGloballyUnique: true,
 transform: ['trim', 'toLowerCase'],
 type: 'string'},
 version: { default: 0, minimum: 0, type: 'integer' },
-touched: { default: true, type: 'boolean' },
-lastModified: { default: 0, type: 'number' },
+touched: { default: false, type: 'boolean' },
+lastModified: { default: 1765576511840, type: 'number' },
 homePageImageType: {
 default: 0,
 minimum: 0,
@@ -55,7 +55,7 @@ type: 'string'},
 enableNarrator: { default: false, type: 'boolean' },
 groups: { default: '', maxLength: 8000, type: 'string' },
 id: {
-default: '019ac0a9-2f8a-77d9-88cd-88e689f65acd',
+default: '019b148f-9160-7501-a783-be3a24d896f2',
 format: 'uuid',
 minLength: 36,
 type: 'string'},
@@ -87,7 +87,7 @@ lastModified: { default: 0, type: 'number' },
 version: { default: 0, minimum: 0, type: 'integer' },
 appId: { format: 'uuid', type: 'string' },
 id: {
-default: '019ac0a9-2f8a-77d9-88cd-8ffd1392e9bf',
+default: '019b148f-9161-730a-bb36-b554a467dcbd',
 format: 'uuid',
 type: 'string'},
 order: { default: 0, minimum: 0, type: 'integer' },
@@ -136,7 +136,10 @@ successAnimations: {
 default: 'Fireworks',
 maxLength: 100,
 type: 'string'},
-successSound: { format: 'uuid', type: 'string' },
+successSound: {
+default: '00000000-0000-0000-0000-000000000005',
+format: 'uuid',
+type: 'string'},
 successSoundType: {
 default: 2,
 minimum: 0,
@@ -151,7 +154,10 @@ homePageImage: {
 default: '00000000-0000-0000-0000-000000000002',
 format: 'uuid',
 type: 'string'},
-router: { format: 'uuid', type: 'string' },
+router: {
+default: '00000000-0000-0000-0000-000000000000',
+format: 'uuid',
+type: 'string'},
 routerTime: { type: 'number' },
 routerTimeImmediate: { default: false, type: 'boolean' },
 points: { default: 0, minimum: 0, type: 'integer' }
@@ -221,7 +227,7 @@ default: '00000000-0000-0000-0000-000000000000',
 format: 'uuid',
 type: 'string'},
 id: {
-default: '019ac0a9-2f8b-756d-9d9c-3b6844b953ba',
+default: '019b148f-9161-730a-bb36-beb69d63cb33',
 format: 'uuid',
 type: 'string'},
 followerName: {
@@ -282,7 +288,7 @@ default: '00000000-0000-0000-0000-000000000000',
 format: 'uuid',
 type: 'string'},
 id: {
-default: '019ac0a9-2f8b-756d-9d9c-3638f65d8bc2',
+default: '019b148f-9161-730a-bb36-b87cd07cfb6b',
 format: 'uuid',
 type: 'string'},
 databaseId: {
@@ -291,7 +297,13 @@ format: 'uuid',
 type: 'string'},
 lastModified: { default: 0, type: 'number' },
 touched: { default: true, type: 'boolean' },
-version: { default: 0, minimum: 0, type: 'integer' }
+version: { default: 0, minimum: 0, type: 'integer' },
+databaseVersion: { default: 0, minimum: 0, type: 'integer' },
+databaseLastModified: { default: 0, type: 'number' },
+unitVersion: { default: 0, minimum: 0, type: 'integer' },
+unitLastModified: { default: 0, type: 'number' },
+itemVersion: { default: 0, minimum: 0, type: 'integer' },
+itemLastModified: { default: 0, type: 'number' }
 },
 required: [
 'followerRequestId',
@@ -299,7 +311,13 @@ required: [
 'databaseId',
 'lastModified',
 'touched',
-'version'
+'version',
+'databaseVersion',
+'databaseLastModified',
+'unitVersion',
+'unitLastModified',
+'itemVersion',
+'itemLastModified'
 ]
 },
 router: {
@@ -307,7 +325,7 @@ $id: 'router',
 type: 'object',
 properties: {
 id: {
-default: '019ac0a9-2f8b-756d-9d9c-47a9611f46c8',
+default: '019b148f-9161-730a-bb36-c950c8751e4c',
 format: 'uuid',
 type: 'string'},
 appId: { format: 'uuid', type: 'string' },
@@ -381,7 +399,7 @@ $id: 'followerDatabaseCompletion',
 type: 'object',
 properties: {
 id: {
-default: '019ac0a9-2f8b-756d-9d9c-41a7989b105d',
+default: '019b148f-9161-730a-bb36-c59da5468e05',
 format: 'uuid',
 type: 'string'},
 followerRequestId: { format: 'uuid', type: 'string' },
@@ -404,7 +422,7 @@ $id: 'media',
 type: 'object',
 properties: {
 id: {
-default: '019ac0a9-2f8b-756d-9d9c-3cce4af8d47a',
+default: '019b148f-9161-730a-bb36-c04f452fdfc0',
 format: 'uuid',
 type: 'string'},
 size: { minimum: 0, type: 'integer' },
@@ -420,8 +438,8 @@ required: ['id']
 const formats2 = /^(?:urn:uuid:)?[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/i
 const formats0 = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/i
 import * as formats from 'ajv-formats/dist/formats'
-const formats98 = formats.fullFormats.regex as any
-const formats100 = /^(?:(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)\.){3}(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)$/
+const formats100 = formats.fullFormats.regex as any
+const formats102 = /^(?:(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)\.){3}(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)$/
 const func2 = (await import('ajv-keywords/dist/definitions/transform')).default.transform
 .toLowerCase
 const func3 = (await import('ajv-keywords/dist/definitions/transform')).default.transform.trim
@@ -446,7 +464,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: missing0 },
- message: "Required"}
+ message: "Required"
+}
 );
 } else {
 if (data.id !== undefined) {
@@ -461,7 +480,8 @@ instancePath: instancePath + '/id',
 schemaPath: '#/properties/id/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 );
 }
 } else {errors.push(
@@ -497,7 +517,8 @@ instancePath: instancePath + '/level',
 schemaPath: '#/properties/level/type',
 keyword: 'type',
 params: { type: 'integer' },
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 );
 }
 if (true) {
@@ -508,7 +529,8 @@ instancePath: instancePath + '/level',
 schemaPath: '#/properties/level/maximum',
 keyword: 'maximum',
 params: { comparison: '<=', limit: 9 },
- message: "Must_be_less_than_or_equal_to_maximum"}
+ message: "Must_be_less_than_or_equal_to_maximum"
+}
 );
 } else {
 if (data1 < 0 || isNaN(data1)) {errors.push(
@@ -517,7 +539,8 @@ instancePath: instancePath + '/level',
 schemaPath: '#/properties/level/minimum',
 keyword: 'minimum',
 params: { comparison: '>=', limit: 0 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 );
 }
 }
@@ -566,7 +589,8 @@ instancePath: instancePath + '/action',
 schemaPath: '#/properties/action/type',
 keyword: 'type',
 params: { type: 'integer' },
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 );
 }
 if (true) {
@@ -577,7 +601,8 @@ instancePath: instancePath + '/action',
 schemaPath: '#/properties/action/maximum',
 keyword: 'maximum',
 params: { comparison: '<=', limit: 3 },
- message: "Must_be_less_than_or_equal_to_maximum"}
+ message: "Must_be_less_than_or_equal_to_maximum"
+}
 );
 } else {
 if (data3 < 0 || isNaN(data3)) {errors.push(
@@ -658,7 +683,8 @@ instancePath: instancePath + '/app/email',
 schemaPath: '#/properties/app/properties/email/maxLength',
 keyword: 'maxLength',
 params: { limit: 100 },
- message: "Must_be_less_than_100_characters"}
+ message: "Must_be_less_than_100_characters"
+}
 );
 } else {
 if (func4(data5) < 5) {errors.push(
@@ -667,7 +693,8 @@ instancePath: instancePath + '/app/email',
 schemaPath: '#/properties/app/properties/email/minLength',
 keyword: 'minLength',
 params: { limit: 5 },
- message: "Required"}
+ message: "Required"
+}
 );
 } else {
 if (!formats0.test(data5)) {errors.push(
@@ -676,7 +703,8 @@ instancePath: instancePath + '/app/email',
 schemaPath: '#/properties/app/properties/email/format',
 keyword: 'format',
 params: { format: 'email' },
- message: "Must_be_a_valid_email"}
+ message: "Must_be_a_valid_email"
+}
 );
 }
 }
@@ -716,7 +744,8 @@ instancePath: instancePath + '/app/name',
 schemaPath: '#/properties/app/properties/name/maxLength',
 keyword: 'maxLength',
 params: { limit: 100 },
- message: "Must_be_less_than_100_characters"}
+ message: "Must_be_less_than_100_characters"
+}
 );
 } else {
 if (func4(data6) < 1) {errors.push(
@@ -725,7 +754,8 @@ instancePath: instancePath + '/app/name',
 schemaPath: '#/properties/app/properties/name/minLength',
 keyword: 'minLength',
 params: { limit: 1 },
- message: "Required"}
+ message: "Required"
+}
 );
 }
 }
@@ -763,7 +793,8 @@ instancePath: instancePath + '/app/uniqueName',
 schemaPath: '#/properties/app/properties/uniqueName/maxLength',
 keyword: 'maxLength',
 params: { limit: 100 },
- message: "Must_be_less_than_100_characters"}
+ message: "Must_be_less_than_100_characters"
+}
 );
 } else {
 if (func4(data7) < 1) {errors.push(
@@ -772,7 +803,8 @@ instancePath: instancePath + '/app/uniqueName',
 schemaPath: '#/properties/app/properties/uniqueName/minLength',
 keyword: 'minLength',
 params: { limit: 1 },
- message: "Required"}
+ message: "Required"
+}
 );
 } else {
 if (!pattern0.test(data7)) {errors.push(
@@ -782,7 +814,8 @@ schemaPath: '#/properties/app/properties/uniqueName/pattern',
 keyword: 'pattern',
 params: {
 pattern: '/^(?!API$|I$).+$/i'},
- message: "Unique_name_contains_reserved_words"}
+ message: "Unique_name_contains_reserved_words"
+}
 );
 } else {
 if (
@@ -795,7 +828,8 @@ instancePath: instancePath + '/app/uniqueName',
 schemaPath: '#/properties/app/properties/uniqueName/isNameGloballyUnique',
 keyword: 'isNameGloballyUnique',
 params: {},
- message: "Not_Globally_Unique"}
+ message: "Not_Globally_Unique"
+}
 );
 }
 }
@@ -833,7 +867,8 @@ instancePath: instancePath + '/app/version',
 schemaPath: '#/properties/app/properties/version/type',
 keyword: 'type',
 params: { type: 'integer' },
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 );
 }
 if (true) {
@@ -850,7 +885,8 @@ params: {
 comparison: '>=',
 limit: 0
 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 );
 }
 }
@@ -868,7 +904,8 @@ instancePath: instancePath + '/app/touched',
 schemaPath: '#/properties/app/properties/touched/type',
 keyword: 'type',
 params: { type: 'boolean' },
- message: "Must_be_a_boolean"}
+ message: "Must_be_a_boolean"
+}
 );
 }
 var valid1 = _errs19 === errors
@@ -890,7 +927,8 @@ instancePath: instancePath + '/app/lastModified',
 schemaPath: '#/properties/app/properties/lastModified/type',
 keyword: 'type',
 params: { type: 'number' },
- message: "Must_be_a_number"}
+ message: "Must_be_a_number"
+}
 );
 }
 var valid1 = _errs21 === errors
@@ -914,7 +952,8 @@ instancePath: instancePath + '/app/homePageImageType',
 schemaPath: '#/properties/app/properties/homePageImageType/type',
 keyword: 'type',
 params: { type: 'integer' },
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 );
 }
 if (true) {
@@ -931,7 +970,8 @@ params: {
 comparison: '<=',
 limit: 3
 },
- message: "Must_be_less_than_or_equal_to_maximum"}
+ message: "Must_be_less_than_or_equal_to_maximum"
+}
 );
 } else {
 if (data11 < 0 || isNaN(data11)) {errors.push(
@@ -943,7 +983,8 @@ params: {
 comparison: '>=',
 limit: 0
 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 );
 }
 }
@@ -966,7 +1007,8 @@ instancePath: instancePath + '/app/homePageImage',
 schemaPath: '#/properties/app/properties/homePageImage/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 );
 }
 } else {errors.push(
@@ -1006,7 +1048,8 @@ instancePath: instancePath + '/app/authenticationType',
 schemaPath: '#/properties/app/properties/authenticationType/maxLength',
 keyword: 'maxLength',
 params: { limit: 100 },
- message: "Must_be_less_than_100_characters"}
+ message: "Must_be_less_than_100_characters"
+}
 );
 } else {
 if (func4(data13) < 1) {errors.push(
@@ -1015,7 +1058,8 @@ instancePath: instancePath + '/app/authenticationType',
 schemaPath: '#/properties/app/properties/authenticationType/minLength',
 keyword: 'minLength',
 params: { limit: 1 },
- message: "Required"}
+ message: "Required"
+}
 );
 }
 }
@@ -1053,7 +1097,8 @@ instancePath: instancePath + '/app/lang',
 schemaPath: '#/properties/app/properties/lang/maxLength',
 keyword: 'maxLength',
 params: { limit: 100 },
- message: "Must_be_less_than_100_characters"}
+ message: "Must_be_less_than_100_characters"
+}
 );
 } else {
 if (func4(data14) < 1) {errors.push(
@@ -1062,7 +1107,8 @@ instancePath: instancePath + '/app/lang',
 schemaPath: '#/properties/app/properties/lang/minLength',
 keyword: 'minLength',
 params: { limit: 1 },
- message: "Required"}
+ message: "Required"
+}
 );
 }
 }
@@ -1094,7 +1140,8 @@ instancePath: instancePath + '/app/enableNarrator',
 schemaPath: '#/properties/app/properties/enableNarrator/type',
 keyword: 'type',
 params: { type: 'boolean' },
- message: "Must_be_a_boolean"}
+ message: "Must_be_a_boolean"
+}
 );
 }
 var valid1 = _errs31 === errors
@@ -1117,7 +1164,8 @@ keyword: 'maxLength',
 params: {
 limit: 8000
 },
- message: "Must_be_less_than_8000_characters"}
+ message: "Must_be_less_than_8000_characters"
+}
 );
 }
 } else {errors.push(
@@ -1155,7 +1203,8 @@ keyword: 'minLength',
 params: {
 limit: 36
 },
- message: "Must_be_36_characters"}
+ message: "Must_be_36_characters"
+}
 );
 } else {
 if (
@@ -1169,7 +1218,8 @@ schemaPath: '#/properties/app/properties/id/format',
 keyword: 'format',
 params: {
 format: 'uuid'},
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 );
 }
 }
@@ -1208,7 +1258,8 @@ schemaPath: '#/properties/app/properties/lastSync/type',
 keyword: 'type',
 params: {
 type: 'number'},
- message: "Must_be_a_number"}
+ message: "Must_be_a_number"
+}
 );
 }
 var valid1 = _errs37 === errors
@@ -1293,7 +1344,8 @@ instancePath: instancePath + '/database/name',
 schemaPath: '#/properties/database/properties/name/maxLength',
 keyword: 'maxLength',
 params: { limit: 100 },
- message: "Must_be_less_than_100_characters"}
+ message: "Must_be_less_than_100_characters"
+}
 );
 } else {
 if (func4(data20) < 1) {errors.push(
@@ -1302,7 +1354,8 @@ instancePath: instancePath + '/database/name',
 schemaPath: '#/properties/database/properties/name/minLength',
 keyword: 'minLength',
 params: { limit: 1 },
- message: "Required"}
+ message: "Required"
+}
 );
 }
 }
@@ -1333,7 +1386,8 @@ instancePath: instancePath + '/database/lastModified',
 schemaPath: '#/properties/database/properties/lastModified/type',
 keyword: 'type',
 params: { type: 'number' },
- message: "Must_be_a_number"}
+ message: "Must_be_a_number"
+}
 );
 }
 var valid2 = _errs43 === errors
@@ -1357,7 +1411,8 @@ instancePath: instancePath + '/database/version',
 schemaPath: '#/properties/database/properties/version/type',
 keyword: 'type',
 params: { type: 'integer' },
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 );
 }
 if (true) {
@@ -1374,7 +1429,8 @@ params: {
 comparison: '>=',
 limit: 0
 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 );
 }
 }
@@ -1396,7 +1452,8 @@ instancePath: instancePath + '/database/appId',
 schemaPath: '#/properties/database/properties/appId/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 );
 }
 } else {errors.push(
@@ -1428,7 +1485,8 @@ instancePath: instancePath + '/database/id',
 schemaPath: '#/properties/database/properties/id/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 );
 }
 } else {errors.push(
@@ -1464,7 +1522,8 @@ instancePath: instancePath + '/database/order',
 schemaPath: '#/properties/database/properties/order/type',
 keyword: 'type',
 params: { type: 'integer' },
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 );
 }
 if (true) {
@@ -1481,7 +1540,8 @@ params: {
 comparison: '>=',
 limit: 0
 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 );
 }
 }
@@ -1509,7 +1569,8 @@ instancePath: instancePath + '/database/homePageIconType',
 schemaPath: '#/properties/database/properties/homePageIconType/type',
 keyword: 'type',
 params: { type: 'integer' },
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 );
 }
 if (true) {
@@ -1526,7 +1587,8 @@ params: {
 comparison: '<=',
 limit: 3
 },
- message: "Must_be_less_than_or_equal_to_maximum"}
+ message: "Must_be_less_than_or_equal_to_maximum"
+}
 );
 } else {
 if (data26 < 0 || isNaN(data26)) {errors.push(
@@ -1538,7 +1600,8 @@ params: {
 comparison: '>=',
 limit: 0
 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 );
 }
 }
@@ -1562,7 +1625,8 @@ schemaPath: '#/properties/database/properties/homePageIcon/format',
 keyword: 'format',
 params: {
 format: 'uuid'},
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 );
 }
 } else {errors.push(
@@ -1592,7 +1656,8 @@ instancePath: instancePath + '/database/touched',
 schemaPath: '#/properties/database/properties/touched/type',
 keyword: 'type',
 params: { type: 'boolean' },
- message: "Must_be_a_boolean"}
+ message: "Must_be_a_boolean"
+}
 );
 }
 var valid2 = _errs57 === errors
@@ -1695,7 +1760,8 @@ instancePath: instancePath + '/databaseUnit/name',
 schemaPath: '#/properties/databaseUnit/properties/name/maxLength',
 keyword: 'maxLength',
 params: { limit: 100 },
- message: "Must_be_less_than_100_characters"}
+ message: "Must_be_less_than_100_characters"
+}
 );
 } else {
 if (func4(data30) < 1) {errors.push(
@@ -1704,7 +1770,8 @@ instancePath: instancePath + '/databaseUnit/name',
 schemaPath: '#/properties/databaseUnit/properties/name/minLength',
 keyword: 'minLength',
 params: { limit: 1 },
- message: "Required"}
+ message: "Required"
+}
 );
 }
 }
@@ -1740,7 +1807,8 @@ instancePath: instancePath + '/databaseUnit/order',
 schemaPath: '#/properties/databaseUnit/properties/order/type',
 keyword: 'type',
 params: { type: 'integer' },
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 );
 }
 if (true) {
@@ -1757,7 +1825,8 @@ params: {
 comparison: '>=',
 limit: 0
 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 );
 }
 }
@@ -1781,7 +1850,8 @@ instancePath: instancePath + '/databaseUnit/lastModified',
 schemaPath: '#/properties/databaseUnit/properties/lastModified/type',
 keyword: 'type',
 params: { type: 'number' },
- message: "Must_be_a_number"}
+ message: "Must_be_a_number"
+}
 );
 }
 var valid3 = _errs65 === errors
@@ -1797,7 +1867,8 @@ instancePath: instancePath + '/databaseUnit/touched',
 schemaPath: '#/properties/databaseUnit/properties/touched/type',
 keyword: 'type',
 params: { type: 'boolean' },
- message: "Must_be_a_boolean"}
+ message: "Must_be_a_boolean"
+}
 );
 }
 var valid3 = _errs67 === errors
@@ -1821,7 +1892,8 @@ instancePath: instancePath + '/databaseUnit/version',
 schemaPath: '#/properties/databaseUnit/properties/version/type',
 keyword: 'type',
 params: { type: 'integer' },
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 );
 }
 if (true) {
@@ -1838,7 +1910,8 @@ params: {
 comparison: '>=',
 limit: 0
 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 );
 }
 }
@@ -1860,7 +1933,8 @@ instancePath: instancePath + '/databaseUnit/id',
 schemaPath: '#/properties/databaseUnit/properties/id/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 );
 }
 } else {errors.push(
@@ -1893,7 +1967,8 @@ schemaPath: '#/properties/databaseUnit/properties/appId/format',
 keyword: 'format',
 params: {
 format: 'uuid'},
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 );
 }
 } else {errors.push(
@@ -1928,7 +2003,8 @@ schemaPath: '#/properties/databaseUnit/properties/databaseId/format',
 keyword: 'format',
 params: {
 format: 'uuid'},
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 );
 }
 } else {errors.push(
@@ -1967,7 +2043,8 @@ instancePath: instancePath + '/databaseUnit/successVideoType',
 schemaPath: '#/properties/databaseUnit/properties/successVideoType/type',
 keyword: 'type',
 params: { type: 'integer' },
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 );
 }
 if (true) {
@@ -1987,7 +2064,8 @@ params: {
 comparison: '<=',
 limit: 2
 },
- message: "Must_be_less_than_or_equal_to_maximum"}
+ message: "Must_be_less_than_or_equal_to_maximum"
+}
 );
 } else {
 if (
@@ -2002,7 +2080,8 @@ params: {
 comparison: '>=',
 limit: 0
 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 );
 }
 }
@@ -2030,7 +2109,8 @@ keyword: 'maxLength',
 params: {
 limit: 100
 },
- message: "Must_be_less_than_100_characters"}
+ message: "Must_be_less_than_100_characters"
+}
 );
 }
 } else {errors.push(
@@ -2067,7 +2147,8 @@ keyword: 'maxLength',
 params: {
 limit: 100
 },
- message: "Must_be_less_than_100_characters"}
+ message: "Must_be_less_than_100_characters"
+}
 );
 }
 } else {errors.push(
@@ -2108,7 +2189,8 @@ schemaPath: '#/properties/databaseUnit/properties/successSound/format',
 keyword: 'format',
 params: {
 format: 'uuid'},
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 );
 }
 } else {errors.push(
@@ -2148,7 +2230,8 @@ schemaPath: '#/properties/databaseUnit/properties/successSoundType/type',
 keyword: 'type',
 params: {
 type: 'integer'},
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 );
 }
 if (true) {
@@ -2168,7 +2251,8 @@ params: {
 comparison: '<=',
 limit: 4
 },
- message: "Must_be_less_than_or_equal_to_maximum"}
+ message: "Must_be_less_than_or_equal_to_maximum"
+}
 );
 } else {
 if (
@@ -2183,7 +2267,8 @@ params: {
 comparison: '>=',
 limit: 0
 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 );
 }
 }
@@ -2213,7 +2298,8 @@ schemaPath: '#/properties/databaseUnit/properties/homePageImageType/type',
 keyword: 'type',
 params: {
 type: 'integer'},
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 );
 }
 if (
@@ -2235,7 +2321,8 @@ params: {
 comparison: '<=',
 limit: 3
 },
- message: "Must_be_less_than_or_equal_to_maximum"}
+ message: "Must_be_less_than_or_equal_to_maximum"
+}
 );
 } else {
 if (
@@ -2250,7 +2337,8 @@ params: {
 comparison: '>=',
 limit: 0
 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 );
 }
 }
@@ -2286,7 +2374,8 @@ schemaPath: '#/properties/databaseUnit/properties/homePageImage/format',
 keyword: 'format',
 params: {
 format: 'uuid'},
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 );
 }
 } else {errors.push(
@@ -2332,7 +2421,8 @@ schemaPath: '#/properties/databaseUnit/properties/router/format',
 keyword: 'format',
 params: {
 format: 'uuid'},
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 );
 }
 } else {errors.push(
@@ -2372,7 +2462,8 @@ schemaPath: '#/properties/databaseUnit/properties/routerTime/type',
 keyword: 'type',
 params: {
 type: 'number'},
- message: "Must_be_a_number"}
+ message: "Must_be_a_number"
+}
 );
 }
 var valid3 = _errs93 ===
@@ -2394,7 +2485,8 @@ schemaPath: '#/properties/databaseUnit/properties/routerTimeImmediate/type',
 keyword: 'type',
 params: {
 type: 'boolean'},
- message: "Must_be_a_boolean"}
+ message: "Must_be_a_boolean"
+}
 );
 }
 var valid3 = _errs95 ===
@@ -2429,7 +2521,8 @@ schemaPath: '#/properties/databaseUnit/properties/points/type',
 keyword: 'type',
 params: {
 type: 'integer'},
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 );
 }
 if (
@@ -2456,7 +2549,8 @@ params: {
 comparison: '>=',
 limit: 0
 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 );
 }
 }
@@ -2560,7 +2654,8 @@ instancePath: instancePath + '/databaseItem/itemType',
 schemaPath: '#/properties/databaseItem/properties/itemType/type',
 keyword: 'type',
 params: { type: 'integer' },
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 );
 }
 if (true) {
@@ -2577,7 +2672,8 @@ params: {
 comparison: '<=',
 limit: 5
 },
- message: "Must_be_less_than_or_equal_to_maximum"}
+ message: "Must_be_less_than_or_equal_to_maximum"
+}
 );
 } else {
 if (data50 < 0 || isNaN(data50)) {errors.push(
@@ -2589,7 +2685,8 @@ params: {
 comparison: '>=',
 limit: 0
 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 );
 }
 }
@@ -2616,7 +2713,8 @@ instancePath: instancePath + '/databaseItem/order',
 schemaPath: '#/properties/databaseItem/properties/order/type',
 keyword: 'type',
 params: { type: 'integer' },
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 );
 }
 if (true) {
@@ -2633,7 +2731,8 @@ params: {
 comparison: '>=',
 limit: 0
 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 );
 }
 }
@@ -2655,7 +2754,8 @@ instancePath: instancePath + '/databaseItem/unitId',
 schemaPath: '#/properties/databaseItem/properties/unitId/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 );
 }
 } else {errors.push(
@@ -2687,7 +2787,8 @@ instancePath: instancePath + '/databaseItem/appId',
 schemaPath: '#/properties/databaseItem/properties/appId/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 );
 }
 } else {errors.push(
@@ -2721,7 +2822,8 @@ instancePath: instancePath + '/databaseItem/lastModified',
 schemaPath: '#/properties/databaseItem/properties/lastModified/type',
 keyword: 'type',
 params: { type: 'number' },
- message: "Must_be_a_number"}
+ message: "Must_be_a_number"
+}
 );
 }
 var valid4 = _errs109 === errors
@@ -2739,7 +2841,8 @@ instancePath: instancePath + '/databaseItem/touched',
 schemaPath: '#/properties/databaseItem/properties/touched/type',
 keyword: 'type',
 params: { type: 'boolean' },
- message: "Must_be_a_boolean"}
+ message: "Must_be_a_boolean"
+}
 );
 }
 var valid4 = _errs111 === errors
@@ -2763,7 +2866,8 @@ instancePath: instancePath + '/databaseItem/version',
 schemaPath: '#/properties/databaseItem/properties/version/type',
 keyword: 'type',
 params: { type: 'integer' },
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 );
 }
 if (true) {
@@ -2783,7 +2887,8 @@ params: {
 comparison: '>=',
 limit: 0
 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 );
 }
 }
@@ -2812,7 +2917,8 @@ schemaPath: '#/properties/databaseItem/properties/databaseId/format',
 keyword: 'format',
 params: {
 format: 'uuid'},
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 );
 }
 } else {errors.push(
@@ -2850,7 +2956,8 @@ schemaPath: '#/properties/databaseItem/properties/id/format',
 keyword: 'format',
 params: {
 format: 'uuid'},
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 );
 }
 } else {errors.push(
@@ -2890,7 +2997,8 @@ keyword: 'maxLength',
 params: {
 limit: 8000
 },
- message: "Must_be_less_than_8000_characters"}
+ message: "Must_be_less_than_8000_characters"
+}
 );
 }
 } else {errors.push(
@@ -2998,7 +3106,8 @@ instancePath: instancePath + '/followerRequest/leaderAppId',
 schemaPath: '#/properties/followerRequest/properties/leaderAppId/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 );
 }
 } else {errors.push(
@@ -3030,7 +3139,8 @@ instancePath: instancePath + '/followerRequest/followerAppId',
 schemaPath: '#/properties/followerRequest/properties/followerAppId/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 );
 }
 } else {errors.push(
@@ -3062,7 +3172,8 @@ instancePath: instancePath + '/followerRequest/id',
 schemaPath: '#/properties/followerRequest/properties/id/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 );
 }
 } else {errors.push(
@@ -3093,7 +3204,8 @@ instancePath: instancePath + '/followerRequest/followerName',
 schemaPath: '#/properties/followerRequest/properties/followerName/maxLength',
 keyword: 'maxLength',
 params: { limit: 100 },
- message: "Must_be_less_than_100_characters"}
+ message: "Must_be_less_than_100_characters"
+}
 );
 } else {
 if (func4(data64) < 1) {errors.push(
@@ -3102,7 +3214,8 @@ instancePath: instancePath + '/followerRequest/followerName',
 schemaPath: '#/properties/followerRequest/properties/followerName/minLength',
 keyword: 'minLength',
 params: { limit: 1 },
- message: "Required"}
+ message: "Required"
+}
 );
 }
 }
@@ -3133,7 +3246,8 @@ instancePath: instancePath + '/followerRequest/leaderName',
 schemaPath: '#/properties/followerRequest/properties/leaderName/maxLength',
 keyword: 'maxLength',
 params: { limit: 100 },
- message: "Must_be_less_than_100_characters"}
+ message: "Must_be_less_than_100_characters"
+}
 );
 } else {
 if (func4(data65) < 1) {errors.push(
@@ -3142,7 +3256,8 @@ instancePath: instancePath + '/followerRequest/leaderName',
 schemaPath: '#/properties/followerRequest/properties/leaderName/minLength',
 keyword: 'minLength',
 params: { limit: 1 },
- message: "Required"}
+ message: "Required"
+}
 );
 }
 }
@@ -3178,7 +3293,8 @@ instancePath: instancePath + '/followerRequest/followerEmail',
 schemaPath: '#/properties/followerRequest/properties/followerEmail/maxLength',
 keyword: 'maxLength',
 params: { limit: 100 },
- message: "Must_be_less_than_100_characters"}
+ message: "Must_be_less_than_100_characters"
+}
 );
 } else {
 if (func4(data66) < 1) {errors.push(
@@ -3187,7 +3303,8 @@ instancePath: instancePath + '/followerRequest/followerEmail',
 schemaPath: '#/properties/followerRequest/properties/followerEmail/minLength',
 keyword: 'minLength',
 params: { limit: 1 },
- message: "Required"}
+ message: "Required"
+}
 );
 } else {
 if (
@@ -3199,7 +3316,8 @@ schemaPath: '#/properties/followerRequest/properties/followerEmail/format',
 keyword: 'format',
 params: {
 format: 'email'},
- message: "Must_be_a_valid_email"}
+ message: "Must_be_a_valid_email"
+}
 );
 } else {
 if (
@@ -3212,7 +3330,8 @@ instancePath: instancePath + '/followerRequest/followerEmail',
 schemaPath: '#/properties/followerRequest/properties/followerEmail/doesEmailExist',
 keyword: 'doesEmailExist',
 params: {},
- message: "Email_does_not_exist"}
+ message: "Email_does_not_exist"
+}
 );
 }
 }
@@ -3254,7 +3373,8 @@ keyword: 'maxLength',
 params: {
 limit: 100
 },
- message: "Must_be_less_than_100_characters"}
+ message: "Must_be_less_than_100_characters"
+}
 );
 } else {
 if (func4(data67) < 1) {errors.push(
@@ -3265,7 +3385,8 @@ keyword: 'minLength',
 params: {
 limit: 1
 },
- message: "Required"}
+ message: "Required"
+}
 );
 } else {
 if (
@@ -3277,7 +3398,8 @@ schemaPath: '#/properties/followerRequest/properties/leaderEmail/format',
 keyword: 'format',
 params: {
 format: 'email'},
- message: "Must_be_a_valid_email"}
+ message: "Must_be_a_valid_email"
+}
 );
 } else {
 if (
@@ -3290,7 +3412,8 @@ instancePath: instancePath + '/followerRequest/leaderEmail',
 schemaPath: '#/properties/followerRequest/properties/leaderEmail/doesEmailExist',
 keyword: 'doesEmailExist',
 params: {},
- message: "Email_does_not_exist"}
+ message: "Email_does_not_exist"
+}
 );
 }
 }
@@ -3327,7 +3450,8 @@ schemaPath: '#/properties/followerRequest/properties/initiatedByFollower/type',
 keyword: 'type',
 params: {
 type: 'boolean'},
- message: "Must_be_a_boolean"}
+ message: "Must_be_a_boolean"
+}
 );
 }
 var valid5 = _errs137 === errors
@@ -3352,7 +3476,8 @@ schemaPath: '#/properties/followerRequest/properties/lastModified/type',
 keyword: 'type',
 params: {
 type: 'number'},
- message: "Must_be_a_number"}
+ message: "Must_be_a_number"
+}
 );
 }
 var valid5 = _errs139 === errors
@@ -3373,7 +3498,8 @@ schemaPath: '#/properties/followerRequest/properties/touched/type',
 keyword: 'type',
 params: {
 type: 'boolean'},
- message: "Must_be_a_boolean"}
+ message: "Must_be_a_boolean"
+}
 );
 }
 var valid5 = _errs141 === errors
@@ -3400,7 +3526,8 @@ schemaPath: '#/properties/followerRequest/properties/version/type',
 keyword: 'type',
 params: {
 type: 'integer'},
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 );
 }
 if (true) {
@@ -3420,7 +3547,8 @@ params: {
 comparison: '>=',
 limit: 0
 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 );
 }
 }
@@ -3449,7 +3577,8 @@ schemaPath: '#/properties/followerRequest/properties/status/type',
 keyword: 'type',
 params: {
 type: 'integer'},
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 );
 }
 if (
@@ -3471,7 +3600,8 @@ params: {
 comparison: '<=',
 limit: 2
 },
- message: "Must_be_less_than_or_equal_to_maximum"}
+ message: "Must_be_less_than_or_equal_to_maximum"
+}
 );
 } else {
 if (
@@ -3486,7 +3616,8 @@ params: {
 comparison: '>=',
 limit: 0
 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 );
 }
 }
@@ -3519,7 +3650,8 @@ keyword: 'maxLength',
 params: {
 limit: 8000
 },
- message: "Must_be_less_than_8000_characters"}
+ message: "Must_be_less_than_8000_characters"
+}
 );
 }
 } else {errors.push(
@@ -3560,7 +3692,8 @@ schemaPath: '#/properties/followerRequest/properties/points/type',
 keyword: 'type',
 params: {
 type: 'integer'},
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 );
 }
 if (
@@ -3582,7 +3715,8 @@ params: {
 comparison: '>=',
 limit: 0
 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 );
 }
 }
@@ -3644,7 +3778,19 @@ if (
 (data75.touched === undefined &&
 (missing6 = 'touched')) ||
 (data75.version === undefined &&
-(missing6 = 'version'))
+(missing6 = 'version')) ||
+(data75.databaseVersion === undefined &&
+(missing6 = 'databaseVersion')) ||
+(data75.databaseLastModified === undefined &&
+(missing6 = 'databaseLastModified')) ||
+(data75.unitVersion === undefined &&
+(missing6 = 'unitVersion')) ||
+(data75.unitLastModified === undefined &&
+(missing6 = 'unitLastModified')) ||
+(data75.itemVersion === undefined &&
+(missing6 = 'itemVersion')) ||
+(data75.itemLastModified === undefined &&
+(missing6 = 'itemLastModified'))
 ) {errors.push(
 {
 instancePath: instancePath + '/followerDatabase',
@@ -3669,7 +3815,8 @@ instancePath: instancePath + '/followerDatabase/followerRequestId',
 schemaPath: '#/properties/followerDatabase/properties/followerRequestId/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 );
 }
 } else {errors.push(
@@ -3701,7 +3848,8 @@ instancePath: instancePath + '/followerDatabase/id',
 schemaPath: '#/properties/followerDatabase/properties/id/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 );
 }
 } else {errors.push(
@@ -3733,7 +3881,8 @@ instancePath: instancePath + '/followerDatabase/databaseId',
 schemaPath: '#/properties/followerDatabase/properties/databaseId/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 );
 }
 } else {errors.push(
@@ -3767,7 +3916,8 @@ instancePath: instancePath + '/followerDatabase/lastModified',
 schemaPath: '#/properties/followerDatabase/properties/lastModified/type',
 keyword: 'type',
 params: { type: 'number' },
- message: "Must_be_a_number"}
+ message: "Must_be_a_number"
+}
 );
 }
 var valid6 = _errs159 === errors
@@ -3785,7 +3935,8 @@ instancePath: instancePath + '/followerDatabase/touched',
 schemaPath: '#/properties/followerDatabase/properties/touched/type',
 keyword: 'type',
 params: { type: 'boolean' },
- message: "Must_be_a_boolean"}
+ message: "Must_be_a_boolean"
+}
 );
 }
 var valid6 = _errs161 === errors
@@ -3809,7 +3960,8 @@ instancePath: instancePath + '/followerDatabase/version',
 schemaPath: '#/properties/followerDatabase/properties/version/type',
 keyword: 'type',
 params: { type: 'integer' },
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 );
 }
 if (true) {
@@ -3829,7 +3981,8 @@ params: {
 comparison: '>=',
 limit: 0
 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 );
 }
 }
@@ -3837,6 +3990,245 @@ limit: 0
 var valid6 = _errs163 === errors
 } else {
 var valid6 = true
+}
+if (valid6) {
+if (
+data75.databaseVersion !== undefined
+) {
+let data82 = data75.databaseVersion
+const _errs165 = errors
+if (
+!(
+typeof data82 == 'number' &&
+!(data82 % 1) &&
+!isNaN(data82) &&
+isFinite(data82)
+)
+) {errors.push(
+{
+instancePath: instancePath + '/followerDatabase/databaseVersion',
+schemaPath: '#/properties/followerDatabase/properties/databaseVersion/type',
+keyword: 'type',
+params: {
+type: 'integer'},
+ message: "Must_be_an_integer"
+}
+);
+}
+if (true) {
+if (
+typeof data82 == 'number' &&
+isFinite(data82)
+) {
+if (
+data82 < 0 ||
+isNaN(data82)
+) {errors.push(
+{
+instancePath: instancePath + '/followerDatabase/databaseVersion',
+schemaPath: '#/properties/followerDatabase/properties/databaseVersion/minimum',
+keyword: 'minimum',
+params: {
+comparison: '>=',
+limit: 0
+},
+ message: "Must_be_greater_than_or_equal_to_0"
+}
+);
+}
+}
+}
+var valid6 = _errs165 === errors
+} else {
+var valid6 = true
+}
+if (valid6) {
+if (
+data75.databaseLastModified !== undefined
+) {
+let data83 = data75.databaseLastModified
+const _errs167 = errors
+if (
+!(
+typeof data83 == 'number' &&
+isFinite(data83)
+)
+) {errors.push(
+{
+instancePath: instancePath + '/followerDatabase/databaseLastModified',
+schemaPath: '#/properties/followerDatabase/properties/databaseLastModified/type',
+keyword: 'type',
+params: {
+type: 'number'},
+ message: "Must_be_a_number"
+}
+);
+}
+var valid6 = _errs167 === errors
+} else {
+var valid6 = true
+}
+if (valid6) {
+if (
+data75.unitVersion !== undefined
+) {
+let data84 = data75.unitVersion
+const _errs169 = errors
+if (
+!(
+typeof data84 == 'number' &&
+!(data84 % 1) &&
+!isNaN(data84) &&
+isFinite(data84)
+)
+) {errors.push(
+{
+instancePath: instancePath + '/followerDatabase/unitVersion',
+schemaPath: '#/properties/followerDatabase/properties/unitVersion/type',
+keyword: 'type',
+params: {
+type: 'integer'},
+ message: "Must_be_an_integer"
+}
+);
+}
+if (true) {
+if (
+typeof data84 == 'number' &&
+isFinite(data84)
+) {
+if (
+data84 < 0 ||
+isNaN(data84)
+) {errors.push(
+{
+instancePath: instancePath + '/followerDatabase/unitVersion',
+schemaPath: '#/properties/followerDatabase/properties/unitVersion/minimum',
+keyword: 'minimum',
+params: {
+comparison: '>=',
+limit: 0
+},
+ message: "Must_be_greater_than_or_equal_to_0"
+}
+);
+}
+}
+}
+var valid6 = _errs169 === errors
+} else {
+var valid6 = true
+}
+if (valid6) {
+if (
+data75.unitLastModified !== undefined
+) {
+let data85 = data75.unitLastModified
+const _errs171 = errors
+if (
+!(
+typeof data85 == 'number' &&
+isFinite(data85)
+)
+) {errors.push(
+{
+instancePath: instancePath + '/followerDatabase/unitLastModified',
+schemaPath: '#/properties/followerDatabase/properties/unitLastModified/type',
+keyword: 'type',
+params: {
+type: 'number'},
+ message: "Must_be_a_number"
+}
+);
+}
+var valid6 = _errs171 === errors
+} else {
+var valid6 = true
+}
+if (valid6) {
+if (
+data75.itemVersion !== undefined
+) {
+let data86 = data75.itemVersion
+const _errs173 = errors
+if (
+!(
+typeof data86 == 'number' &&
+!(data86 % 1) &&
+!isNaN(data86) &&
+isFinite(data86)
+)
+) {errors.push(
+{
+instancePath: instancePath + '/followerDatabase/itemVersion',
+schemaPath: '#/properties/followerDatabase/properties/itemVersion/type',
+keyword: 'type',
+params: {
+type: 'integer'},
+ message: "Must_be_an_integer"
+}
+);
+}
+if (
+errors === _errs173
+) {
+if (
+typeof data86 == 'number' &&
+isFinite(data86)
+) {
+if (
+data86 < 0 ||
+isNaN(data86)
+) {errors.push(
+{
+instancePath: instancePath + '/followerDatabase/itemVersion',
+schemaPath: '#/properties/followerDatabase/properties/itemVersion/minimum',
+keyword: 'minimum',
+params: {
+comparison: '>=',
+limit: 0
+},
+ message: "Must_be_greater_than_or_equal_to_0"
+}
+);
+}
+}
+}
+var valid6 = _errs173 === errors
+} else {
+var valid6 = true
+}
+if (valid6) {
+if (
+data75.itemLastModified !== undefined
+) {
+let data87 = data75.itemLastModified
+const _errs175 = errors
+if (
+!(
+typeof data87 == 'number' &&
+isFinite(data87)
+)
+) {errors.push(
+{
+instancePath: instancePath + '/followerDatabase/itemLastModified',
+schemaPath: '#/properties/followerDatabase/properties/itemLastModified/type',
+keyword: 'type',
+params: {
+type: 'number'},
+ message: "Must_be_a_number"
+}
+);
+}
+var valid6 = _errs175 === errors
+} else {
+var valid6 = true
+}
+}
+}
+}
+}
+}
 }
 }
 }
@@ -3861,45 +4253,45 @@ var valid0 = true
 }
 if (valid0) {
 if (data.router !== undefined) {
-let data82 = data.router
-const _errs165 = errors
+let data88 = data.router
+const _errs177 = errors
 if (true) {
 if (
-data82 &&
-typeof data82 == 'object' &&
-!Array.isArray(data82)
+data88 &&
+typeof data88 == 'object' &&
+!Array.isArray(data88)
 ) {
 let missing7
 if (
-(data82.id === undefined &&
+(data88.id === undefined &&
 (missing7 = 'id')) ||
-(data82.appId === undefined &&
+(data88.appId === undefined &&
 (missing7 = 'appId')) ||
-(data82.routerMac === undefined &&
+(data88.routerMac === undefined &&
 (missing7 = 'routerMac')) ||
-(data82.ipAddress === undefined &&
+(data88.ipAddress === undefined &&
 (missing7 = 'ipAddress')) ||
-(data82.mondayTimesAndDurations === undefined &&
+(data88.mondayTimesAndDurations === undefined &&
 (missing7 = 'mondayTimesAndDurations')) ||
-(data82.tuesdayTimesAndDurations === undefined &&
+(data88.tuesdayTimesAndDurations === undefined &&
 (missing7 = 'tuesdayTimesAndDurations')) ||
-(data82.wednesdayTimesAndDurations === undefined &&
+(data88.wednesdayTimesAndDurations === undefined &&
 (missing7 = 'wednesdayTimesAndDurations')) ||
-(data82.thursdayTimesAndDurations === undefined &&
+(data88.thursdayTimesAndDurations === undefined &&
 (missing7 = 'thursdayTimesAndDurations')) ||
-(data82.fridayTimesAndDurations === undefined &&
+(data88.fridayTimesAndDurations === undefined &&
 (missing7 = 'fridayTimesAndDurations')) ||
-(data82.saturdayTimesAndDurations === undefined &&
+(data88.saturdayTimesAndDurations === undefined &&
 (missing7 = 'saturdayTimesAndDurations')) ||
-(data82.sundayTimesAndDurations === undefined &&
+(data88.sundayTimesAndDurations === undefined &&
 (missing7 = 'sundayTimesAndDurations')) ||
-(data82.version === undefined &&
+(data88.version === undefined &&
 (missing7 = 'version')) ||
-(data82.lastModified === undefined &&
+(data88.lastModified === undefined &&
 (missing7 = 'lastModified')) ||
-(data82.touched === undefined &&
+(data88.touched === undefined &&
 (missing7 = 'touched')) ||
-(data82.status === undefined &&
+(data88.status === undefined &&
 (missing7 = 'status'))
 ) {errors.push(
 {
@@ -3913,19 +4305,20 @@ missing7 +
 }
 );
 } else {
-if (data82.id !== undefined) {
-let data83 = data82.id
-const _errs167 = errors
+if (data88.id !== undefined) {
+let data89 = data88.id
+const _errs179 = errors
 if (true) {
 if (true) {
-if (typeof data83 === 'string') {
-if (!formats2.test(data83)) {errors.push(
+if (typeof data89 === 'string') {
+if (!formats2.test(data89)) {errors.push(
 {
 instancePath: instancePath + '/router/id',
 schemaPath: '#/properties/router/properties/id/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 );
 }
 } else {errors.push(
@@ -3940,24 +4333,25 @@ message: 'must be string'
 }
 }
 }
-var valid7 = _errs167 === errors
+var valid7 = _errs179 === errors
 } else {
 var valid7 = true
 }
 if (valid7) {
-if (data82.appId !== undefined) {
-let data84 = data82.appId
-const _errs169 = errors
+if (data88.appId !== undefined) {
+let data90 = data88.appId
+const _errs181 = errors
 if (true) {
 if (true) {
-if (typeof data84 === 'string') {
-if (!formats2.test(data84)) {errors.push(
+if (typeof data90 === 'string') {
+if (!formats2.test(data90)) {errors.push(
 {
 instancePath: instancePath + '/router/appId',
 schemaPath: '#/properties/router/properties/appId/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 );
 }
 } else {errors.push(
@@ -3972,35 +4366,37 @@ message: 'must be string'
 }
 }
 }
-var valid7 = _errs169 === errors
+var valid7 = _errs181 === errors
 } else {
 var valid7 = true
 }
 if (valid7) {
-if (data82.routerMac !== undefined) {
-let data85 = data82.routerMac
-const _errs171 = errors
+if (data88.routerMac !== undefined) {
+let data91 = data88.routerMac
+const _errs183 = errors
 if (true) {
 if (true) {
-if (typeof data85 === 'string') {
-if (!pattern1.test(data85)) {errors.push(
+if (typeof data91 === 'string') {
+if (!pattern1.test(data91)) {errors.push(
 {
 instancePath: instancePath + '/router/routerMac',
 schemaPath: '#/properties/router/properties/routerMac/pattern',
 keyword: 'pattern',
 params: {
 pattern: '^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$'},
- message: "Must_be_a_valid_MAC_address"}
+ message: "Must_be_a_valid_MAC_address"
+}
 );
 } else {
-if (!formats98(data85)) {errors.push(
+if (!formats100(data91)) {errors.push(
 {
 instancePath: instancePath + '/router/routerMac',
 schemaPath: '#/properties/router/properties/routerMac/format',
 keyword: 'format',
 params: {
 format: 'regex'},
- message: "Must_be_a_valid_MAC_address"}
+ message: "Must_be_a_valid_MAC_address"
+}
 );
 }
 }
@@ -4016,21 +4412,21 @@ message: 'must be string'
 }
 }
 }
-var valid7 = _errs171 === errors
+var valid7 = _errs183 === errors
 } else {
 var valid7 = true
 }
 if (valid7) {
-if (data82.ipAddress !== undefined) {
-let data86 = data82.ipAddress
-const _errs173 = errors
+if (data88.ipAddress !== undefined) {
+let data92 = data88.ipAddress
+const _errs185 = errors
 if (true) {
 if (true) {
 if (
-typeof data86 === 'string'
+typeof data92 === 'string'
 ) {
 if (
-!formats100.test(data86)
+!formats102.test(data92)
 ) {errors.push(
 {
 instancePath: instancePath + '/router/ipAddress',
@@ -4038,7 +4434,8 @@ schemaPath: '#/properties/router/properties/ipAddress/format',
 keyword: 'format',
 params: {
 format: 'ipv4'},
- message: "Must_be_a_valid_IP_address"}
+ message: "Must_be_a_valid_IP_address"
+}
 );
 }
 } else {errors.push(
@@ -4054,23 +4451,23 @@ message: 'must be string'
 }
 }
 }
-var valid7 = _errs173 === errors
+var valid7 = _errs185 === errors
 } else {
 var valid7 = true
 }
 if (valid7) {
 if (
-data82.mondayTimesAndDurations !== undefined
+data88.mondayTimesAndDurations !== undefined
 ) {
-let data87 = data82.mondayTimesAndDurations
-const _errs175 = errors
+let data93 = data88.mondayTimesAndDurations
+const _errs187 = errors
 if (true) {
 if (true) {
 if (
-typeof data87 === 'string'
+typeof data93 === 'string'
 ) {
 if (
-!pattern2.test(data87)
+!pattern2.test(data93)
 ) {errors.push(
 {
 instancePath: instancePath + '/router/mondayTimesAndDurations',
@@ -4078,17 +4475,19 @@ schemaPath: '#/properties/router/properties/mondayTimesAndDurations/pattern',
 keyword: 'pattern',
 params: {
 pattern: '^([0-9]{2}:[0-9]{2})\\|([0-9]+)$'},
- message: "Must_be_a_valid_time_and_duration"}
+ message: "Must_be_a_valid_time_and_duration"
+}
 );
 } else {
-if (!formats98(data87)) {errors.push(
+if (!formats100(data93)) {errors.push(
 {
 instancePath: instancePath + '/router/mondayTimesAndDurations',
 schemaPath: '#/properties/router/properties/mondayTimesAndDurations/format',
 keyword: 'format',
 params: {
 format: 'regex'},
- message: "Must_be_a_valid_time_and_duration"}
+ message: "Must_be_a_valid_time_and_duration"
+}
 );
 }
 }
@@ -4105,23 +4504,23 @@ message: 'must be string'
 }
 }
 }
-var valid7 = _errs175 === errors
+var valid7 = _errs187 === errors
 } else {
 var valid7 = true
 }
 if (valid7) {
 if (
-data82.tuesdayTimesAndDurations !== undefined
+data88.tuesdayTimesAndDurations !== undefined
 ) {
-let data88 = data82.tuesdayTimesAndDurations
-const _errs177 = errors
+let data94 = data88.tuesdayTimesAndDurations
+const _errs189 = errors
 if (true) {
 if (true) {
 if (
-typeof data88 === 'string'
+typeof data94 === 'string'
 ) {
 if (
-!pattern2.test(data88)
+!pattern2.test(data94)
 ) {errors.push(
 {
 instancePath: instancePath + '/router/tuesdayTimesAndDurations',
@@ -4129,11 +4528,12 @@ schemaPath: '#/properties/router/properties/tuesdayTimesAndDurations/pattern',
 keyword: 'pattern',
 params: {
 pattern: '^([0-9]{2}:[0-9]{2})\\|([0-9]+)$'},
- message: "Must_be_a_valid_time_and_duration"}
+ message: "Must_be_a_valid_time_and_duration"
+}
 );
 } else {
 if (
-!formats98(data88)
+!formats100(data94)
 ) {errors.push(
 {
 instancePath: instancePath + '/router/tuesdayTimesAndDurations',
@@ -4141,7 +4541,8 @@ schemaPath: '#/properties/router/properties/tuesdayTimesAndDurations/format',
 keyword: 'format',
 params: {
 format: 'regex'},
- message: "Must_be_a_valid_time_and_duration"}
+ message: "Must_be_a_valid_time_and_duration"
+}
 );
 }
 }
@@ -4158,23 +4559,23 @@ message: 'must be string'
 }
 }
 }
-var valid7 = _errs177 === errors
+var valid7 = _errs189 === errors
 } else {
 var valid7 = true
 }
 if (valid7) {
 if (
-data82.wednesdayTimesAndDurations !== undefined
+data88.wednesdayTimesAndDurations !== undefined
 ) {
-let data89 = data82.wednesdayTimesAndDurations
-const _errs179 = errors
+let data95 = data88.wednesdayTimesAndDurations
+const _errs191 = errors
 if (true) {
 if (true) {
 if (
-typeof data89 === 'string'
+typeof data95 === 'string'
 ) {
 if (
-!pattern2.test(data89)
+!pattern2.test(data95)
 ) {errors.push(
 {
 instancePath: instancePath + '/router/wednesdayTimesAndDurations',
@@ -4182,11 +4583,12 @@ schemaPath: '#/properties/router/properties/wednesdayTimesAndDurations/pattern',
 keyword: 'pattern',
 params: {
 pattern: '^([0-9]{2}:[0-9]{2})\\|([0-9]+)$'},
- message: "Must_be_a_valid_time_and_duration"}
+ message: "Must_be_a_valid_time_and_duration"
+}
 );
 } else {
 if (
-!formats98(data89)
+!formats100(data95)
 ) {errors.push(
 {
 instancePath: instancePath + '/router/wednesdayTimesAndDurations',
@@ -4194,7 +4596,8 @@ schemaPath: '#/properties/router/properties/wednesdayTimesAndDurations/format',
 keyword: 'format',
 params: {
 format: 'regex'},
- message: "Must_be_a_valid_time_and_duration"}
+ message: "Must_be_a_valid_time_and_duration"
+}
 );
 }
 }
@@ -4211,24 +4614,24 @@ message: 'must be string'
 }
 }
 }
-var valid7 = _errs179 === errors
+var valid7 = _errs191 === errors
 } else {
 var valid7 = true
 }
 if (valid7) {
 if (
-data82.thursdayTimesAndDurations !== undefined
+data88.thursdayTimesAndDurations !== undefined
 ) {
-let data90 = data82.thursdayTimesAndDurations
-const _errs181 = errors
+let data96 = data88.thursdayTimesAndDurations
+const _errs193 = errors
 if (true) {
 if (true) {
 if (
-typeof data90 === 'string'
+typeof data96 === 'string'
 ) {
 if (
 !pattern2.test(
-data90
+data96
 )
 ) {errors.push(
 {
@@ -4237,11 +4640,14 @@ schemaPath: '#/properties/router/properties/thursdayTimesAndDurations/pattern',
 keyword: 'pattern',
 params: {
 pattern: '^([0-9]{2}:[0-9]{2})\\|([0-9]+)$'},
- message: "Must_be_a_valid_time_and_duration"}
+ message: "Must_be_a_valid_time_and_duration"
+}
 );
 } else {
 if (
-!formats98(data90)
+!formats100(
+data96
+)
 ) {errors.push(
 {
 instancePath: instancePath + '/router/thursdayTimesAndDurations',
@@ -4249,7 +4655,8 @@ schemaPath: '#/properties/router/properties/thursdayTimesAndDurations/format',
 keyword: 'format',
 params: {
 format: 'regex'},
- message: "Must_be_a_valid_time_and_duration"}
+ message: "Must_be_a_valid_time_and_duration"
+}
 );
 }
 }
@@ -4266,26 +4673,26 @@ message: 'must be string'
 }
 }
 }
-var valid7 = _errs181 === errors
+var valid7 = _errs193 === errors
 } else {
 var valid7 = true
 }
 if (valid7) {
 if (
-data82.fridayTimesAndDurations !== undefined
+data88.fridayTimesAndDurations !== undefined
 ) {
-let data91 = data82.fridayTimesAndDurations
-const _errs183 = errors
+let data97 = data88.fridayTimesAndDurations
+const _errs195 = errors
 if (true) {
 if (
-errors === _errs183
+errors === _errs195
 ) {
 if (
-typeof data91 === 'string'
+typeof data97 === 'string'
 ) {
 if (
 !pattern2.test(
-data91
+data97
 )
 ) {errors.push(
 {
@@ -4294,12 +4701,13 @@ schemaPath: '#/properties/router/properties/fridayTimesAndDurations/pattern',
 keyword: 'pattern',
 params: {
 pattern: '^([0-9]{2}:[0-9]{2})\\|([0-9]+)$'},
- message: "Must_be_a_valid_time_and_duration"}
+ message: "Must_be_a_valid_time_and_duration"
+}
 );
 } else {
 if (
-!formats98(
-data91
+!formats100(
+data97
 )
 ) {errors.push(
 {
@@ -4308,7 +4716,8 @@ schemaPath: '#/properties/router/properties/fridayTimesAndDurations/format',
 keyword: 'format',
 params: {
 format: 'regex'},
- message: "Must_be_a_valid_time_and_duration"}
+ message: "Must_be_a_valid_time_and_duration"
+}
 );
 }
 }
@@ -4325,28 +4734,28 @@ message: 'must be string'
 }
 }
 }
-var valid7 = _errs183 === errors
+var valid7 = _errs195 === errors
 } else {
 var valid7 = true
 }
 if (valid7) {
 if (
-data82.saturdayTimesAndDurations !== undefined
+data88.saturdayTimesAndDurations !== undefined
 ) {
-let data92 = data82.saturdayTimesAndDurations
-const _errs185 = errors
+let data98 = data88.saturdayTimesAndDurations
+const _errs197 = errors
 if (
-errors === _errs185
-) {
-if (
-errors === _errs185
+errors === _errs197
 ) {
 if (
-typeof data92 === 'string'
+errors === _errs197
+) {
+if (
+typeof data98 === 'string'
 ) {
 if (
 !pattern2.test(
-data92
+data98
 )
 ) {errors.push(
 {
@@ -4355,12 +4764,13 @@ schemaPath: '#/properties/router/properties/saturdayTimesAndDurations/pattern',
 keyword: 'pattern',
 params: {
 pattern: '^([0-9]{2}:[0-9]{2})\\|([0-9]+)$'},
- message: "Must_be_a_valid_time_and_duration"}
+ message: "Must_be_a_valid_time_and_duration"
+}
 );
 } else {
 if (
-!formats98(
-data92
+!formats100(
+data98
 )
 ) {errors.push(
 {
@@ -4369,7 +4779,8 @@ schemaPath: '#/properties/router/properties/saturdayTimesAndDurations/format',
 keyword: 'format',
 params: {
 format: 'regex'},
- message: "Must_be_a_valid_time_and_duration"}
+ message: "Must_be_a_valid_time_and_duration"
+}
 );
 }
 }
@@ -4386,28 +4797,28 @@ message: 'must be string'
 }
 }
 }
-var valid7 = _errs185 === errors
+var valid7 = _errs197 === errors
 } else {
 var valid7 = true
 }
 if (valid7) {
 if (
-data82.sundayTimesAndDurations !== undefined
+data88.sundayTimesAndDurations !== undefined
 ) {
-let data93 = data82.sundayTimesAndDurations
-const _errs187 = errors
+let data99 = data88.sundayTimesAndDurations
+const _errs199 = errors
 if (
-errors === _errs187
-) {
-if (
-errors === _errs187
+errors === _errs199
 ) {
 if (
-typeof data93 === 'string'
+errors === _errs199
+) {
+if (
+typeof data99 === 'string'
 ) {
 if (
 !pattern2.test(
-data93
+data99
 )
 ) {errors.push(
 {
@@ -4416,12 +4827,13 @@ schemaPath: '#/properties/router/properties/sundayTimesAndDurations/pattern',
 keyword: 'pattern',
 params: {
 pattern: '^([0-9]{2}:[0-9]{2})\\|([0-9]+)$'},
- message: "Must_be_a_valid_time_and_duration"}
+ message: "Must_be_a_valid_time_and_duration"
+}
 );
 } else {
 if (
-!formats98(
-data93
+!formats100(
+data99
 )
 ) {errors.push(
 {
@@ -4430,7 +4842,8 @@ schemaPath: '#/properties/router/properties/sundayTimesAndDurations/format',
 keyword: 'format',
 params: {
 format: 'regex'},
- message: "Must_be_a_valid_time_and_duration"}
+ message: "Must_be_a_valid_time_and_duration"
+}
 );
 }
 }
@@ -4447,24 +4860,28 @@ message: 'must be string'
 }
 }
 }
-var valid7 = _errs187 === errors
+var valid7 = _errs199 === errors
 } else {
 var valid7 = true
 }
 if (valid7) {
 if (
-data82.version !== undefined
+data88.version !== undefined
 ) {
-let data94 = data82.version
-const _errs189 = errors
+let data100 = data88.version
+const _errs201 = errors
 if (
 !(
-typeof data94 == 'number' &&
-!(data94 % 1) &&
-!isNaN(
-data94
+typeof data100 == 'number' &&
+!(
+data100 % 1
 ) &&
-isFinite(data94)
+!isNaN(
+data100
+) &&
+isFinite(
+data100
+)
 )
 ) {errors.push(
 {
@@ -4473,19 +4890,22 @@ schemaPath: '#/properties/router/properties/version/type',
 keyword: 'type',
 params: {
 type: 'integer'},
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 );
 }
 if (
-errors === _errs189
+errors === _errs201
 ) {
 if (
-typeof data94 == 'number' &&
-isFinite(data94)
+typeof data100 == 'number' &&
+isFinite(
+data100
+)
 ) {
 if (
-data94 < 0 ||
-isNaN(data94)
+data100 < 0 ||
+isNaN(data100)
 ) {errors.push(
 {
 instancePath: instancePath + '/router/version',
@@ -4495,27 +4915,28 @@ params: {
 comparison: '>=',
 limit: 0
 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 );
 }
 }
 }
-var valid7 = _errs189 ===
+var valid7 = _errs201 ===
 errors
 } else {
 var valid7 = true
 }
 if (valid7) {
 if (
-data82.lastModified !== undefined
+data88.lastModified !== undefined
 ) {
-let data95 = data82.lastModified
-const _errs191 = errors
+let data101 = data88.lastModified
+const _errs203 = errors
 if (
 !(
-typeof data95 == 'number' &&
+typeof data101 == 'number' &&
 isFinite(
-data95
+data101
 )
 )
 ) {errors.push(
@@ -4525,21 +4946,22 @@ schemaPath: '#/properties/router/properties/lastModified/type',
 keyword: 'type',
 params: {
 type: 'number'},
- message: "Must_be_a_number"}
+ message: "Must_be_a_number"
+}
 );
 }
-var valid7 = _errs191 ===
+var valid7 = _errs203 ===
 errors
 } else {
 var valid7 = true
 }
 if (valid7) {
 if (
-data82.touched !== undefined
+data88.touched !== undefined
 ) {
-const _errs193 = errors
+const _errs205 = errors
 if (
-typeof data82.touched !== 'boolean'
+typeof data88.touched !== 'boolean'
 ) {errors.push(
 {
 instancePath: instancePath + '/router/touched',
@@ -4547,32 +4969,33 @@ schemaPath: '#/properties/router/properties/touched/type',
 keyword: 'type',
 params: {
 type: 'boolean'},
- message: "Must_be_a_boolean"}
+ message: "Must_be_a_boolean"
+}
 );
 }
-var valid7 = _errs193 ===
+var valid7 = _errs205 ===
 errors
 } else {
 var valid7 = true
 }
 if (valid7) {
 if (
-data82.status !== undefined
+data88.status !== undefined
 ) {
-let data97 = data82.status
-const _errs195 = errors
+let data103 = data88.status
+const _errs207 = errors
 if (
 !(
-typeof data97 == 'number' &&
+typeof data103 == 'number' &&
 !(
-data97 %
+data103 %
 1
 ) &&
 !isNaN(
-data97
+data103
 ) &&
 isFinite(
-data97
+data103
 )
 )
 ) {errors.push(
@@ -4582,23 +5005,24 @@ schemaPath: '#/properties/router/properties/status/type',
 keyword: 'type',
 params: {
 type: 'integer'},
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 );
 }
 if (
-errors === _errs195
+errors === _errs207
 ) {
 if (
-typeof data97 == 'number' &&
+typeof data103 == 'number' &&
 isFinite(
-data97
+data103
 )
 ) {
 if (
-data97 >
+data103 >
 2 ||
 isNaN(
-data97
+data103
 )
 ) {errors.push(
 {
@@ -4609,12 +5033,13 @@ params: {
 comparison: '<=',
 limit: 2
 },
- message: "Must_be_less_than_or_equal_to_maximum"}
+ message: "Must_be_less_than_or_equal_to_maximum"
+}
 );
 }
 }
 }
-var valid7 = _errs195 ===
+var valid7 = _errs207 ===
 errors
 } else {
 var valid7 = true
@@ -4645,7 +5070,7 @@ message: 'must be object'
 );
 }
 }
-var valid0 = _errs165 === errors
+var valid0 = _errs177 === errors
 } else {
 var valid0 = true
 }
@@ -4653,27 +5078,27 @@ if (valid0) {
 if (
 data.followerDatabaseCompletion !== undefined
 ) {
-let data98 = data.followerDatabaseCompletion
-const _errs197 = errors
+let data104 = data.followerDatabaseCompletion
+const _errs209 = errors
 if (true) {
 if (
-data98 &&
-typeof data98 == 'object' &&
-!Array.isArray(data98)
+data104 &&
+typeof data104 == 'object' &&
+!Array.isArray(data104)
 ) {
 let missing8
 if (
-(data98.id === undefined &&
+(data104.id === undefined &&
 (missing8 = 'id')) ||
-(data98.followerRequestId === undefined &&
+(data104.followerRequestId === undefined &&
 (missing8 = 'followerRequestId')) ||
-(data98.itemId === undefined &&
+(data104.itemId === undefined &&
 (missing8 = 'itemId')) ||
-(data98.parentItemId === undefined &&
+(data104.parentItemId === undefined &&
 (missing8 = 'parentItemId')) ||
-(data98.itemLevel === undefined &&
+(data104.itemLevel === undefined &&
 (missing8 = 'itemLevel')) ||
-(data98.lastModified === undefined &&
+(data104.lastModified === undefined &&
 (missing8 = 'lastModified'))
 ) {errors.push(
 {
@@ -4687,19 +5112,20 @@ missing8 +
 }
 );
 } else {
-if (data98.id !== undefined) {
-let data99 = data98.id
-const _errs199 = errors
+if (data104.id !== undefined) {
+let data105 = data104.id
+const _errs211 = errors
 if (true) {
 if (true) {
-if (typeof data99 === 'string') {
-if (!formats2.test(data99)) {errors.push(
+if (typeof data105 === 'string') {
+if (!formats2.test(data105)) {errors.push(
 {
 instancePath: instancePath + '/followerDatabaseCompletion/id',
 schemaPath: '#/properties/followerDatabaseCompletion/properties/id/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 );
 }
 } else {errors.push(
@@ -4714,27 +5140,28 @@ message: 'must be string'
 }
 }
 }
-var valid8 = _errs199 === errors
+var valid8 = _errs211 === errors
 } else {
 var valid8 = true
 }
 if (valid8) {
 if (
-data98.followerRequestId !== undefined
+data104.followerRequestId !== undefined
 ) {
-let data100 = data98.followerRequestId
-const _errs201 = errors
+let data106 = data104.followerRequestId
+const _errs213 = errors
 if (true) {
 if (true) {
-if (typeof data100 === 'string') {
-if (!formats2.test(data100)) {errors.push(
+if (typeof data106 === 'string') {
+if (!formats2.test(data106)) {errors.push(
 {
 instancePath: instancePath + '/followerDatabaseCompletion/followerRequestId',
 schemaPath: '#/properties/followerDatabaseCompletion/properties/followerRequestId/format',
 keyword: 'format',
 params: {
 format: 'uuid'},
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 );
 }
 } else {errors.push(
@@ -4749,27 +5176,28 @@ message: 'must be string'
 }
 }
 }
-var valid8 = _errs201 === errors
+var valid8 = _errs213 === errors
 } else {
 var valid8 = true
 }
 if (valid8) {
-if (data98.itemId !== undefined) {
-let data101 = data98.itemId
-const _errs203 = errors
+if (data104.itemId !== undefined) {
+let data107 = data104.itemId
+const _errs215 = errors
 if (true) {
 if (true) {
 if (
-typeof data101 === 'string'
+typeof data107 === 'string'
 ) {
-if (!formats2.test(data101)) {errors.push(
+if (!formats2.test(data107)) {errors.push(
 {
 instancePath: instancePath + '/followerDatabaseCompletion/itemId',
 schemaPath: '#/properties/followerDatabaseCompletion/properties/itemId/format',
 keyword: 'format',
 params: {
 format: 'uuid'},
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 );
 }
 } else {errors.push(
@@ -4785,23 +5213,23 @@ message: 'must be string'
 }
 }
 }
-var valid8 = _errs203 === errors
+var valid8 = _errs215 === errors
 } else {
 var valid8 = true
 }
 if (valid8) {
 if (
-data98.parentItemId !== undefined
+data104.parentItemId !== undefined
 ) {
-let data102 = data98.parentItemId
-const _errs205 = errors
+let data108 = data104.parentItemId
+const _errs217 = errors
 if (true) {
 if (true) {
 if (
-typeof data102 === 'string'
+typeof data108 === 'string'
 ) {
 if (
-!formats2.test(data102)
+!formats2.test(data108)
 ) {errors.push(
 {
 instancePath: instancePath + '/followerDatabaseCompletion/parentItemId',
@@ -4809,7 +5237,8 @@ schemaPath: '#/properties/followerDatabaseCompletion/properties/parentItemId/for
 keyword: 'format',
 params: {
 format: 'uuid'},
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 );
 }
 } else {errors.push(
@@ -4825,22 +5254,22 @@ message: 'must be string'
 }
 }
 }
-var valid8 = _errs205 === errors
+var valid8 = _errs217 === errors
 } else {
 var valid8 = true
 }
 if (valid8) {
 if (
-data98.itemLevel !== undefined
+data104.itemLevel !== undefined
 ) {
-let data103 = data98.itemLevel
-const _errs207 = errors
+let data109 = data104.itemLevel
+const _errs219 = errors
 if (
 !(
-typeof data103 == 'number' &&
-!(data103 % 1) &&
-!isNaN(data103) &&
-isFinite(data103)
+typeof data109 == 'number' &&
+!(data109 % 1) &&
+!isNaN(data109) &&
+isFinite(data109)
 )
 ) {errors.push(
 {
@@ -4849,17 +5278,18 @@ schemaPath: '#/properties/followerDatabaseCompletion/properties/itemLevel/type',
 keyword: 'type',
 params: {
 type: 'integer'},
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 );
 }
 if (true) {
 if (
-typeof data103 == 'number' &&
-isFinite(data103)
+typeof data109 == 'number' &&
+isFinite(data109)
 ) {
 if (
-data103 > 9 ||
-isNaN(data103)
+data109 > 9 ||
+isNaN(data109)
 ) {errors.push(
 {
 instancePath: instancePath + '/followerDatabaseCompletion/itemLevel',
@@ -4869,12 +5299,13 @@ params: {
 comparison: '<=',
 limit: 9
 },
- message: "Must_be_less_than_or_equal_to_maximum"}
+ message: "Must_be_less_than_or_equal_to_maximum"
+}
 );
 } else {
 if (
-data103 < 0 ||
-isNaN(data103)
+data109 < 0 ||
+isNaN(data109)
 ) {errors.push(
 {
 instancePath: instancePath + '/followerDatabaseCompletion/itemLevel',
@@ -4884,26 +5315,27 @@ params: {
 comparison: '>=',
 limit: 0
 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 );
 }
 }
 }
 }
-var valid8 = _errs207 === errors
+var valid8 = _errs219 === errors
 } else {
 var valid8 = true
 }
 if (valid8) {
 if (
-data98.lastModified !== undefined
+data104.lastModified !== undefined
 ) {
-let data104 = data98.lastModified
-const _errs209 = errors
+let data110 = data104.lastModified
+const _errs221 = errors
 if (
 !(
-typeof data104 == 'number' &&
-isFinite(data104)
+typeof data110 == 'number' &&
+isFinite(data110)
 )
 ) {errors.push(
 {
@@ -4912,10 +5344,11 @@ schemaPath: '#/properties/followerDatabaseCompletion/properties/lastModified/typ
 keyword: 'type',
 params: {
 type: 'number'},
- message: "Must_be_a_number"}
+ message: "Must_be_a_number"
+}
 );
 }
-var valid8 = _errs209 === errors
+var valid8 = _errs221 === errors
 } else {
 var valid8 = true
 }
@@ -4936,31 +5369,31 @@ message: 'must be object'
 );
 }
 }
-var valid0 = _errs197 === errors
+var valid0 = _errs209 === errors
 } else {
 var valid0 = true
 }
 if (valid0) {
 if (data.media !== undefined) {
-let data105 = data.media
-const _errs211 = errors
+let data111 = data.media
+const _errs223 = errors
 if (true) {
 if (
-data105 &&
-typeof data105 == 'object' &&
-!Array.isArray(data105)
+data111 &&
+typeof data111 == 'object' &&
+!Array.isArray(data111)
 ) {
 let missing9
 if (
-(data105.id === undefined &&
+(data111.id === undefined &&
 (missing9 = 'id')) ||
-(data105.size === undefined &&
+(data111.size === undefined &&
 (missing9 = 'size')) ||
-(data105.data === undefined &&
+(data111.data === undefined &&
 (missing9 = 'data')) ||
-(data105.appId === undefined &&
+(data111.appId === undefined &&
 (missing9 = 'appId')) ||
-(data105.touched === undefined &&
+(data111.touched === undefined &&
 (missing9 = 'touched'))
 ) {errors.push(
 {
@@ -4976,20 +5409,21 @@ missing9 +
 }
 );
 } else {
-if (data105.id !== undefined) {
-let data106 = data105.id
-const _errs213 = errors
+if (data111.id !== undefined) {
+let data112 = data111.id
+const _errs225 = errors
 if (true) {
 if (true) {
-if (typeof data106 === 'string') {
-if (!formats2.test(data106)) {errors.push(
+if (typeof data112 === 'string') {
+if (!formats2.test(data112)) {errors.push(
 {
 instancePath: instancePath + '/media/id',
 schemaPath: '#/properties/media/properties/id/format',
 keyword: 'format',
 params: {
 format: 'uuid'},
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 );
 }
 } else {errors.push(
@@ -5004,20 +5438,20 @@ message: 'must be string'
 }
 }
 }
-var valid9 = _errs213 === errors
+var valid9 = _errs225 === errors
 } else {
 var valid9 = true
 }
 if (valid9) {
-if (data105.size !== undefined) {
-let data107 = data105.size
-const _errs215 = errors
+if (data111.size !== undefined) {
+let data113 = data111.size
+const _errs227 = errors
 if (
 !(
-typeof data107 == 'number' &&
-!(data107 % 1) &&
-!isNaN(data107) &&
-isFinite(data107)
+typeof data113 == 'number' &&
+!(data113 % 1) &&
+!isNaN(data113) &&
+isFinite(data113)
 )
 ) {errors.push(
 {
@@ -5025,17 +5459,18 @@ instancePath: instancePath + '/media/size',
 schemaPath: '#/properties/media/properties/size/type',
 keyword: 'type',
 params: { type: 'integer' },
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 );
 }
 if (true) {
 if (
-typeof data107 == 'number' &&
-isFinite(data107)
+typeof data113 == 'number' &&
+isFinite(data113)
 ) {
 if (
-data107 < 0 ||
-isNaN(data107)
+data113 < 0 ||
+isNaN(data113)
 ) {errors.push(
 {
 instancePath: instancePath + '/media/size',
@@ -5045,30 +5480,32 @@ params: {
 comparison: '>=',
 limit: 0
 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 );
 }
 }
 }
-var valid9 = _errs215 === errors
+var valid9 = _errs227 === errors
 } else {
 var valid9 = true
 }
 if (valid9) {
-if (data105.data !== undefined) {
-let data108 = data105.data
-const _errs217 = errors
+if (data111.data !== undefined) {
+let data114 = data111.data
+const _errs229 = errors
 if (true) {
 if (
-typeof data108 === 'string'
+typeof data114 === 'string'
 ) {
-if (func4(data108) > 8000) {errors.push(
+if (func4(data114) > 8000) {errors.push(
 {
 instancePath: instancePath + '/media/data',
 schemaPath: '#/properties/media/properties/data/maxLength',
 keyword: 'maxLength',
 params: { limit: 8000 },
- message: "Must_be_less_than_8000_characters"}
+ message: "Must_be_less_than_8000_characters"
+}
 );
 }
 } else {errors.push(
@@ -5083,21 +5520,21 @@ message: 'must be string'
 );
 }
 }
-var valid9 = _errs217 === errors
+var valid9 = _errs229 === errors
 } else {
 var valid9 = true
 }
 if (valid9) {
-if (data105.appId !== undefined) {
-let data109 = data105.appId
-const _errs219 = errors
+if (data111.appId !== undefined) {
+let data115 = data111.appId
+const _errs231 = errors
 if (true) {
 if (true) {
 if (
-typeof data109 === 'string'
+typeof data115 === 'string'
 ) {
 if (
-!formats2.test(data109)
+!formats2.test(data115)
 ) {errors.push(
 {
 instancePath: instancePath + '/media/appId',
@@ -5105,7 +5542,8 @@ schemaPath: '#/properties/media/properties/appId/format',
 keyword: 'format',
 params: {
 format: 'uuid'},
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 );
 }
 } else {errors.push(
@@ -5121,17 +5559,17 @@ message: 'must be string'
 }
 }
 }
-var valid9 = _errs219 === errors
+var valid9 = _errs231 === errors
 } else {
 var valid9 = true
 }
 if (valid9) {
 if (
-data105.touched !== undefined
+data111.touched !== undefined
 ) {
-const _errs221 = errors
+const _errs233 = errors
 if (
-typeof data105.touched !== 'boolean'
+typeof data111.touched !== 'boolean'
 ) {errors.push(
 {
 instancePath: instancePath + '/media/touched',
@@ -5139,10 +5577,11 @@ schemaPath: '#/properties/media/properties/touched/type',
 keyword: 'type',
 params: {
 type: 'boolean'},
- message: "Must_be_a_boolean"}
+ message: "Must_be_a_boolean"
+}
 );
 }
-var valid9 = _errs221 === errors
+var valid9 = _errs233 === errors
 } else {
 var valid9 = true
 }
@@ -5162,7 +5601,7 @@ message: 'must be object'
 );
 }
 }
-var valid0 = _errs211 === errors
+var valid0 = _errs223 === errors
 } else {
 var valid0 = true
 }

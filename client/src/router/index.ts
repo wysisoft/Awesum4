@@ -19,7 +19,7 @@ import DatabaseCompletionsView from "@/views/DatabaseCompletionsView.vue";
 import ErrorView from "../views/ErrorView.vue";
 import LeadersAndFollowersView from "@/views/LeadersAndFollowersView.vue";
 import DatabaseView from "@/views/DatabaseView.vue";
-import RouterView from "@/views/RouterView.vue";
+//import RouterView from "@/views/RouterView.vue";
 import DatabaseSettingsView from "@/views/DatabaseSettingsView.vue";
 import LeaderView from "@/views/LeaderView.vue";
 import RefreshView from "@/views/RefreshView.vue";

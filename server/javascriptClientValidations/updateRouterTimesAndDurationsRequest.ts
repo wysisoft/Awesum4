@@ -1,5 +1,5 @@
 'use strict'
-const schema41 = {
+const schema43 = {
 $id: 'updateRouterTimesAndDurationsRequest',
 type: 'object',
 properties: {
@@ -56,7 +56,7 @@ required: [
 }
 const formats2 = /^(?:urn:uuid:)?[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/i
 import * as formats from 'ajv-formats/dist/formats'
-const formats98 = formats.fullFormats.regex as any
+const formats100 = formats.fullFormats.regex as any
 const pattern2 = new RegExp('^([0-9]{2}:[0-9]{2})\\|([0-9]+)$', 'u')
 import type { ErrorObject } from 'ajv'
 import * as serverAndClientFunctions from '../serverAndClientFunctions'
@@ -73,7 +73,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'type' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err0]
 } else {
@@ -87,7 +88,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'routerId' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err1]
 } else {
@@ -101,7 +103,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'mondayTimesAndDurations' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err2]
 } else {
@@ -115,7 +118,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'tuesdayTimesAndDurations' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err3]
 } else {
@@ -129,7 +133,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'wednesdayTimesAndDurations' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err4]
 } else {
@@ -143,7 +148,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'thursdayTimesAndDurations' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err5]
 } else {
@@ -157,7 +163,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'fridayTimesAndDurations' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err6]
 } else {
@@ -171,7 +178,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'saturdayTimesAndDurations' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err7]
 } else {
@@ -185,7 +193,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'sundayTimesAndDurations' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err8]
 } else {
@@ -235,7 +244,8 @@ instancePath: instancePath + '/routerId',
 schemaPath: '#/properties/routerId/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 if (vErrors === null) {
 vErrors = [err11]
 } else {
@@ -268,7 +278,8 @@ instancePath: instancePath + '/mondayTimesAndDurations',
 schemaPath: '#/properties/mondayTimesAndDurations/pattern',
 keyword: 'pattern',
 params: { pattern: '^([0-9]{2}:[0-9]{2})\\|([0-9]+)$' },
- message: "Must_be_a_valid_time_and_duration"}
+ message: "Must_be_a_valid_time_and_duration"
+}
 if (vErrors === null) {
 vErrors = [err13]
 } else {
@@ -276,13 +287,14 @@ vErrors.push(err13)
 }
 
 }
-if (!formats98(data2)) {
+if (!formats100(data2)) {
 const err14 = {
 instancePath: instancePath + '/mondayTimesAndDurations',
 schemaPath: '#/properties/mondayTimesAndDurations/format',
 keyword: 'format',
 params: { format: 'regex' },
- message: "Must_be_a_valid_time_and_duration"}
+ message: "Must_be_a_valid_time_and_duration"
+}
 if (vErrors === null) {
 vErrors = [err14]
 } else {
@@ -315,7 +327,8 @@ instancePath: instancePath + '/tuesdayTimesAndDurations',
 schemaPath: '#/properties/tuesdayTimesAndDurations/pattern',
 keyword: 'pattern',
 params: { pattern: '^([0-9]{2}:[0-9]{2})\\|([0-9]+)$' },
- message: "Must_be_a_valid_time_and_duration"}
+ message: "Must_be_a_valid_time_and_duration"
+}
 if (vErrors === null) {
 vErrors = [err16]
 } else {
@@ -323,13 +336,14 @@ vErrors.push(err16)
 }
 
 }
-if (!formats98(data3)) {
+if (!formats100(data3)) {
 const err17 = {
 instancePath: instancePath + '/tuesdayTimesAndDurations',
 schemaPath: '#/properties/tuesdayTimesAndDurations/format',
 keyword: 'format',
 params: { format: 'regex' },
- message: "Must_be_a_valid_time_and_duration"}
+ message: "Must_be_a_valid_time_and_duration"
+}
 if (vErrors === null) {
 vErrors = [err17]
 } else {
@@ -362,7 +376,8 @@ instancePath: instancePath + '/wednesdayTimesAndDurations',
 schemaPath: '#/properties/wednesdayTimesAndDurations/pattern',
 keyword: 'pattern',
 params: { pattern: '^([0-9]{2}:[0-9]{2})\\|([0-9]+)$' },
- message: "Must_be_a_valid_time_and_duration"}
+ message: "Must_be_a_valid_time_and_duration"
+}
 if (vErrors === null) {
 vErrors = [err19]
 } else {
@@ -370,13 +385,14 @@ vErrors.push(err19)
 }
 
 }
-if (!formats98(data4)) {
+if (!formats100(data4)) {
 const err20 = {
 instancePath: instancePath + '/wednesdayTimesAndDurations',
 schemaPath: '#/properties/wednesdayTimesAndDurations/format',
 keyword: 'format',
 params: { format: 'regex' },
- message: "Must_be_a_valid_time_and_duration"}
+ message: "Must_be_a_valid_time_and_duration"
+}
 if (vErrors === null) {
 vErrors = [err20]
 } else {
@@ -409,7 +425,8 @@ instancePath: instancePath + '/thursdayTimesAndDurations',
 schemaPath: '#/properties/thursdayTimesAndDurations/pattern',
 keyword: 'pattern',
 params: { pattern: '^([0-9]{2}:[0-9]{2})\\|([0-9]+)$' },
- message: "Must_be_a_valid_time_and_duration"}
+ message: "Must_be_a_valid_time_and_duration"
+}
 if (vErrors === null) {
 vErrors = [err22]
 } else {
@@ -417,13 +434,14 @@ vErrors.push(err22)
 }
 
 }
-if (!formats98(data5)) {
+if (!formats100(data5)) {
 const err23 = {
 instancePath: instancePath + '/thursdayTimesAndDurations',
 schemaPath: '#/properties/thursdayTimesAndDurations/format',
 keyword: 'format',
 params: { format: 'regex' },
- message: "Must_be_a_valid_time_and_duration"}
+ message: "Must_be_a_valid_time_and_duration"
+}
 if (vErrors === null) {
 vErrors = [err23]
 } else {
@@ -456,7 +474,8 @@ instancePath: instancePath + '/fridayTimesAndDurations',
 schemaPath: '#/properties/fridayTimesAndDurations/pattern',
 keyword: 'pattern',
 params: { pattern: '^([0-9]{2}:[0-9]{2})\\|([0-9]+)$' },
- message: "Must_be_a_valid_time_and_duration"}
+ message: "Must_be_a_valid_time_and_duration"
+}
 if (vErrors === null) {
 vErrors = [err25]
 } else {
@@ -464,13 +483,14 @@ vErrors.push(err25)
 }
 
 }
-if (!formats98(data6)) {
+if (!formats100(data6)) {
 const err26 = {
 instancePath: instancePath + '/fridayTimesAndDurations',
 schemaPath: '#/properties/fridayTimesAndDurations/format',
 keyword: 'format',
 params: { format: 'regex' },
- message: "Must_be_a_valid_time_and_duration"}
+ message: "Must_be_a_valid_time_and_duration"
+}
 if (vErrors === null) {
 vErrors = [err26]
 } else {
@@ -503,7 +523,8 @@ instancePath: instancePath + '/saturdayTimesAndDurations',
 schemaPath: '#/properties/saturdayTimesAndDurations/pattern',
 keyword: 'pattern',
 params: { pattern: '^([0-9]{2}:[0-9]{2})\\|([0-9]+)$' },
- message: "Must_be_a_valid_time_and_duration"}
+ message: "Must_be_a_valid_time_and_duration"
+}
 if (vErrors === null) {
 vErrors = [err28]
 } else {
@@ -511,13 +532,14 @@ vErrors.push(err28)
 }
 
 }
-if (!formats98(data7)) {
+if (!formats100(data7)) {
 const err29 = {
 instancePath: instancePath + '/saturdayTimesAndDurations',
 schemaPath: '#/properties/saturdayTimesAndDurations/format',
 keyword: 'format',
 params: { format: 'regex' },
- message: "Must_be_a_valid_time_and_duration"}
+ message: "Must_be_a_valid_time_and_duration"
+}
 if (vErrors === null) {
 vErrors = [err29]
 } else {
@@ -550,7 +572,8 @@ instancePath: instancePath + '/sundayTimesAndDurations',
 schemaPath: '#/properties/sundayTimesAndDurations/pattern',
 keyword: 'pattern',
 params: { pattern: '^([0-9]{2}:[0-9]{2})\\|([0-9]+)$' },
- message: "Must_be_a_valid_time_and_duration"}
+ message: "Must_be_a_valid_time_and_duration"
+}
 if (vErrors === null) {
 vErrors = [err31]
 } else {
@@ -558,13 +581,14 @@ vErrors.push(err31)
 }
 
 }
-if (!formats98(data8)) {
+if (!formats100(data8)) {
 const err32 = {
 instancePath: instancePath + '/sundayTimesAndDurations',
 schemaPath: '#/properties/sundayTimesAndDurations/format',
 keyword: 'format',
 params: { format: 'regex' },
- message: "Must_be_a_valid_time_and_duration"}
+ message: "Must_be_a_valid_time_and_duration"
+}
 if (vErrors === null) {
 vErrors = [err32]
 } else {

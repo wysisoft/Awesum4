@@ -24,7 +24,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'id' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err0]
 } else {
@@ -38,7 +39,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'level' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err1]
 } else {
@@ -55,7 +57,8 @@ instancePath: instancePath + '/id',
 schemaPath: '#/properties/id/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 if (vErrors === null) {
 vErrors = [err2]
 } else {
@@ -94,7 +97,8 @@ instancePath: instancePath + '/level',
 schemaPath: '#/properties/level/type',
 keyword: 'type',
 params: { type: 'integer' },
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 if (vErrors === null) {
 vErrors = [err4]
 } else {
@@ -109,7 +113,8 @@ instancePath: instancePath + '/level',
 schemaPath: '#/properties/level/maximum',
 keyword: 'maximum',
 params: { comparison: '<=', limit: 9 },
- message: "Must_be_less_than_or_equal_to_maximum"}
+ message: "Must_be_less_than_or_equal_to_maximum"
+}
 if (vErrors === null) {
 vErrors = [err5]
 } else {
@@ -123,7 +128,8 @@ instancePath: instancePath + '/level',
 schemaPath: '#/properties/level/minimum',
 keyword: 'minimum',
 params: { comparison: '>=', limit: 0 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 if (vErrors === null) {
 vErrors = [err6]
 } else {

@@ -1,6 +1,6 @@
-
+import { createClient } from "redis";
 import { types } from "./typebox";
-import {execSync}  from "child_process";
+import { execSync } from "child_process";
 import {
   InputData,
   JSONSchemaInput,
@@ -128,8 +128,7 @@ function generateClientClasses(typeObject: TSchema, id: string) {
     var columns: string[] = [];
     for (const [key, field] of Object.entries(typeObject.properties)) {
       if (
-        key == "id" || key == "version" || key == "lastModified" || id == "media" || 
-        (id == "followerDatabaseCompletion" )
+        key == "id" || key == "version" || key == "lastModified" || key == "touched" 
       ) {
         clientClass += `
     private _${key}: ${getJavascriptType(field as TSchema)} = ${getJavascriptDefaultValue(field as TSchema)
@@ -137,7 +136,7 @@ function generateClientClasses(typeObject: TSchema, id: string) {
     public get ${key}():${getJavascriptType(field as TSchema)
           } { return this._${key}; }
     public set ${key}(v:${getJavascriptType(field as TSchema)
-          }) {if(this._${key} != v){this._${key}=v;awesum.setTablePropertyValueById(this.id, '${key}',v,this.table)}}`;;
+          }) {if(this._${key} != v){this._${key}=v;}}`;;
       } else {
         clientClass += `
     private _${key}: ${getJavascriptType(field as TSchema)} = ${getJavascriptDefaultValue(field as TSchema)
@@ -523,10 +522,10 @@ types.forEach((type) => {
       for (const message in messages) {
         formattedCode = formattedCode.replace(
           new RegExp(
-            "schemaPath: '#" + message + "',(...+?)message:...+?}",
+            "schemaPath: '#" + message + "',(...+?)message:...+?\n}",
             "isg",
           ),
-          `schemaPath: '#${message}',$1 message: "${messages[message]}"}`,
+          `schemaPath: '#${message}',$1 message: "${messages[message]}"\n}`,
         );
       }
 
@@ -636,17 +635,17 @@ types.forEach((type) => {
         /const (func[\d]*) = require\('ajv\/dist\/runtime\/ucs2length'\).default/g,
         "import ucs2length from 'ajv/dist/runtime/ucs2length';const $1 = (ucs2length as any).default;",
       );
-      
 
-formattedCode = formattedCode.replace(
-  "const func2 = require('ajv-keywords/dist/definitions/transform').transform",
-  "const func2 = (await import('ajv-keywords/dist/definitions/transform')).default.transform",
-);
 
-formattedCode = formattedCode.replace(
-  "const func3 = require('ajv-keywords/dist/definitions/transform').transform",
-  "const func3 = (await import('ajv-keywords/dist/definitions/transform')).default.transform",
-);
+      formattedCode = formattedCode.replace(
+        "const func2 = require('ajv-keywords/dist/definitions/transform').transform",
+        "const func2 = (await import('ajv-keywords/dist/definitions/transform')).default.transform",
+      );
+
+      formattedCode = formattedCode.replace(
+        "const func3 = require('ajv-keywords/dist/definitions/transform').transform",
+        "const func3 = (await import('ajv-keywords/dist/definitions/transform')).default.transform",
+      );
 
       //AwesumDotCustomValidation needs to be replaced with await Awesum.CustomValidation
       formattedCode = formattedCode.replace(
@@ -723,10 +722,10 @@ formattedCode = formattedCode.replace(
       for (const message in messages) {
         formattedCode = formattedCode.replace(
           new RegExp(
-            "schemaPath: '#" + message + "',(...+?)message:...+?}",
+            "schemaPath: '#" + message + "',(...+?)message:...+?\n}",
             "isg",
           ),
-          `schemaPath: '#${message}',$1 message: "${messages[message]}"}`,
+          `schemaPath: '#${message}',$1 message: "${messages[message]}"\n}`,
         );
       }
 
@@ -851,3 +850,10 @@ if (process.platform === "win32") {
 }
 
 execSync(`DATABASE_URL='postgresql://postgres:This4Now!@localhost:5432/awesumDev' npx kysely-codegen --out-file ./db/db.d.ts --type-mapping='{"numeric":"number"}'`)
+
+setTimeout(async () => {
+  const pub = createClient();
+  await pub.connect();
+  await pub.flushAll();
+  await pub.destroy();
+}, 4000);

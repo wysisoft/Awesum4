@@ -5,4 +5,10 @@ export type followerDatabase = {
   lastModified: number
   touched: boolean
   version: number
+  databaseVersion: number
+  databaseLastModified: number
+  unitVersion: number
+  unitLastModified: number
+  itemVersion: number
+  itemLastModified: number
 }

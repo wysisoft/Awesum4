@@ -66,19 +66,19 @@
     public set appId(v:string) {if(this._appId != v){this.version++;this.lastModified=new Date().getTime();this._appId=v;awesum.setTablePropertyValueById(this.id, 'appId',v,this.table)}}
     private _lastModified: number = 0;
     public get lastModified():number { return this._lastModified; }
-    public set lastModified(v:number) {if(this._lastModified != v){this._lastModified=v;awesum.setTablePropertyValueById(this.id, 'lastModified',v,this.table)}}
+    public set lastModified(v:number) {if(this._lastModified != v){this._lastModified=v;}}
     private _touched: boolean = false;
     public get touched():boolean { return this._touched; }
-    public set touched(v:boolean) {if(this._touched != v){this.version++;this.lastModified=new Date().getTime();this._touched=v;awesum.setTablePropertyValueById(this.id, 'touched',v,this.table)}}
+    public set touched(v:boolean) {if(this._touched != v){this._touched=v;}}
     private _version: number = 0;
     public get version():number { return this._version; }
-    public set version(v:number) {if(this._version != v){this._version=v;awesum.setTablePropertyValueById(this.id, 'version',v,this.table)}}
+    public set version(v:number) {if(this._version != v){this._version=v;}}
     private _databaseId: string = "";
     public get databaseId():string { return this._databaseId; }
     public set databaseId(v:string) {if(this._databaseId != v){this.version++;this.lastModified=new Date().getTime();this._databaseId=v;awesum.setTablePropertyValueById(this.id, 'databaseId',v,this.table)}}
     private _id: string = "";
     public get id():string { return this._id; }
-    public set id(v:string) {if(this._id != v){this._id=v;awesum.setTablePropertyValueById(this.id, 'id',v,this.table)}}
+    public set id(v:string) {if(this._id != v){this._id=v;}}
     private _dataText: string = "";
     public get dataText():string { return this._dataText; }
     public set dataText(v:string) {if(this._dataText != v){this.version++;this.lastModified=new Date().getTime();this._dataText=v;awesum.setTablePropertyValueById(this.id, 'dataText',v,this.table)}}

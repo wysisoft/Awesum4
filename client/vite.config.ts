@@ -19,6 +19,11 @@ export default defineConfig({
     },
 },
   server: {
+    watch: {
+      ignored: [
+        '**/UserDataDir/**',
+      ]
+    },
     host: "localhost",
     strictPort: true,
     port: 5173,

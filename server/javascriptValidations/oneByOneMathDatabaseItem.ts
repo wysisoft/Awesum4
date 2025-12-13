@@ -1,5 +1,5 @@
 'use strict'
-const schema32 = {
+const schema34 = {
 $id: 'oneByOneMathDatabaseItem',
 type: 'object',
 properties: {
@@ -100,7 +100,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: missing0 },
- message: "Required"}
+ message: "Required"
+}
 );
 } else {
 if (data.data !== undefined) {
@@ -155,7 +156,8 @@ instancePath: instancePath + '/data/firstNumber',
 schemaPath: '#/properties/data/properties/firstNumber/type',
 keyword: 'type',
 params: { type: 'integer' },
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 );
 }
 if (true) {
@@ -166,7 +168,8 @@ instancePath: instancePath + '/data/firstNumber',
 schemaPath: '#/properties/data/properties/firstNumber/minimum',
 keyword: 'minimum',
 params: { comparison: '>=', limit: 0 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 );
 }
 }
@@ -192,7 +195,8 @@ instancePath: instancePath + '/data/secondNumber',
 schemaPath: '#/properties/data/properties/secondNumber/type',
 keyword: 'type',
 params: { type: 'integer' },
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 );
 }
 if (true) {
@@ -203,7 +207,8 @@ instancePath: instancePath + '/data/secondNumber',
 schemaPath: '#/properties/data/properties/secondNumber/minimum',
 keyword: 'minimum',
 params: { comparison: '>=', limit: 0 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 );
 }
 }
@@ -224,7 +229,8 @@ instancePath: instancePath + '/data/options',
 schemaPath: '#/properties/data/properties/options/maxLength',
 keyword: 'maxLength',
 params: { limit: 364 },
- message: "Must_be_less_than_364_characters"}
+ message: "Must_be_less_than_364_characters"
+}
 );
 }
 } else {errors.push(
@@ -255,7 +261,8 @@ instancePath: instancePath + '/data/sound',
 schemaPath: '#/properties/data/properties/sound/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 );
 }
 } else {errors.push(
@@ -291,7 +298,8 @@ instancePath: instancePath + '/data/audioType',
 schemaPath: '#/properties/data/properties/audioType/type',
 keyword: 'type',
 params: { type: 'integer' },
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 );
 }
 if (true) {
@@ -302,7 +310,8 @@ instancePath: instancePath + '/data/audioType',
 schemaPath: '#/properties/data/properties/audioType/maximum',
 keyword: 'maximum',
 params: { comparison: '<=', limit: 4 },
- message: "Must_be_less_than_or_equal_to_maximum"}
+ message: "Must_be_less_than_or_equal_to_maximum"
+}
 );
 } else {
 if (data5 < 0 || isNaN(data5)) {errors.push(
@@ -311,7 +320,8 @@ instancePath: instancePath + '/data/audioType',
 schemaPath: '#/properties/data/properties/audioType/minimum',
 keyword: 'minimum',
 params: { comparison: '>=', limit: 0 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 );
 }
 }
@@ -334,7 +344,8 @@ instancePath: instancePath + '/data/successSound',
 schemaPath: '#/properties/data/properties/successSound/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 );
 }
 } else {errors.push(
@@ -370,7 +381,8 @@ instancePath: instancePath + '/data/successSoundType',
 schemaPath: '#/properties/data/properties/successSoundType/type',
 keyword: 'type',
 params: { type: 'integer' },
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 );
 }
 if (true) {
@@ -384,7 +396,8 @@ instancePath: instancePath + '/data/successSoundType',
 schemaPath: '#/properties/data/properties/successSoundType/maximum',
 keyword: 'maximum',
 params: { comparison: '<=', limit: 4 },
- message: "Must_be_less_than_or_equal_to_maximum"}
+ message: "Must_be_less_than_or_equal_to_maximum"
+}
 );
 } else {
 if (data7 < 0 || isNaN(data7)) {errors.push(
@@ -396,7 +409,8 @@ params: {
 comparison: '>=',
 limit: 0
 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 );
 }
 }
@@ -419,7 +433,8 @@ instancePath: instancePath + '/data/successImage',
 schemaPath: '#/properties/data/properties/successImage/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 );
 }
 } else {errors.push(
@@ -455,7 +470,8 @@ instancePath: instancePath + '/data/successImageType',
 schemaPath: '#/properties/data/properties/successImageType/type',
 keyword: 'type',
 params: { type: 'integer' },
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 );
 }
 if (true) {
@@ -472,7 +488,8 @@ params: {
 comparison: '<=',
 limit: 3
 },
- message: "Must_be_less_than_or_equal_to_maximum"}
+ message: "Must_be_less_than_or_equal_to_maximum"
+}
 );
 } else {
 if (data9 < 0 || isNaN(data9)) {errors.push(
@@ -484,7 +501,8 @@ params: {
 comparison: '>=',
 limit: 0
 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 );
 }
 }
@@ -506,7 +524,8 @@ instancePath: instancePath + '/data/successAnimations',
 schemaPath: '#/properties/data/properties/successAnimations/maxLength',
 keyword: 'maxLength',
 params: { limit: 100 },
- message: "Must_be_less_than_100_characters"}
+ message: "Must_be_less_than_100_characters"
+}
 );
 }
 } else {errors.push(
@@ -541,7 +560,8 @@ instancePath: instancePath + '/data/successImageTime',
 schemaPath: '#/properties/data/properties/successImageTime/type',
 keyword: 'type',
 params: { type: 'integer' },
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 );
 }
 if (true) {
@@ -558,7 +578,8 @@ params: {
 comparison: '>=',
 limit: 0
 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 );
 }
 }
@@ -610,7 +631,8 @@ instancePath: instancePath + '/itemType',
 schemaPath: '#/properties/itemType/type',
 keyword: 'type',
 params: { type: 'integer' },
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 );
 }
 if (true) {
@@ -621,7 +643,8 @@ instancePath: instancePath + '/itemType',
 schemaPath: '#/properties/itemType/maximum',
 keyword: 'maximum',
 params: { comparison: '<=', limit: 5 },
- message: "Must_be_less_than_or_equal_to_maximum"}
+ message: "Must_be_less_than_or_equal_to_maximum"
+}
 );
 } else {
 if (data12 < 0 || isNaN(data12)) {errors.push(
@@ -630,7 +653,8 @@ instancePath: instancePath + '/itemType',
 schemaPath: '#/properties/itemType/minimum',
 keyword: 'minimum',
 params: { comparison: '>=', limit: 0 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 );
 }
 }
@@ -657,7 +681,8 @@ instancePath: instancePath + '/order',
 schemaPath: '#/properties/order/type',
 keyword: 'type',
 params: { type: 'integer' },
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 );
 }
 if (true) {
@@ -668,7 +693,8 @@ instancePath: instancePath + '/order',
 schemaPath: '#/properties/order/minimum',
 keyword: 'minimum',
 params: { comparison: '>=', limit: 0 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 );
 }
 }
@@ -690,7 +716,8 @@ instancePath: instancePath + '/unitId',
 schemaPath: '#/properties/unitId/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 );
 }
 } else {errors.push(
@@ -722,7 +749,8 @@ instancePath: instancePath + '/appId',
 schemaPath: '#/properties/appId/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 );
 }
 } else {errors.push(
@@ -751,7 +779,8 @@ instancePath: instancePath + '/lastModified',
 schemaPath: '#/properties/lastModified/type',
 keyword: 'type',
 params: { type: 'number' },
- message: "Must_be_a_number"}
+ message: "Must_be_a_number"
+}
 );
 }
 var valid0 = _errs33 === errors
@@ -767,7 +796,8 @@ instancePath: instancePath + '/touched',
 schemaPath: '#/properties/touched/type',
 keyword: 'type',
 params: { type: 'boolean' },
- message: "Must_be_a_boolean"}
+ message: "Must_be_a_boolean"
+}
 );
 }
 var valid0 = _errs35 === errors
@@ -791,7 +821,8 @@ instancePath: instancePath + '/version',
 schemaPath: '#/properties/version/type',
 keyword: 'type',
 params: { type: 'integer' },
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 );
 }
 if (true) {
@@ -802,7 +833,8 @@ instancePath: instancePath + '/version',
 schemaPath: '#/properties/version/minimum',
 keyword: 'minimum',
 params: { comparison: '>=', limit: 0 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 );
 }
 }
@@ -824,7 +856,8 @@ instancePath: instancePath + '/databaseId',
 schemaPath: '#/properties/databaseId/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 );
 }
 } else {errors.push(
@@ -856,7 +889,8 @@ instancePath: instancePath + '/id',
 schemaPath: '#/properties/id/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 );
 }
 } else {errors.push(
@@ -887,7 +921,8 @@ instancePath: instancePath + '/dataText',
 schemaPath: '#/properties/dataText/maxLength',
 keyword: 'maxLength',
 params: { limit: 8000 },
- message: "Must_be_less_than_8000_characters"}
+ message: "Must_be_less_than_8000_characters"
+}
 );
 }
 } else {errors.push(

@@ -1,5 +1,5 @@
 'use strict'
-const schema24 = {
+const schema26 = {
 $id: 'profileResponse',
 type: 'object',
 properties: {
@@ -52,7 +52,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: missing0 },
- message: "Required"}
+ message: "Required"
+}
 );
 } else {
 if (data.sub !== undefined) {

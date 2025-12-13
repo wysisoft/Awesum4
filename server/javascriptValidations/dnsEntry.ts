@@ -1,16 +1,16 @@
 'use strict'
-const schema43 = {
+const schema45 = {
 $id: 'dnsEntry',
 type: 'object',
 properties: {
 timestamp: { type: 'number' },
 domain: { type: 'string' },
 routerId: {
-default: '019ac0a9-2f8b-756d-9d9c-497ca2901a61',
+default: '019b148f-9161-730a-bb36-ccf6b598c833',
 format: 'uuid',
 type: 'string'},
 id: {
-default: '019ac0a9-2f8b-756d-9d9c-4c9520de6816',
+default: '019b148f-9161-730a-bb36-d02902868028',
 format: 'uuid',
 type: 'string'
 }
@@ -40,7 +40,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: missing0 },
- message: "Required"}
+ message: "Required"
+}
 );
 } else {
 if (data.timestamp !== undefined) {
@@ -90,7 +91,8 @@ instancePath: instancePath + '/routerId',
 schemaPath: '#/properties/routerId/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 );
 }
 } else {errors.push(
@@ -122,7 +124,8 @@ instancePath: instancePath + '/id',
 schemaPath: '#/properties/id/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 );
 }
 } else {errors.push(

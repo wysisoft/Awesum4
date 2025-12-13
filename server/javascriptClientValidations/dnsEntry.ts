@@ -1,16 +1,16 @@
 'use strict'
-const schema43 = {
+const schema45 = {
 $id: 'dnsEntry',
 type: 'object',
 properties: {
 timestamp: { type: 'number' },
 domain: { type: 'string' },
 routerId: {
-default: '019ac0a9-2f8b-756d-9d9c-497ca2901a61',
+default: '019b148f-9161-730a-bb36-ccf6b598c833',
 format: 'uuid',
 type: 'string'},
 id: {
-default: '019ac0a9-2f8b-756d-9d9c-4c9520de6816',
+default: '019b148f-9161-730a-bb36-d02902868028',
 format: 'uuid',
 type: 'string'
 }
@@ -33,7 +33,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'timestamp' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err0]
 } else {
@@ -47,7 +48,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'domain' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err1]
 } else {
@@ -61,7 +63,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'routerId' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err2]
 } else {
@@ -75,7 +78,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'id' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err3]
 } else {
@@ -127,7 +131,8 @@ instancePath: instancePath + '/routerId',
 schemaPath: '#/properties/routerId/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 if (vErrors === null) {
 vErrors = [err6]
 } else {
@@ -160,7 +165,8 @@ instancePath: instancePath + '/id',
 schemaPath: '#/properties/id/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 if (vErrors === null) {
 vErrors = [err8]
 } else {

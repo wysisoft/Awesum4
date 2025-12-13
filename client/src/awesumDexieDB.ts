@@ -1,4 +1,4 @@
-import Dexie, { type Table } from "dexie";
+import Dexie, { type Table, type Transaction } from "dexie";
 import { awesum } from "./awesum";
 import type { ServerAppInterface } from "../../server/serverInterfaces/ServerAppInterface";
 import { I18nGlobal } from "./i18nGlobal";
@@ -17,17 +17,20 @@ import { ClientDatabaseUnit } from "./clientClasses/DatabaseUnit";
 import { ClientFollowerDatabase } from "./clientClasses/FollowerDatabase";
 import type { ServerRouterInterface } from "../../server/serverInterfaces/ServerRouterInterface";
 import { ClientRouter } from "./clientClasses/Router";
-import { followerRequestStatus, itemType, successVideoType, imageType, audioType } from "../../server/typebox";
+import { followerRequestStatus, itemType, successVideoType, imageType, audioType, ItemLevel } from "../../server/typebox";
 import { constants } from "../../server/constants";
 import { v7 as uuid } from 'uuid';
 import type { ServerSpellingDatabaseItemInterface } from "../../server/serverInterfaces/ServerSpellingDatabaseItemInterface";
 import type { ServerSpellingDatabaseItemDataInterface } from "../../server/serverInterfaces/ServerSpellingDatabaseItemDataInterface";
 import type { ServerDeletionInterface } from "../../server/serverInterfaces/ServerDeletionInterface";
 import type { ServerInternalInterface } from "../../server/serverInterfaces/ServerInternalInterface";
+import type { ServerAdditionInterface } from "../../server/serverInterfaces/ServerAdditionInterface";
+import { ClientFollowerRequest } from "./clientClasses/FollowerRequest";
 export class AwesumDexieDB extends Dexie {
 
     internal!: Table<ServerInternalInterface, string>;
     deletions!: Table<ServerDeletionInterface, string>;
+    additions!: Table<ServerAdditionInterface, string>;
     serverApps!: Table<ServerAppInterface, string>;
     serverDatabases!: Table<ServerDatabaseInterface, string>;
     serverDatabaseUnits!: Table<ServerDatabaseUnitInterface, string>;
@@ -115,7 +118,6 @@ export class AwesumDexieDB extends Dexie {
                 trans.table('serverDatabases').put({
                     id: dbId,
                     appId: awesum.publicAppId,
-
                     lastModified: new Date().getTime(),
                     version: 0,
                     size: 0,
@@ -634,13 +636,14 @@ export class AwesumDexieDB extends Dexie {
         this.version(1).stores({
             internal: "id",
             deletions: "id",
+            additions: "id",
             serverDatabases: "id,appId,touched",
             serverFollowerRequests: "id,touched,followerAppId,leaderAppId",
             serverFollowerDatabases: "id,databaseId,touched,followerRequestId",
             serverFollowerDatabaseCompletions:
-                "id,databaseId,touched,itemId,parentItemId,followerRequestId",
+                "id,databaseId,touched,itemId,parentItemId,followerRequestId,lastModified",
             serverApps: "id,email,touched",
-            serverMedia: "id,databaseId,touched,order",
+            serverMedia: "id,appId,touched,order",
             serverDatabaseItems: "id,unitId,touched,appId",
             serverDatabaseUnits: "id,databaseId,touched,appId",
             serverRouters: "id,appId",
@@ -670,9 +673,61 @@ export class AwesumDexieDB extends Dexie {
             return new ClientFollowerDatabase(obj, this.serverFollowerDatabases);
         });
 
+        this.serverFollowerRequests.hook("reading", (obj) => {
+            return new ClientFollowerRequest(obj, this.serverFollowerRequests);
+        });
+
         this.serverRouters.hook("reading", (obj) => {
             return new ClientRouter(obj, this.serverRouters);
         });
 
+
+
+        // Attach hooks for all tables:
+
+
+
+        Object.values(this.tables).forEach(table => {
+            if (table.name == "additions" || table.name == "deletions") {
+                return;
+            }
+            if (table.name.startsWith("server")) {
+                table.hook("creating", async (primKey, obj, transaction: Transaction) => {
+                    if (table.name == "serverApps" ||
+                        table.name == "serverFollowerRequests" ||
+                        primKey.startsWith("00000000-0000-0000-0000")) {
+                        return;
+                    }
+                    setTimeout(() => {
+                        var promise = this.additions.add({ id: primKey }) as unknown as Function;
+                        (promise as any).apply = () => { }
+                        awesum.dexiePromises.push(promise);
+                        awesum.updatesToSync.push(primKey);
+                    }, 0
+                    );
+                });
+                table.hook("deleting", async (primKey, obj, transaction) => {
+                    setTimeout(() => {
+                        var itemLevel = table.name == "serverDatabases" ? ItemLevel.database
+                            : table.name == "serverDatabaseUnits" ? ItemLevel.databaseUnit
+                                : table.name == "serverDatabaseItems" ? ItemLevel.databaseItem
+                                    : table.name == "serverFollowerDatabases" ? ItemLevel.followerDatabase
+                                        : table.name == "serverFollowerDatabaseCompletions" ? ItemLevel.followerDatabaseCompletion
+                                            : table.name == "serverFollowerRequests" ? ItemLevel.followerRequest
+                                                : table.name == "serverMedia" ? ItemLevel.media
+                                                    : table.name == "serverRouters" ? ItemLevel.router : 0;
+
+
+                        var promise = this.additions.delete(obj.id);
+                        (promise as any).apply = () => { }
+                        awesum.dexiePromises.push(promise as any);
+                        var promise1 = this.deletions.add({ id: obj.id, level: itemLevel });
+                        (promise1 as any).apply = () => { }
+                        awesum.dexiePromises.push(promise1 as any);
+                        awesum.updatesToSync.push(obj.id);
+                    }, 0);
+                });
+            }
+        });
     }
 }

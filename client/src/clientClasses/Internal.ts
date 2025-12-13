@@ -29,9 +29,9 @@
   
     private _id: string = "";
     public get id():string { return this._id; }
-    public set id(v:string) {if(this._id != v){this._id=v;awesum.setTablePropertyValueById(this.id, 'id',v,this.table)}}
+    public set id(v:string) {if(this._id != v){this._id=v;}}
     private _lastModified: number = 0;
     public get lastModified():number { return this._lastModified; }
-    public set lastModified(v:number) {if(this._lastModified != v){this._lastModified=v;awesum.setTablePropertyValueById(this.id, 'lastModified',v,this.table)}}
+    public set lastModified(v:number) {if(this._lastModified != v){this._lastModified=v;}}
   }
   

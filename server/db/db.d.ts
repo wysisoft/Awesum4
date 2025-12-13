@@ -3,6 +3,10 @@
  * Please do not edit it manually.
  */
 
+export interface AwesumAddition {
+  id: string;
+}
+
 export interface AwesumApp {
   authenticationType: string;
   email: string;
@@ -82,10 +86,16 @@ export interface AwesumDnsEntry {
 
 export interface AwesumFollowerDatabase {
   databaseId: string;
+  databaseLastModified: number;
+  databaseVersion: number;
   followerRequestId: string;
   id: string;
+  itemLastModified: number;
+  itemVersion: number;
   lastModified: number;
   touched: boolean;
+  unitLastModified: number;
+  unitVersion: number;
   version: number;
 }
 
@@ -128,6 +138,10 @@ export interface AwesumMedia {
   touched: boolean;
 }
 
+export interface AwesumModification {
+  id: string;
+}
+
 export interface AwesumRouter {
   appId: string;
   fridayTimesAndDurations: string;
@@ -147,6 +161,7 @@ export interface AwesumRouter {
 }
 
 export interface DB {
+  "awesum.Addition": AwesumAddition;
   "awesum.App": AwesumApp;
   "awesum.Database": AwesumDatabase;
   "awesum.DatabaseItem": AwesumDatabaseItem;
@@ -158,5 +173,6 @@ export interface DB {
   "awesum.FollowerRequest": AwesumFollowerRequest;
   "awesum.Internal": AwesumInternal;
   "awesum.Media": AwesumMedia;
+  "awesum.Modification": AwesumModification;
   "awesum.Router": AwesumRouter;
 }

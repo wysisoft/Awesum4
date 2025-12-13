@@ -1,5 +1,5 @@
 'use strict'
-const schema37 = {
+const schema39 = {
 $id: 'unfollowFollowerRequest',
 type: 'object',
 properties: { followerRequestId: { format: 'uuid', type: 'string' } },
@@ -21,7 +21,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'followerRequestId' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err0]
 } else {
@@ -38,7 +39,8 @@ instancePath: instancePath + '/followerRequestId',
 schemaPath: '#/properties/followerRequestId/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 if (vErrors === null) {
 vErrors = [err1]
 } else {

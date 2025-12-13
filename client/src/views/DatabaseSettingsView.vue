@@ -1,4 +1,6 @@
 <script lang="ts">
+import { getDefault, types } from '../../../server/typebox';
+import { Value } from '@sinclair/typebox/value';
 import { ref } from 'vue';
 import EditTextComponent from '@/components/EditTextComponent.vue';
 import * as Modal from '../components/Modal.vue';
@@ -153,27 +155,24 @@ export default {
       return this.existingAssignments;
     },
     async addUnit() {
-      var maxOrder = this.$awesum.currentDatabaseUnits.length == 0 ? 0 : this.$awesum.currentDatabaseUnits.reduce((max, databaseUnit) => Math.max(max, databaseUnit.order), 0);
+      // var defaultDatabase = getDefault(Value.Default(types.filter((x) => x.$id == "database")[0], {}) as ServerDatabaseInterface);
+      // defaultDatabase.appId = this.$awesum.ownerApp.id;
+      // //if there are no databases, set order to 0, otherwise set order to the highest order + 1
+      // defaultDatabase.order = this.$awesum.currentDatabases.length == 0 ? 0 : this.$awesum.currentDatabases.reduce((max, database) => Math.max(max, database.order), 0) + 1;
+      // defaultDatabase.name = 'Database ' + (defaultDatabase.order).toString();
+      // await this.$awesum.AwesumDexieDB.serverDatabases.add(defaultDatabase);
 
-      await this.$awesum.AwesumDexieDB.serverDatabaseUnits.add({
-        name: "Unit " + (maxOrder + 1),
-        order: maxOrder + 1,
-        lastModified: Date.now(),
-        databaseId: this.$awesum.currentDatabase.id,
-        version: 1,
-        id: uuid(),
-        appId: this.$awesum.currentApp.id,
-        successVideoType: successVideoType.YouTube,
-        successVideoUrl: awesum.defaultYouTubeVideoUrl,
-        successAnimations: '',
-        successSound: awesum.defaultSuccessSoundGuid,
-        successSoundType: audioType.WebAddress,
-        homePageImageType: imageType.WebAddress,
-        homePageImage: awesum.defaultAppBackgroundGuid,
-        router: constants.emptyGuid,
-      } as ServerDatabaseUnitInterface);
+      // await this.$awesum.refreshCurrentDatabases();
 
+      var defaultDatabaseUnit = getDefault(Value.Default(types.filter((x) => x.$id == "databaseUnit")[0], {}) as ServerDatabaseUnitInterface);
+      defaultDatabaseUnit.appId = this.$awesum.currentApp.id;
+      defaultDatabaseUnit.databaseId = this.$awesum.currentDatabase.id;
+      defaultDatabaseUnit.order = this.$awesum.currentDatabaseUnits.length == 0 ? 0 : this.$awesum.currentDatabaseUnits.reduce((max, databaseUnit) => Math.max(max, databaseUnit.order), 0) + 1;
+      defaultDatabaseUnit.name = 'Unit ' + (defaultDatabaseUnit.order).toString();
+      await this.$awesum.AwesumDexieDB.serverDatabaseUnits.add(defaultDatabaseUnit);
       await this.$awesum.refreshCurrentDatabaseUnits();
+
+
     },
   },
 };
@@ -197,7 +196,7 @@ export default {
       </h2>
       <div v-for="typ in $awesum.currentDatabaseUnits" class="listItem"
         style="margin-bottom:1svmin;display:flex;align-items:baseline;">
-        <div>{{ $router.currentRoute.value.fullPath + '/' + encodeURIComponent(typ.name) }}</div>
+        
         <router-link :to="$router.currentRoute.value.fullPath + '/' + encodeURIComponent(typ.name)"
           class="btn btn-primary" style="margin-left:2svmin;">{{ $t($resources.Edit.key) }}</router-link>
         <button class="btn btn-primary" style="margin-left:1svmin;" v-on:click="showDeleteModal(typ)">{{

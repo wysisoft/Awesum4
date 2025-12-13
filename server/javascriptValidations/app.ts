@@ -22,8 +22,8 @@ isNameGloballyUnique: true,
 transform: ['trim', 'toLowerCase'],
 type: 'string'},
 version: { default: 0, minimum: 0, type: 'integer' },
-touched: { default: true, type: 'boolean' },
-lastModified: { default: 0, type: 'number' },
+touched: { default: false, type: 'boolean' },
+lastModified: { default: 1765576511840, type: 'number' },
 homePageImageType: { default: 0, minimum: 0, maximum: 3, type: 'integer' },
 homePageImage: {
 default: '00000000-0000-0000-0000-000000000001',
@@ -43,7 +43,7 @@ type: 'string'},
 enableNarrator: { default: false, type: 'boolean' },
 groups: { default: '', maxLength: 8000, type: 'string' },
 id: {
-default: '019ac0a9-2f8a-77d9-88cd-88e689f65acd',
+default: '019b148f-9160-7501-a783-be3a24d896f2',
 format: 'uuid',
 minLength: 36,
 type: 'string'},
@@ -107,7 +107,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: missing0 },
- message: "Required"}
+ message: "Required"
+}
 );
 } else {
 if (data.email !== undefined) {
@@ -126,7 +127,8 @@ instancePath: instancePath + '/email',
 schemaPath: '#/properties/email/maxLength',
 keyword: 'maxLength',
 params: { limit: 100 },
- message: "Must_be_less_than_100_characters"}
+ message: "Must_be_less_than_100_characters"
+}
 );
 } else {
 if (func4(data0) < 5) {errors.push(
@@ -135,7 +137,8 @@ instancePath: instancePath + '/email',
 schemaPath: '#/properties/email/minLength',
 keyword: 'minLength',
 params: { limit: 5 },
- message: "Required"}
+ message: "Required"
+}
 );
 } else {
 if (!formats0.test(data0)) {errors.push(
@@ -144,7 +147,8 @@ instancePath: instancePath + '/email',
 schemaPath: '#/properties/email/format',
 keyword: 'format',
 params: { format: 'email' },
- message: "Must_be_a_valid_email"}
+ message: "Must_be_a_valid_email"
+}
 );
 }
 }
@@ -181,7 +185,8 @@ instancePath: instancePath + '/name',
 schemaPath: '#/properties/name/maxLength',
 keyword: 'maxLength',
 params: { limit: 100 },
- message: "Must_be_less_than_100_characters"}
+ message: "Must_be_less_than_100_characters"
+}
 );
 } else {
 if (func4(data1) < 1) {errors.push(
@@ -190,7 +195,8 @@ instancePath: instancePath + '/name',
 schemaPath: '#/properties/name/minLength',
 keyword: 'minLength',
 params: { limit: 1 },
- message: "Required"}
+ message: "Required"
+}
 );
 }
 }
@@ -225,7 +231,8 @@ instancePath: instancePath + '/uniqueName',
 schemaPath: '#/properties/uniqueName/maxLength',
 keyword: 'maxLength',
 params: { limit: 100 },
- message: "Must_be_less_than_100_characters"}
+ message: "Must_be_less_than_100_characters"
+}
 );
 } else {
 if (func4(data2) < 1) {errors.push(
@@ -234,7 +241,8 @@ instancePath: instancePath + '/uniqueName',
 schemaPath: '#/properties/uniqueName/minLength',
 keyword: 'minLength',
 params: { limit: 1 },
- message: "Required"}
+ message: "Required"
+}
 );
 } else {
 if (!pattern0.test(data2)) {errors.push(
@@ -243,7 +251,8 @@ instancePath: instancePath + '/uniqueName',
 schemaPath: '#/properties/uniqueName/pattern',
 keyword: 'pattern',
 params: { pattern: '/^(?!API$|I$).+$/i' },
- message: "Unique_name_contains_reserved_words"}
+ message: "Unique_name_contains_reserved_words"
+}
 );
 } else {
 if (
@@ -256,7 +265,8 @@ instancePath: instancePath + '/uniqueName',
 schemaPath: '#/properties/uniqueName/isNameGloballyUnique',
 keyword: 'isNameGloballyUnique',
 params: {},
- message: "Not_Globally_Unique"}
+ message: "Not_Globally_Unique"
+}
 );
 }
 }
@@ -294,7 +304,8 @@ instancePath: instancePath + '/version',
 schemaPath: '#/properties/version/type',
 keyword: 'type',
 params: { type: 'integer' },
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 );
 }
 if (true) {
@@ -305,7 +316,8 @@ instancePath: instancePath + '/version',
 schemaPath: '#/properties/version/minimum',
 keyword: 'minimum',
 params: { comparison: '>=', limit: 0 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 );
 }
 }
@@ -323,7 +335,8 @@ instancePath: instancePath + '/touched',
 schemaPath: '#/properties/touched/type',
 keyword: 'type',
 params: { type: 'boolean' },
- message: "Must_be_a_boolean"}
+ message: "Must_be_a_boolean"
+}
 );
 }
 var valid0 = _errs9 === errors
@@ -340,7 +353,8 @@ instancePath: instancePath + '/lastModified',
 schemaPath: '#/properties/lastModified/type',
 keyword: 'type',
 params: { type: 'number' },
- message: "Must_be_a_number"}
+ message: "Must_be_a_number"
+}
 );
 }
 var valid0 = _errs11 === errors
@@ -364,7 +378,8 @@ instancePath: instancePath + '/homePageImageType',
 schemaPath: '#/properties/homePageImageType/type',
 keyword: 'type',
 params: { type: 'integer' },
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 );
 }
 if (true) {
@@ -375,7 +390,8 @@ instancePath: instancePath + '/homePageImageType',
 schemaPath: '#/properties/homePageImageType/maximum',
 keyword: 'maximum',
 params: { comparison: '<=', limit: 3 },
- message: "Must_be_less_than_or_equal_to_maximum"}
+ message: "Must_be_less_than_or_equal_to_maximum"
+}
 );
 } else {
 if (data6 < 0 || isNaN(data6)) {errors.push(
@@ -384,7 +400,8 @@ instancePath: instancePath + '/homePageImageType',
 schemaPath: '#/properties/homePageImageType/minimum',
 keyword: 'minimum',
 params: { comparison: '>=', limit: 0 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 );
 }
 }
@@ -407,7 +424,8 @@ instancePath: instancePath + '/homePageImage',
 schemaPath: '#/properties/homePageImage/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 );
 }
 } else {errors.push(
@@ -442,7 +460,8 @@ instancePath: instancePath + '/authenticationType',
 schemaPath: '#/properties/authenticationType/maxLength',
 keyword: 'maxLength',
 params: { limit: 100 },
- message: "Must_be_less_than_100_characters"}
+ message: "Must_be_less_than_100_characters"
+}
 );
 } else {
 if (func4(data8) < 1) {errors.push(
@@ -451,7 +470,8 @@ instancePath: instancePath + '/authenticationType',
 schemaPath: '#/properties/authenticationType/minLength',
 keyword: 'minLength',
 params: { limit: 1 },
- message: "Required"}
+ message: "Required"
+}
 );
 }
 }
@@ -489,7 +509,8 @@ instancePath: instancePath + '/lang',
 schemaPath: '#/properties/lang/maxLength',
 keyword: 'maxLength',
 params: { limit: 100 },
- message: "Must_be_less_than_100_characters"}
+ message: "Must_be_less_than_100_characters"
+}
 );
 } else {
 if (func4(data9) < 1) {errors.push(
@@ -498,7 +519,8 @@ instancePath: instancePath + '/lang',
 schemaPath: '#/properties/lang/minLength',
 keyword: 'minLength',
 params: { limit: 1 },
- message: "Required"}
+ message: "Required"
+}
 );
 }
 }
@@ -526,7 +548,8 @@ instancePath: instancePath + '/enableNarrator',
 schemaPath: '#/properties/enableNarrator/type',
 keyword: 'type',
 params: { type: 'boolean' },
- message: "Must_be_a_boolean"}
+ message: "Must_be_a_boolean"
+}
 );
 }
 var valid0 = _errs21 === errors
@@ -545,7 +568,8 @@ instancePath: instancePath + '/groups',
 schemaPath: '#/properties/groups/maxLength',
 keyword: 'maxLength',
 params: { limit: 8000 },
- message: "Must_be_less_than_8000_characters"}
+ message: "Must_be_less_than_8000_characters"
+}
 );
 }
 } else {errors.push(
@@ -576,7 +600,8 @@ instancePath: instancePath + '/id',
 schemaPath: '#/properties/id/minLength',
 keyword: 'minLength',
 params: { limit: 36 },
- message: "Must_be_36_characters"}
+ message: "Must_be_36_characters"
+}
 );
 } else {
 if (!formats2.test(data12)) {errors.push(
@@ -585,7 +610,8 @@ instancePath: instancePath + '/id',
 schemaPath: '#/properties/id/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 );
 }
 }
@@ -620,7 +646,8 @@ instancePath: instancePath + '/lastSync',
 schemaPath: '#/properties/lastSync/type',
 keyword: 'type',
 params: { type: 'number' },
- message: "Must_be_a_number"}
+ message: "Must_be_a_number"
+}
 );
 }
 var valid0 = _errs27 === errors

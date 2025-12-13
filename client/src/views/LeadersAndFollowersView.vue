@@ -35,7 +35,8 @@ export default {
         , width: '10svmin', // Set the width to 9svmin
         className: 'text-center', // Center the content
         render: function (data: any) {
-          return new Date(data).toLocaleDateString();
+          
+          return new Date(parseInt(data)).toLocaleDateString();
         }
       },
       {
@@ -68,6 +69,7 @@ export default {
     const order = awesum.router.currentRoute.query.order;
     let showApproveRejectFollowerModal = ref(false);
 
+    
     if (activeView == null && order == null) {
       awesum.router.replace({
         query: {
@@ -75,6 +77,7 @@ export default {
           order: JSON.stringify([[1, 'desc']])
         }
       });
+      return {}
     }
     else if (activeView == null) {
       awesum.router.replace({
@@ -83,6 +86,7 @@ export default {
           order: order
         }
       });
+      return {}
     }
     else if (order == null) {
       awesum.router.replace({
@@ -91,6 +95,7 @@ export default {
           order: JSON.stringify([1, 'desc'])
         }
       });
+      return {}
     }
     else {
       followersTableOptions!.order = JSON.parse(order as string)
@@ -117,7 +122,7 @@ export default {
         , width: '10svmin', // Set the width to 9svmin
         className: 'text-center', // Center the content
         render: function (data: any) {
-          return new Date(data).toLocaleDateString()
+          return new Date(parseInt(data)).toLocaleDateString()
         }
 
       },
@@ -157,30 +162,30 @@ export default {
       return activeView == 'followers' ? '48svmin' : '56.75svmin';
     });
 
-    if (activeView == null && order == null) {
-      awesum.router.replace({
-        query: {
-          activeView: 'followers',
-          order: JSON.stringify([[I18nGlobal.t(resources.number1.key), I18nGlobal.t(resources.desc.key)]])
-        }
-      });
-    }
-    else if (activeView == null) {
-      awesum.router.replace({
-        query: {
-          activeView: 'followers',
-          order: order
-        }
-      });
-    }
-    else if (order == null) {
-      awesum.router.replace({
-        query: {
-          activeView: activeView,
-          order: JSON.stringify([[I18nGlobal.t(resources.number1.key), I18nGlobal.t(resources.desc.key)]])
-        }
-      });
-    }
+    // if (activeView == null && order == null) {
+    //   awesum.router.replace({
+    //     query: {
+    //       activeView: 'followers',
+    //       order: JSON.stringify([[I18nGlobal.t(resources.number1.key), I18nGlobal.t(resources.desc.key)]])
+    //     }
+    //   });
+    // }
+    // else if (activeView == null) {
+    //   awesum.router.replace({
+    //     query: {
+    //       activeView: 'followers',
+    //       order: order
+    //     }
+    //   });
+    // }
+    // else if (order == null) {
+    //   awesum.router.replace({
+    //     query: {
+    //       activeView: activeView,
+    //       order: JSON.stringify([[I18nGlobal.t(resources.number1.key), I18nGlobal.t(resources.desc.key)]])
+    //     }
+    //   });
+    // }
 
     DataTable.use(DataTablesCore);
 

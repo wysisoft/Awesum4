@@ -1,5 +1,5 @@
 'use strict'
-const schema16 = {
+const schema18 = {
 $id: 'databaseUnit',
 type: 'object',
 properties: {
@@ -14,14 +14,20 @@ databaseId: { format: 'uuid', type: 'string' },
 successVideoType: { default: 0, minimum: 0, maximum: 2, type: 'integer' },
 successVideoUrl: { maxLength: 100, type: 'string' },
 successAnimations: { default: 'Fireworks', maxLength: 100, type: 'string' },
-successSound: { format: 'uuid', type: 'string' },
+successSound: {
+default: '00000000-0000-0000-0000-000000000005',
+format: 'uuid',
+type: 'string'},
 successSoundType: { default: 2, minimum: 0, maximum: 4, type: 'integer' },
 homePageImageType: { default: 0, minimum: 0, maximum: 3, type: 'integer' },
 homePageImage: {
 default: '00000000-0000-0000-0000-000000000002',
 format: 'uuid',
 type: 'string'},
-router: { format: 'uuid', type: 'string' },
+router: {
+default: '00000000-0000-0000-0000-000000000000',
+format: 'uuid',
+type: 'string'},
 routerTime: { type: 'number' },
 routerTimeImmediate: { default: false, type: 'boolean' },
 points: { default: 0, minimum: 0, type: 'integer' }
@@ -65,7 +71,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'name' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err0]
 } else {
@@ -79,7 +86,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'order' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err1]
 } else {
@@ -93,7 +101,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'lastModified' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err2]
 } else {
@@ -107,7 +116,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'touched' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err3]
 } else {
@@ -121,7 +131,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'version' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err4]
 } else {
@@ -135,7 +146,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'id' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err5]
 } else {
@@ -149,7 +161,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'appId' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err6]
 } else {
@@ -163,7 +176,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'databaseId' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err7]
 } else {
@@ -177,7 +191,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'successVideoType' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err8]
 } else {
@@ -191,7 +206,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'successVideoUrl' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err9]
 } else {
@@ -205,7 +221,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'successAnimations' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err10]
 } else {
@@ -219,7 +236,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'successSound' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err11]
 } else {
@@ -233,7 +251,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'successSoundType' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err12]
 } else {
@@ -247,7 +266,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'homePageImageType' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err13]
 } else {
@@ -261,7 +281,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'homePageImage' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err14]
 } else {
@@ -275,7 +296,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'router' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err15]
 } else {
@@ -289,7 +311,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'routerTime' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err16]
 } else {
@@ -303,7 +326,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'routerTimeImmediate' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err17]
 } else {
@@ -317,7 +341,8 @@ instancePath,
 schemaPath: '#/required',
 keyword: 'required',
 params: { missingProperty: 'points' },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err18]
 } else {
@@ -334,7 +359,8 @@ instancePath: instancePath + '/name',
 schemaPath: '#/properties/name/maxLength',
 keyword: 'maxLength',
 params: { limit: 100 },
- message: "Must_be_less_than_100_characters"}
+ message: "Must_be_less_than_100_characters"
+}
 if (vErrors === null) {
 vErrors = [err19]
 } else {
@@ -348,7 +374,8 @@ instancePath: instancePath + '/name',
 schemaPath: '#/properties/name/minLength',
 keyword: 'minLength',
 params: { limit: 1 },
- message: "Required"}
+ message: "Required"
+}
 if (vErrors === null) {
 vErrors = [err20]
 } else {
@@ -387,7 +414,8 @@ instancePath: instancePath + '/order',
 schemaPath: '#/properties/order/type',
 keyword: 'type',
 params: { type: 'integer' },
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 if (vErrors === null) {
 vErrors = [err22]
 } else {
@@ -402,7 +430,8 @@ instancePath: instancePath + '/order',
 schemaPath: '#/properties/order/minimum',
 keyword: 'minimum',
 params: { comparison: '>=', limit: 0 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 if (vErrors === null) {
 vErrors = [err23]
 } else {
@@ -420,7 +449,8 @@ instancePath: instancePath + '/lastModified',
 schemaPath: '#/properties/lastModified/type',
 keyword: 'type',
 params: { type: 'number' },
- message: "Must_be_a_number"}
+ message: "Must_be_a_number"
+}
 if (vErrors === null) {
 vErrors = [err24]
 } else {
@@ -436,7 +466,8 @@ instancePath: instancePath + '/touched',
 schemaPath: '#/properties/touched/type',
 keyword: 'type',
 params: { type: 'boolean' },
- message: "Must_be_a_boolean"}
+ message: "Must_be_a_boolean"
+}
 if (vErrors === null) {
 vErrors = [err25]
 } else {
@@ -460,7 +491,8 @@ instancePath: instancePath + '/version',
 schemaPath: '#/properties/version/type',
 keyword: 'type',
 params: { type: 'integer' },
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 if (vErrors === null) {
 vErrors = [err26]
 } else {
@@ -475,7 +507,8 @@ instancePath: instancePath + '/version',
 schemaPath: '#/properties/version/minimum',
 keyword: 'minimum',
 params: { comparison: '>=', limit: 0 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 if (vErrors === null) {
 vErrors = [err27]
 } else {
@@ -494,7 +527,8 @@ instancePath: instancePath + '/id',
 schemaPath: '#/properties/id/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 if (vErrors === null) {
 vErrors = [err28]
 } else {
@@ -527,7 +561,8 @@ instancePath: instancePath + '/appId',
 schemaPath: '#/properties/appId/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 if (vErrors === null) {
 vErrors = [err30]
 } else {
@@ -560,7 +595,8 @@ instancePath: instancePath + '/databaseId',
 schemaPath: '#/properties/databaseId/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 if (vErrors === null) {
 vErrors = [err32]
 } else {
@@ -599,7 +635,8 @@ instancePath: instancePath + '/successVideoType',
 schemaPath: '#/properties/successVideoType/type',
 keyword: 'type',
 params: { type: 'integer' },
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 if (vErrors === null) {
 vErrors = [err34]
 } else {
@@ -614,7 +651,8 @@ instancePath: instancePath + '/successVideoType',
 schemaPath: '#/properties/successVideoType/maximum',
 keyword: 'maximum',
 params: { comparison: '<=', limit: 2 },
- message: "Must_be_less_than_or_equal_to_maximum"}
+ message: "Must_be_less_than_or_equal_to_maximum"
+}
 if (vErrors === null) {
 vErrors = [err35]
 } else {
@@ -628,7 +666,8 @@ instancePath: instancePath + '/successVideoType',
 schemaPath: '#/properties/successVideoType/minimum',
 keyword: 'minimum',
 params: { comparison: '>=', limit: 0 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 if (vErrors === null) {
 vErrors = [err36]
 } else {
@@ -647,7 +686,8 @@ instancePath: instancePath + '/successVideoUrl',
 schemaPath: '#/properties/successVideoUrl/maxLength',
 keyword: 'maxLength',
 params: { limit: 100 },
- message: "Must_be_less_than_100_characters"}
+ message: "Must_be_less_than_100_characters"
+}
 if (vErrors === null) {
 vErrors = [err37]
 } else {
@@ -680,7 +720,8 @@ instancePath: instancePath + '/successAnimations',
 schemaPath: '#/properties/successAnimations/maxLength',
 keyword: 'maxLength',
 params: { limit: 100 },
- message: "Must_be_less_than_100_characters"}
+ message: "Must_be_less_than_100_characters"
+}
 if (vErrors === null) {
 vErrors = [err39]
 } else {
@@ -713,7 +754,8 @@ instancePath: instancePath + '/successSound',
 schemaPath: '#/properties/successSound/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 if (vErrors === null) {
 vErrors = [err41]
 } else {
@@ -752,7 +794,8 @@ instancePath: instancePath + '/successSoundType',
 schemaPath: '#/properties/successSoundType/type',
 keyword: 'type',
 params: { type: 'integer' },
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 if (vErrors === null) {
 vErrors = [err43]
 } else {
@@ -767,7 +810,8 @@ instancePath: instancePath + '/successSoundType',
 schemaPath: '#/properties/successSoundType/maximum',
 keyword: 'maximum',
 params: { comparison: '<=', limit: 4 },
- message: "Must_be_less_than_or_equal_to_maximum"}
+ message: "Must_be_less_than_or_equal_to_maximum"
+}
 if (vErrors === null) {
 vErrors = [err44]
 } else {
@@ -781,7 +825,8 @@ instancePath: instancePath + '/successSoundType',
 schemaPath: '#/properties/successSoundType/minimum',
 keyword: 'minimum',
 params: { comparison: '>=', limit: 0 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 if (vErrors === null) {
 vErrors = [err45]
 } else {
@@ -806,7 +851,8 @@ instancePath: instancePath + '/homePageImageType',
 schemaPath: '#/properties/homePageImageType/type',
 keyword: 'type',
 params: { type: 'integer' },
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 if (vErrors === null) {
 vErrors = [err46]
 } else {
@@ -821,7 +867,8 @@ instancePath: instancePath + '/homePageImageType',
 schemaPath: '#/properties/homePageImageType/maximum',
 keyword: 'maximum',
 params: { comparison: '<=', limit: 3 },
- message: "Must_be_less_than_or_equal_to_maximum"}
+ message: "Must_be_less_than_or_equal_to_maximum"
+}
 if (vErrors === null) {
 vErrors = [err47]
 } else {
@@ -835,7 +882,8 @@ instancePath: instancePath + '/homePageImageType',
 schemaPath: '#/properties/homePageImageType/minimum',
 keyword: 'minimum',
 params: { comparison: '>=', limit: 0 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 if (vErrors === null) {
 vErrors = [err48]
 } else {
@@ -854,7 +902,8 @@ instancePath: instancePath + '/homePageImage',
 schemaPath: '#/properties/homePageImage/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 if (vErrors === null) {
 vErrors = [err49]
 } else {
@@ -887,7 +936,8 @@ instancePath: instancePath + '/router',
 schemaPath: '#/properties/router/format',
 keyword: 'format',
 params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"}
+ message: "Must_be_a_valid_UUID"
+}
 if (vErrors === null) {
 vErrors = [err51]
 } else {
@@ -919,7 +969,8 @@ instancePath: instancePath + '/routerTime',
 schemaPath: '#/properties/routerTime/type',
 keyword: 'type',
 params: { type: 'number' },
- message: "Must_be_a_number"}
+ message: "Must_be_a_number"
+}
 if (vErrors === null) {
 vErrors = [err53]
 } else {
@@ -935,7 +986,8 @@ instancePath: instancePath + '/routerTimeImmediate',
 schemaPath: '#/properties/routerTimeImmediate/type',
 keyword: 'type',
 params: { type: 'boolean' },
- message: "Must_be_a_boolean"}
+ message: "Must_be_a_boolean"
+}
 if (vErrors === null) {
 vErrors = [err54]
 } else {
@@ -959,7 +1011,8 @@ instancePath: instancePath + '/points',
 schemaPath: '#/properties/points/type',
 keyword: 'type',
 params: { type: 'integer' },
- message: "Must_be_an_integer"}
+ message: "Must_be_an_integer"
+}
 if (vErrors === null) {
 vErrors = [err55]
 } else {
@@ -974,7 +1027,8 @@ instancePath: instancePath + '/points',
 schemaPath: '#/properties/points/minimum',
 keyword: 'minimum',
 params: { comparison: '>=', limit: 0 },
- message: "Must_be_greater_than_or_equal_to_0"}
+ message: "Must_be_greater_than_or_equal_to_0"
+}
 if (vErrors === null) {
 vErrors = [err56]
 } else {

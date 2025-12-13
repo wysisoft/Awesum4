@@ -68,7 +68,7 @@ export default {
         }]);
       }
       else {
-        await awesum.sync([{
+        var response = await awesum.sync([{
           id: this.payload.id,
           level: ItemLevel.app,
           action: syncAction.add,
@@ -78,10 +78,16 @@ export default {
             email: this.payload.email
           }
         }]);
+
+        if(response.length == 0)
+        {
+          //error occurred, allow error redirect to happen
+          return;
+        }
+        else {
+          awesum.router.push({ name: I18nGlobal.t(resources.Home.key) });
+        }
       }
-
-      awesum.router.push({ name: I18nGlobal.t(resources.Home.key) });
-
     }
   },
 };

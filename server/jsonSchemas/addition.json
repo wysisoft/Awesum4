@@ -1,0 +1,1 @@
+{"$id":"addition","type":"object","properties":{"id":{"format":"uuid","type":"string"}},"required":["id"]}

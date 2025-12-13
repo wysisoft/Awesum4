@@ -1,3 +1,28 @@
+import { createClient } from "redis";
+
+const pub = createClient();
+
+const sub = createClient();
+
+
+await pub.connect();
+await sub.connect();
+
+// Subscribe to channel
+await sub.subscribe("ws-broadcast", (msg) => {
+  var msgJson = JSON.parse(msg);
+
+  if (socketConnections.has(msgJson.email)) {
+    var wses = socketConnections.get(msgJson.email);
+    if (wses) {
+      for (var ws of wses) {
+        if (ws.readyState === WebSocket.OPEN && !(ws as any).macAddress) {
+          ws.send(msgJson.payload);
+        }
+      }
+    }
+  }
+});
 
 //@bun
 import { getDefault, types } from './typebox';
@@ -77,6 +102,18 @@ import type { ServerPushAppResponseInterface } from "./serverInterfaces/ServerPu
 import { validateAddFollowerRequest } from "./javascriptValidations/addFollowerRequest";
 import type { ServerDnsEntryInterface } from "./serverInterfaces/ServerDnsEntryInterface";
 
+await (async () => {
+  const appEmailRows = await db.selectFrom('awesum.App as a')
+    .select((eb) => [
+      'a.email', 'a.id'
+    ])
+    .distinct()
+    .execute();
+  for (const row of appEmailRows) {
+    await pub.set("appEmailsAndIds:" + row.email, row.id);
+    await pub.sAdd("appIds", row.id);
+  }
+})();
 
 
 const routerRows =
@@ -546,489 +583,140 @@ app.post("/api/sync", express.json({ limit: '1mb' }), async (req: express.Reques
     const syncRequestArray = req.body as ServerSyncRequestInterface[];
     const syncResponseArray: ServerSyncResponseInterface[] = [];
 
-
-
     let foundLeaderAppId = await getAppIdFromEmail(userEmail);
 
+    var query = await db.selectFrom('awesum.FollowerRequest as fr')
+      .where(({ eb }) =>
+        eb('followerAppId', '=', foundLeaderAppId))
+      .selectAll()
 
-    // if (!foundLeaderAppId) {
-
-    //   if (syncRequestArray.length == 0) {
-    //     res.status(200).json(syncResponseArray);
-    //     return;
-    //   }
-
-    //   if (syncRequestArray.length == 1
-    //     && syncRequestArray[0].app
-    //     && syncRequestArray[0].app.email == userEmail) {
-
-    //     var validationErrors = await validateApp(syncRequestArray[0].app);
-    //     if (validationErrors.length > 0) {
-    //       syncResponseArray.push({ message: "App not found" });
-    //       res.status(500).json(syncResponseArray);
-    //       return;
-    //     }
-    //     else {
-    //       syncRequestArray[0].app.lastSync = new Date().getTime();
-    //       await db.insertInto('awesum.App').values(syncRequestArray[0].app as AwesumApp).execute();
-    //       syncResponseArray.push(
-    //         {
-    //           id: syncRequestArray[0].app.id,
-    //           level: ItemLevel.app,
-    //           action: syncAction.add,
-    //           result: syncResultType.added,
-    //           app: syncRequestArray[0].app,
-    //         });
-    //       res.status(200).json(syncResponseArray);
-    //       return;
-    //     }
-    //   }
-    //   else {
-    //     syncResponseArray.push({ message: "App not found" })
-    //     res.status(500).json(syncResponseArray);
-    //     return;
-    //   }
-    // }
-
-    let foundFollowerRequests: { [key: string]: AwesumFollowerRequest } = {};
-    let foundFollowerCompletions: { [key: string]: AwesumFollowerDatabaseCompletion } = {};
-    let foundFollowerDatabases: { [key: string]: AwesumFollowerDatabase } = {};
-    let followerLeaderAppIds: Set<string> = new Set();
-    let followerRequestIds: Set<string> = new Set();
-    let followerDatabaseIds: Set<string> = new Set();
-    let foundApps: { [key: string]: AwesumApp } = {}
-
-    let foundDatabaseUnit: { [key: string]: AwesumDatabaseUnit } = {};
-    let foundDatabaseItem: { [key: string]: AwesumDatabaseItem } = {};
-    let foundRouters: { [key: string]: AwesumRouter } = {};
-    let foundDatabases: { [key: string]: AwesumDatabase } = {};
-    let foundDatabaseIds: Set<string> = new Set();
-
-
-
-    // Helper functions
-    const populateFoundFollowers = async () => {
-      // const followers = await models.FOLLOWER_REQUEST.findAll({
-      //   where: {
-      //     [Op.or]: [
-      //       { leaderAppId: foundLeaderAppId },
-      //       { followerAppId: foundLeaderAppId },
-      //     ],
-      //   }
-      // });
-      const followersQuery = await db.selectFrom('awesum.FollowerRequest as fr')
-        .where(({ eb }) =>
-          eb('leaderAppId', '=', foundLeaderAppId).or
-            ('followerAppId', '=', foundLeaderAppId))
-        .selectAll()
-
-      function interpolateQuery(query: any): string {
-        let sql = query.sql
-        query.parameters.forEach((param: any, index: number) => {
-          const paramStr = typeof param === 'string' ? `'${param}'` : String(param)
-          const placeholder = `$${index + 1}`
-          sql = sql.replace(placeholder, paramStr)
-        })
-        return sql
-      }
-
-      const compiled = followersQuery.compile()
-      const sqlWithParams = interpolateQuery(compiled)
-
-      console.log(sqlWithParams) // Logs SQL with embedded parameters
-
-      const followers = await followersQuery.execute();
-
-      console.log("1")
-
-      foundFollowerRequests = {};
-      followers.forEach((follower) => {
-        foundFollowerRequests[follower.id] = follower;
-      });
-    };
-
-    // Process server items to send to client
-    await populateFoundFollowers();
-
-
-
-    // if (syncRequestArray.length == 1 &&
-    //   syncRequestArray[0].action == syncAction.add &&
-    //   syncRequestArray[0].followerRequest) {
-
-
-    // if (syncRequestArray.length == 1 && syncRequestArray[0].followerDatabase) {
-    //   var followerDatabase = syncRequestArray[0].followerDatabase;
-    //   var followerRequest = foundFollowerRequests[followerDatabase.followerRequestId];
-    //   if (followerRequest.leaderAppId != foundLeaderAppId) {
-    //     syncResponseArray.push({ message: "Follower request rejected" })
-    //     res.status(200).json(syncResponseArray);
-    //     return;
-    //   }
-    //   if (followerRequest.followerAppId != foundLeaderAppId) {
-    //     //await models.FOLLOWER_DATABASE.create(followerDatabase);
-    //     await db.insertInto('awesum.FollowerDatabase').values(followerDatabase as AwesumFollowerDatabase).execute();
-    //     var followerEmail = foundFollowerRequests[followerDatabase.followerRequestId].followerEmail;
-    //     const wses = socketConnections.get(followerEmail);
-    //     if (wses) {
-    //       for (const ws of wses) {
-    //         if (!(ws as any).macAddress) {
-    //           ws.send(JSON.stringify({ type: "Assignment Added", data: followerDatabase }));
-    //         }
-    //       }
-    //     }
-    //     res.status(200).json(syncResponseArray);
-    //     return;
-    //   }
-    // }
-
-
-    const requestItems: { [key: string]: ServerSyncRequestInterface } = {};
-    syncRequestArray.forEach((item) => {
-      requestItems[item.app?.id || item.database?.id || item.databaseUnit?.id || item.databaseItem?.id || item.followerRequest?.id || item.router?.id || item.followerDatabase?.id || item.media?.id || ""] = item;
-    });
-
-    // Helper collections
-
-
-
-
-    const populateFoundFollowerCompletions = async () => {
-      // const followerCompletions = await models.FOLLOWER_DATABASE_COMPLETION.findAll({
-      //   where: {
-      //     followerRequestId: { [Op.in]: Array.from(Object.keys(foundFollowerRequests)) },
-      //   },
-      // });
-      const followerCompletions = await db.selectFrom('awesum.FollowerDatabaseCompletion as fdc')
-        .where(({ eb }) =>
-          eb('followerRequestId', 'in', Array.from(Object.keys(foundFollowerRequests))))
-        .selectAll()
-        .execute();
-      foundFollowerCompletions = {};
-      followerCompletions.forEach((completion) => {
-        foundFollowerCompletions[completion.id] = completion;
-      });
-    };
-
-    const populateFoundFollowerDatabases = async () => {
-      // const followerDatabases = await models.FOLLOWER_DATABASE.findAll({
-      //   where: {
-      //     followerRequestId: { [Op.in]: Array.from(Object.keys(foundFollowerRequests)) },
-      //   },
-      // });
-      const followerDatabases = await db.selectFrom('awesum.FollowerDatabase as fd')
-        .where(({ eb }) =>
-          eb('followerRequestId', 'in', Array.from(Object.keys(foundFollowerRequests))))
-        .selectAll()
-        .execute();
-      foundFollowerDatabases = {};
-      followerDatabases.forEach((database) => {
-        foundFollowerDatabases[database.id] = database;
-      });
-    };
-
-    const populateFollowerLeaderAppIds = async () => {
-      if (Object.keys(foundFollowerRequests).length > 0) {
-        followerLeaderAppIds = new Set();
-        Object.values(foundFollowerRequests)
-          .filter((f) =>
-            f.status !== followerRequestStatus.Rejected &&
-            f.followerAppId === foundLeaderAppId
-          )
-          .forEach((f) => followerLeaderAppIds.add(f.leaderAppId));
-      }
-    };
-
-    const populateFollowerDatabaseIds = async () => {
-      if (foundFollowerRequests) {
-        followerRequestIds = new Set();
-        Object.values(foundFollowerRequests)
-          .filter((f) =>
-            f.status !== followerRequestStatus.Rejected &&
-            f.followerAppId === foundLeaderAppId
-          )
-          .forEach((f) => followerRequestIds.add(f.id));
-
-        // const followerDatabases = await models.FOLLOWER_DATABASE.findAll({
-        //   where: {
-        //     followerRequestId: { [Op.in]: Array.from(followerRequestIds) },
-        //   },
-        // });
-        const followerDatabases = await db.selectFrom('awesum.FollowerDatabase as fd')
-          .where(({ eb }) =>
-            eb('followerRequestId', 'in', Array.from(followerRequestIds)))
-          .selectAll()
-          .execute();
-
-        followerDatabases.forEach((database) => {
-          followerDatabaseIds.add(database.databaseId);
-        });
-      }
-    };
-
-    const populateFoundDatabases = async () => {
-      // const databases = await models.DATABASE.findAll({
-      //   where: {
-      //     [Op.or]: [
-      //       { appId: foundLeaderAppId },
-      //       { id: { [Op.in]: Array.from(followerDatabaseIds) } },
-      //     ],
-      //   },
-      // });
-      const databases = await db.selectFrom('awesum.Database as d')
-        .where(({ eb, or }) =>
-          eb('appId', '=', foundLeaderAppId).or(
-            'id', 'in', Array.from(followerDatabaseIds)))
-        .selectAll()
-        .execute();
-      foundDatabases = {};
-      foundDatabaseIds = new Set();
-
-      databases.forEach((database) => {
-        foundDatabases[database.id] = database;
-        foundDatabaseIds.add(database.id);
-      });
-    };
-
-    // if (Object.keys(foundFollowerRequests).length > 0) {
-    //   for (const [key, follower] of Object.entries(foundFollowerRequests)) {
-    //     const requestFollower = requestItems[key] && requestItems[key].followerRequest
-    //       ? requestItems[key].followerRequest
-    //       : null;
-
-    //     if (
-    //       !requestFollower ||
-    //       requestFollower.lastModified < follower.lastModified ||
-    //       requestFollower.version < follower.version
-    //     ) {
-    //       // Server has a follower that the client does not have,
-    //       // or the server follower is newer than the client follower
-
-    //       if (!requestFollower && follower.leaderAppId === foundLeaderAppId
-    //       ) {
-    //         await db.deleteFrom('awesum.FollowerRequest').where('id', '=', follower.id).execute();
-    //       } else {
-    //         syncResponseArray.push({
-    //           followerRequest: follower,
-    //         });
-    //       }
-    //     }
-    //   }
-    // }
-
-    await populateFoundFollowerCompletions();
-    await populateFoundFollowerDatabases();
-
-    if (foundFollowerCompletions) {
-      for (
-        const [key, completion] of Object.entries(foundFollowerCompletions)
-      ) {
-        const requestFollowerCompletion = requestItems[key]
-
-        if (!requestFollowerCompletion) {
-          // Server has a followerDatabaseCompletion that the client does not have
-          syncResponseArray.push({
-            followerDatabaseCompletion: completion,
-          });
-        }
-      }
+    var resultArray = await query.execute();
+    const followerFollowerRequests: { [key: string]: AwesumFollowerRequest } = {}
+    for (const followerFollowerRequest of resultArray) {
+      followerFollowerRequests[followerFollowerRequest.id] = followerFollowerRequest;
     }
 
-    await populateFollowerLeaderAppIds();
+    var query = await db.selectFrom('awesum.FollowerRequest as fr')
+      .where(({ eb }) =>
+        eb('leaderAppId', '=', foundLeaderAppId))
+      .selectAll()
 
-    // const apps = await models.APP.findAll({
-    //   where: {
-    //     [Op.or]: [
-    //       { id: foundLeaderAppId },
-    //       { id: { [Op.in]: Array.from(followerLeaderAppIds) } },
-    //     ],
-    //   },
-    // });
-
-
-    for (const [key, app] of Object.entries(foundApps)) {
-      const requestApp = requestItems[key] && requestItems[key].app
-        ? requestItems[key].app
-        : null;
-
-      if (
-        !requestApp ||
-        requestApp.lastModified < app.lastModified ||
-        requestApp.version < app.version
-      ) {
-        // Server has an app that the client does not have,
-        // or the server app is newer than the client app
-        syncResponseArray.push({
-          app: app,
-        });
-      }
+    var resultArray = await query.execute();
+    const leaderFollowerRequests: { [key: string]: AwesumFollowerRequest } = {}
+    for (const followerFollowerRequest of resultArray) {
+      leaderFollowerRequests[followerFollowerRequest.id] = followerFollowerRequest;
     }
 
-    await populateFollowerDatabaseIds();
-    await populateFoundDatabases();
+    const requestFollowerRequests = {}
 
-    // if (foundDatabases) {
-    //   for (const [key, database] of Object.entries(foundDatabases)) {
-    //     const requestDatabase = requestItems[key] && requestItems[key].database
-    //       ? requestItems[key].database
-    //       : null;
-
-    //     if (
-    //       !requestDatabase ||
-    //       requestDatabase.lastModified < database.lastModified ||
-    //       requestDatabase.version < database.version
-    //     ) {
-    //       // Server has a database that the client does not have,
-    //       // or the server database is newer than the client database
-
-    //       if (!requestDatabase && database.appId === foundLeaderAppId) {
-    //         await db.deleteFrom('awesum.Database').where('id', '=', database.id).execute();
-    //       } else {
-    //         syncResponseArray.push({
-    //           database: database,
-    //         });
-    //       }
-    //     }
-    //   }
-    // }
-
-
-
-
-
-    // Find and process database units
-    // const databaseUnits = await models.DATABASE_UNIT.findAll({
-    //   where: {
-    //     [Op.or]: [
-    //       { databaseId: { [Op.in]: Array.from(foundDatabaseIds) } },
-    //       { databaseId: { [Op.in]: Array.from(followerRequestIds) } },
-    //     ],
-    //   },
-    // });
-    // const databaseUnits = await db.selectFrom('awesum.DatabaseUnit as du')
-    //   .where(({ eb, or }) =>
-    //     eb('databaseId', 'in', Array.from(foundDatabaseIds)).or(
-    //       'databaseId', 'in', Array.from(followerRequestIds)))
-    //   .selectAll()
-    //   .execute();
-    // foundDatabaseUnit = {};
-    // databaseUnits.forEach((unit) => {
-    //   foundDatabaseUnit[unit.id] = unit;
-    // });
-
-    // for (const [key, databaseUnit] of Object.entries(foundDatabaseUnit)) {
-    //   const requestDatabaseUnit =
-    //     requestItems[key] && requestItems[key].databaseUnit
-    //       ? requestItems[key].databaseUnit
-    //       : null;
-
-    //   if (
-    //     !requestDatabaseUnit ||
-    //     requestDatabaseUnit.lastModified < databaseUnit.lastModified ||
-    //     requestDatabaseUnit.version < databaseUnit.version
-    //   ) {
-    //     if (!requestDatabaseUnit && databaseUnit.appId === foundLeaderAppId) {
-    //       await db.deleteFrom('awesum.DatabaseUnit').where('id', '=', databaseUnit.id).execute();
-    //     } else {
-    //       syncResponseArray.push({
-    //         databaseUnit: databaseUnit,
-    //       });
-    //     }
-    //   }
-    // }
-
-    // Find and process database items
-    // const databaseItems = await models.DATABASE_ITEM.findAll({
-    //   where: {
-    //     [Op.or]: [
-    //       { databaseId: { [Op.in]: Array.from(foundDatabaseIds) } },
-    //       { databaseId: { [Op.in]: Array.from(followerRequestIds) } },
-    //     ],
-    //   },
-    // });
-    // const databaseItems = await db.selectFrom('awesum.DatabaseItem as di')
-    //   .where(({ eb, or }) =>
-    //     eb('databaseId', 'in', Array.from(foundDatabaseIds)).or(
-    //       'databaseId', 'in', Array.from(followerRequestIds)))
-    //   .selectAll()
-    //   .execute();
-
-    // foundDatabaseItem = {};
-    // databaseItems.forEach((item) => {
-    //   foundDatabaseItem[item.id] = item;
-    // });
-
-    // for (const [key, databaseItem] of Object.entries(foundDatabaseItem)) {
-    //   const requestDatabaseItem =
-    //     requestItems[key] && requestItems[key].databaseItem
-    //       ? requestItems[key].databaseItem
-    //       : null;
-
-    //   if (
-    //     !requestDatabaseItem ||
-    //     requestDatabaseItem.lastModified < databaseItem.lastModified ||
-    //     requestDatabaseItem.version < databaseItem.version
-    //   ) {
-    //     if (!requestDatabaseItem && databaseItem.appId === foundLeaderAppId) {
-    //       await db.deleteFrom('awesum.DatabaseItem').where('id', '=', databaseItem.id).execute();
-    //     } else {
-    //       syncResponseArray.push({
-    //         databaseItem: databaseItem,
-    //       });
-    //     }
-    //   }
-    // }
-
-    // const routers = await models.ROUTER.findAll({
-    //   where: {
-    //     appId: { [Op.in]: [foundLeaderAppId, ...Array.from(followerLeaderAppIds)] },
-    //   },
-    // });
-    // const routers = await db.selectFrom('awesum.Router as r')
-    //   .where(({ eb }) =>
-    //     eb('appId', 'in', [foundLeaderAppId, ...Array.from(followerLeaderAppIds)]))
-    //   .selectAll()
-    //   .execute();
-
-    // foundRouters = {};
-    // routers.forEach((router) => {
-    //   foundRouters[router.id] = router;
-    // });
-
-    // for (const [key, router] of Object.entries(foundRouters)) {
-    //   const requestRouter = requestItems[key] && requestItems[key].router
-    //     ? requestItems[key].router
-    //     : null;
-
-    //   if (
-    //     !requestRouter ||
-    //     requestRouter.lastModified < router.lastModified ||
-    //     requestRouter.version < router.version
-    //   ) {
-    //     if (!requestRouter && router.appId === foundLeaderAppId) {
-    //       await db.deleteFrom('awesum.Router').where('id', '=', router.id).execute();
-    //     } else {
-    //       syncResponseArray.push({
-    //         router: router,
-    //       });
-    //     }
-    //   }
-    // }
-
-    var databaseIdsToDelete = new Set<string>();
-
-    // Process client items to update server
     for (const item of syncRequestArray) {
 
+      if (item.level == ItemLevel.followerRequest) {
+        requestFollowerRequests[item.id] = (item.values as AwesumFollowerRequest).lastModified;
+      }
 
+      if (item.action == syncAction.receiveChanges) {
+        if (item.level == ItemLevel.followerRequest){
+          var followerRequest = leaderFollowerRequests[item.id];
+          if(!followerRequest){
+            syncResponseArray.push({
+              id: item.id,
+              result: syncResultType.failedValidation,
+              message: "Follower request not found"
+            });
+            continue;
+          }
+          if(followerRequest.lastModified > (item.values as AwesumFollowerRequest).lastModified 
+          && followerRequest.version > (item.values as AwesumFollowerRequest).version){
+            syncResponseArray.push({
+              id: item.id,
+              values: followerRequest,
+              level: ItemLevel.followerRequest,
+              action: syncAction.modify,
+            });
+            continue;
+          }
+        }
+      }
+      
+      if (item.action == syncAction.modify) {
 
-      if (item.action == syncAction.add || item.action == syncAction.modify) {
+        if (item.level == ItemLevel.followerRequest) {
+          var followerRequest = item.values as AwesumFollowerRequest;
+          foundFollowerRequest = followerFollowerRequests[item.id];
+          if
+            ((followerRequest.status == followerRequestStatus.Approved 
+            || followerRequest.status == followerRequestStatus.Rejected)
+          && (foundFollowerRequest.followerAppId != foundLeaderAppId
+        || foundFollowerRequest.followerEmail != userEmail)){
+            syncResponseArray.push({
+              id: item.id,
+              result: syncResultType.failedValidation,
+              message: "user is not follower"
+            });
+            continue;
+          }
+
+          foundFollowerRequest.status = followerRequest.status;
+          foundFollowerRequest.lastModified = followerRequest.lastModified;
+          foundFollowerRequest.version = followerRequest.version;
+
+          var validationErrors = await validateFollowerRequest(foundFollowerRequest);
+          if (validationErrors.length > 0) {
+            for (const error of validationErrors) {
+              syncResponseArray.push({
+                id: item.id,
+                result: syncResultType.failedValidation,
+                message: error.message
+              });
+            }
+          }
+          else {            
+            foundFollowerRequest.touched = false;
+            await db
+              .updateTable('awesum.FollowerRequest')
+              .set(foundFollowerRequest as AwesumFollowerRequest)
+              .where('id', '=', item.id)
+              .execute();
+
+            syncResponseArray.push({
+              id: item.id,
+              level: ItemLevel.followerRequest,
+              result: syncResultType.modified,
+            });
+          }
+        }
+      }
+
+      if (item.action == syncAction.add) {
 
 
         if (item.level == ItemLevel.app
         ) {
 
+          var appEmail = (item.values as AwesumApp).email;
+          //already have app with this email
+          var appId = await pub.get("appEmailsAndIds:" + appEmail) as string;
+          if (appId) {
+            syncResponseArray.push({
+              id: item.id,
+              result: syncResultType.failedValidation,
+              message: "App email must be unique: " + appEmail
+            });
+            continue;
+          }
 
+          //app id must be the same as the leader app id
+          if (appId && appId != foundLeaderAppId) {
+            syncResponseArray.push({
+              id: item.id,
+              result: syncResultType.failedValidation,
+              message: "App id is already in use"
+            });
+            continue;
+          }
+
+          //app id must be the same as the leader app id
           if ((item.values as AwesumApp).email != userEmail) {
             syncResponseArray.push({
               id: item.id,
@@ -1038,7 +726,22 @@ app.post("/api/sync", express.json({ limit: '1mb' }), async (req: express.Reques
             continue;
           }
 
-          var defaultApp = getDefault(Value.Default(types.filter((x) => x.$id == "app")[0],{} )as ServerAppInterface);
+
+          var appId = await pub.get("appIds:" + foundLeaderAppId) as string;
+
+          if (appId) {
+            //already have app with this id
+            syncResponseArray.push({
+              id: item.id,
+              result: syncResultType.failedValidation,
+              message: "App email must be unique"
+            });
+            res.status(200).send(syncResponseArray);
+            return;
+
+          }
+
+          var defaultApp = getDefault(Value.Default(types.filter((x) => x.$id == "app")[0], {}) as ServerAppInterface);
           defaultApp.authenticationType = userProvider;
 
           for (const key in item.values as any) {
@@ -1065,6 +768,10 @@ app.post("/api/sync", express.json({ limit: '1mb' }), async (req: express.Reques
                 oc.column('id').doUpdateSet(defaultApp as AwesumApp)
               )
               .execute();
+
+            await pub.set("appEmailsAndIds:" + defaultApp.email, defaultApp.id);
+            await pub.sAdd("appIds", defaultApp.id);
+
             syncResponseArray.push(
               {
                 id: defaultApp.id,
@@ -1075,6 +782,58 @@ app.post("/api/sync", express.json({ limit: '1mb' }), async (req: express.Reques
 
             res.status(200).send(syncResponseArray);
             return;
+          }
+        }
+
+        if (item.level == ItemLevel.followerRequest) {
+          if ((item.values as AwesumFollowerRequest).leaderAppId != foundLeaderAppId) {
+            syncResponseArray.push({
+              id: item.id,
+              result: syncResultType.failedValidation,
+              message: "Follower request must be initiated by the leader"
+            });
+            continue;
+          }
+
+          var foundFollowerAppId = await pub.get("appEmailsAndIds:" + (item.values as AwesumFollowerRequest).followerEmail) as string;
+          if (!foundFollowerAppId) {
+            syncResponseArray.push({
+              id: item.id,
+              result: syncResultType.failedValidation,
+              message: "Follower email not found"
+            });
+            continue;
+          }
+
+          var validationErrors = await validateFollowerRequest(item.values as AwesumFollowerRequest);
+          if (validationErrors.length > 0) {
+            for (const error of validationErrors) {
+              syncResponseArray.push({
+                id: item.id,
+                result: syncResultType.failedValidation,
+                message: error.message
+              });
+            }
+          }
+          else {
+
+            item.values.touched = false;
+
+            (item.values as AwesumFollowerRequest).followerAppId = foundFollowerAppId
+            await db
+              .insertInto('awesum.FollowerRequest')
+              .values(item.values as AwesumFollowerRequest)
+              .onConflict(oc =>
+                oc.column('id').doUpdateSet(item.values as AwesumFollowerRequest)
+              )
+              .execute();
+
+            syncResponseArray.push({
+              id: item.id,
+              level: ItemLevel.followerRequest,
+              action: syncAction.add,
+              values: item.values as AwesumFollowerRequest
+            });
           }
         }
 
@@ -1116,9 +875,7 @@ app.post("/api/sync", express.json({ limit: '1mb' }), async (req: express.Reques
               level: ItemLevel.database,
               action: syncAction.modify,
               result: item.action == syncAction.add ? syncResultType.added : syncResultType.modified,
-              values: {
-                lastModified: (item.values as ServerDatabaseInterface).lastModified,
-              }
+              values: {}
             });
           }
         }
@@ -1156,6 +913,14 @@ app.post("/api/sync", express.json({ limit: '1mb' }), async (req: express.Reques
                 oc.column('id').doUpdateSet(item.values as AwesumDatabaseUnit)
               )
               .execute();
+
+            syncResponseArray.push({
+              id: item.id,
+              level: ItemLevel.databaseUnit,
+              action: syncAction.modify,
+              result: item.action == syncAction.add ? syncResultType.added : syncResultType.modified,
+              values: {}
+            });
           }
         }
 
@@ -1241,21 +1006,17 @@ app.post("/api/sync", express.json({ limit: '1mb' }), async (req: express.Reques
         }
 
         if (item.level == ItemLevel.followerDatabase) {
-          //get all followerRequests as map of id, followerRequest from foundFollowerRequests where leaderAppId is the foundLeaderAppId
-          const followerRequests = Object.values(
-            foundFollowerRequests).filter((f) => f.leaderAppId == foundLeaderAppId
-              && f.status == followerRequestStatus.Approved).reduce((acc, f) => {
-                acc[f.id] = f;
-                return acc;
-              }, {} as { [key: string]: AwesumFollowerRequest });
 
-          var foundFollowerRequest =
-            followerRequests[(item.values as AwesumFollowerDatabase).followerRequestId];
+          var foundFollowerRequest = await db.selectFrom('awesum.FollowerRequest as fr')
+            .where(({ eb }) => eb('id', '=', (item.values as AwesumFollowerDatabase).followerRequestId)
+              .and(eb('leaderAppId', '=', foundLeaderAppId)))
+            .selectAll('fr')
+            .executeTakeFirst();
           if (!foundFollowerRequest) {
             syncResponseArray.push({
               id: item.id,
               result: syncResultType.failedValidation,
-              message: "Follower database must be initiated by the leader"
+              message: "Follower request not found"
             });
             continue;
           }
@@ -1282,37 +1043,24 @@ app.post("/api/sync", express.json({ limit: '1mb' }), async (req: express.Reques
           }
         }
 
-        if(item.level == ItemLevel.followerRequest){
-          if((item.values as AwesumFollowerRequest).leaderAppId != foundLeaderAppId){
+
+      }
+      else if (item.action == syncAction.delete) {
+        if (item.level == ItemLevel.app) {
+          if (item.id != foundLeaderAppId) {
             syncResponseArray.push({
               id: item.id,
               result: syncResultType.failedValidation,
-              message: "Follower request must be initiated by the leader"
+              message: "App must be the leader app"
             });
             continue;
           }
-          var validationErrors = await validateFollowerRequest(item.values as AwesumFollowerRequest);
-          if (validationErrors.length > 0) {
-            for (const error of validationErrors) {
-              syncResponseArray.push({
-                id: item.id,
-                result: syncResultType.failedValidation,
-                message: error.message
-              });
-            }
-          }
-          else {
-            await db
-              .insertInto('awesum.FollowerRequest')
-              .values(item.values as AwesumFollowerRequest)
-              .onConflict(oc =>
-                oc.column('id').doUpdateSet(item.values as AwesumFollowerRequest)
-              )
-              .execute();
-          }
+
+          await pub.del("appEmailsAndIds:" + userEmail);
+          await pub.sRem("appIds", item.id);
+
+          DeleteApp(item.id, syncResponseArray, res);
         }
-      }
-      else if (item.action == syncAction.delete) {
         if (item.level == ItemLevel.databaseUnit) {
           if ((item.values as AwesumDatabaseUnit).appId != foundLeaderAppId) {
             syncResponseArray.push({
@@ -1390,7 +1138,7 @@ app.post("/api/sync", express.json({ limit: '1mb' }), async (req: express.Reques
 
       if (item.level == ItemLevel.database && item.action == syncAction.add) {
         if (item.action == syncAction.add && item.values) {
-          var defaultDatabase = getDefault(Value.Default(types.filter((x) => x.$id == "database")[0],{} )as ServerDatabaseInterface);
+          var defaultDatabase = getDefault(Value.Default(types.filter((x) => x.$id == "database")[0], {}) as ServerDatabaseInterface);
           for (const key in item.values as any) {
             defaultDatabase[key] = (item.values as any)[key];
           }
@@ -1399,87 +1147,86 @@ app.post("/api/sync", express.json({ limit: '1mb' }), async (req: express.Reques
 
 
 
-      if (item.level == ItemLevel.followerRequest
-        && item.action == syncAction.add
-        && item.values
-      ) {
+      // if (item.level == ItemLevel.followerRequest
+      //   && item.action == syncAction.add
+      //   && item.values
+      // ) {
 
-        var defaultFollowerRequest = getDefault(Value.Default(types.filter((x) => x.$id == "followerRequest")[0],{} )as ServerFollowerRequestInterface);
-        for (const key in item.values as any) {
-          defaultFollowerRequest[key] = (item.values as any)[key];
-        }
-        var validationErrors = await validateFollowerRequest(defaultFollowerRequest as ServerFollowerRequestInterface);
-        if (validationErrors.length > 0) {
-          for (const error of validationErrors) {
-            syncResponseArray.push({
-              id: defaultFollowerRequest.id,
-              result: syncResultType.failedValidation,
-              message: error.message
-            });
-          }
-        }
-        else {
-          var followerEmail = defaultFollowerRequest.followerEmail;
-          var followerAppId = await getAppIdFromEmail(followerEmail);
-          if (!followerAppId) {
-            syncResponseArray.push({
-              id: defaultFollowerRequest.id,
-              result: syncResultType.failedValidation,
-              message: "Follower email not found"
-            });
-            continue;
-          }
-          defaultFollowerRequest.id = item.id;
-          defaultFollowerRequest.followerAppId = followerAppId
+      //   var defaultFollowerRequest = getDefault(Value.Default(types.filter((x) => x.$id == "followerRequest")[0], {}) as ServerFollowerRequestInterface);
+      //   for (const key in item.values as any) {
+      //     defaultFollowerRequest[key] = (item.values as any)[key];
+      //   }
+      //   var validationErrors = await validateFollowerRequest(defaultFollowerRequest as ServerFollowerRequestInterface);
+      //   if (validationErrors.length > 0) {
+      //     for (const error of validationErrors) {
+      //       syncResponseArray.push({
+      //         id: defaultFollowerRequest.id,
+      //         result: syncResultType.failedValidation,
+      //         message: error.message
+      //       });
+      //     }
+      //   }
+      //   else {
+      //     var followerEmail = defaultFollowerRequest.followerEmail;
+      //     var followerAppId = await getAppIdFromEmail(followerEmail);
+      //     if (!followerAppId) {
+      //       syncResponseArray.push({
+      //         id: defaultFollowerRequest.id,
+      //         result: syncResultType.failedValidation,
+      //         message: "Follower email not found"
+      //       });
+      //       continue;
+      //     }
+      //     defaultFollowerRequest.id = item.id;
+      //     defaultFollowerRequest.followerAppId = followerAppId
 
-          await db.insertInto('awesum.FollowerRequest').values(defaultFollowerRequest as AwesumFollowerRequest).execute();
+      //     await db.insertInto('awesum.FollowerRequest').values(defaultFollowerRequest as AwesumFollowerRequest).execute();
 
-          syncResponseArray.push({
-            id: defaultFollowerRequest.id,
-            level: ItemLevel.followerRequest,
-            result: syncResultType.added,
-            action: syncAction.add,
-            values: defaultFollowerRequest
-          });
-
-          const wses = socketConnections.get(defaultFollowerRequest.followerEmail);
-          if (wses) {
-            for (const ws of wses) {
-              if (!(ws as any).macAddress) {
-                ws.send(JSON.stringify(syncRequestArray));
-              }
-            }
-          }
-
-        }
-      }
+      //     syncResponseArray.push({
+      //       id: defaultFollowerRequest.id,
+      //       level: ItemLevel.followerRequest,
+      //       result: syncResultType.added,
+      //       action: syncAction.add,
+      //       values: defaultFollowerRequest
+      //     });
 
 
-      if (item.level == ItemLevel.followerRequest
-        && item.action == syncAction.modify
-        && foundFollowerRequests[item.id]
-        && item.values
-      ) {
-        const followerRequest = foundFollowerRequests[item.id];
+      //     await pub.publish("ws-broadcast", JSON.stringify({
+      //       email: defaultFollowerRequest.followerEmail,
+      //       payload: syncRequestArray
+      //     }));
 
-        for (const key in item.values as any) {
-          followerRequest[key] = (item.values as any)[key];
-        }
 
-        await db.updateTable('awesum.FollowerRequest').set(followerRequest as AwesumFollowerRequest).where('id', '=', followerRequest.id).execute();
 
-        const wses = socketConnections.get(item.values['status'] == followerRequestStatus.Approved ? followerRequest.leaderEmail : followerRequest.followerEmail);
-        if (wses) {
-          for (const ws of wses) {
-            if (!(ws as any).macAddress) {
-              ws.send(JSON.stringify(syncRequestArray));
-            }
-          }
-        }
-      }
+      //   }
+      //}
+
+
+      // if (item.level == ItemLevel.followerRequest
+      //   && item.action == syncAction.modify
+      //   && foundFollowerRequests[item.id]
+      //   && item.values
+      // ) {
+      //   const followerRequest = foundFollowerRequests[item.id];
+
+      //   for (const key in item.values as any) {
+      //     followerRequest[key] = (item.values as any)[key];
+      //   }
+
+      //   await db.updateTable('awesum.FollowerRequest').set(followerRequest as AwesumFollowerRequest).where('id', '=', followerRequest.id).execute();
+
+      //   const wses = socketConnections.get(item.values['status'] == followerRequestStatus.Approved ? followerRequest.leaderEmail : followerRequest.followerEmail);
+      //   if (wses) {
+      //     for (const ws of wses) {
+      //       if (!(ws as any).macAddress) {
+      //         ws.send(JSON.stringify(syncRequestArray));
+      //       }
+      //     }
+      //   }
+      // }
 
       if (item.level == ItemLevel.followerDatabase && item.action == syncAction.add && item.values) {
-        var defaultFollowerDatabase = getDefault(Value.Default(types.filter((x) => x.$id == "followerDatabase")[0],{} )as ServerFollowerDatabaseInterface);
+        var defaultFollowerDatabase = getDefault(Value.Default(types.filter((x) => x.$id == "followerDatabase")[0], {}) as ServerFollowerDatabaseInterface);
         for (const key in item.values as any) {
           defaultFollowerDatabase[key] = (item.values as any)[key];
         }
@@ -1800,6 +1547,28 @@ app.post("/api/sync", express.json({ limit: '1mb' }), async (req: express.Reques
 
       //   } */
     }
+
+    for (const followerRequestId in followerFollowerRequests) {
+      var leader = followerFollowerRequests[followerRequestId];
+      var foundFollowerRequest = requestFollowerRequests[followerRequestId];
+      if (!foundFollowerRequest) {
+        syncResponseArray.push({
+          id: followerRequestId,
+          level: ItemLevel.followerRequest,
+          action: syncAction.add,
+          values: leader
+        });
+
+      }
+      if (foundFollowerRequest && foundFollowerRequest.lastModified < leader.lastModified) {
+        syncResponseArray.push({
+          id: leader.id,
+          action: syncAction.modify,
+          values: leader
+        });
+      }
+    }
+
     res.status(200).json(syncResponseArray);
     return;
   } catch (error) {
@@ -1850,6 +1619,170 @@ app.get(
     }
   },
 );
+
+
+
+app.get(
+  "/api/appChecksum",
+  async (req: express.Request, res: express.Response) => {
+    if (!(req as any).user) {
+      res.status(401).json({
+        error: req.t!(resources.Authentication_Is_Required.key),
+      });
+      return;
+    }
+
+    var email = (req as any).user.emails[0];
+    var appId = await getAppIdFromEmail(email);
+    if (!appId) {
+      res.status(400).json({
+        error: "unknown user"
+      });
+      return;
+    }
+    // get followerRequests and joined followerDatabases where followerAppId is appId
+    var followerRequests = await db.selectFrom('awesum.FollowerRequest as fr')
+      .where(({ eb }) =>
+        eb('followerAppId', '=', appId))
+
+      .select((eb) => [
+
+        'fr.id',
+        'fr.version',
+        'fr.lastModified',
+
+      ])
+      .execute();
+
+    // Collect list of id, version, lastModified for both FollowerRequest and FollowerDatabase
+    const result: { type: string, id: string, version: number, lastModified: number }[] = [];
+
+    for (const followerRequest of followerRequests) {
+      result.push({
+        type: "FollowerRequest",
+        id: followerRequest.id,
+        version: followerRequest.version,
+        lastModified: followerRequest.lastModified
+      });
+
+    }
+
+    // get followerRequests and joined followerDatabases where followerAppId is appId
+    var followerDatabases = await db.selectFrom('awesum.FollowerRequest as fr')
+      .innerJoin('awesum.FollowerDatabase as fd', 'fd.followerRequestId', 'fr.id')
+      .where(({ eb }) =>
+        eb('followerAppId', '=', appId))
+      .select((eb) => [
+        'fd.id as fd_id',
+        'fd.version as fd_version',
+        'fd.lastModified as fd_lastModified',
+      ])
+      .execute();
+
+    for (const followerDatabase of followerDatabases) {
+      result.push({
+        type: "FollowerDatabase",
+        id: followerDatabase.fd_id,
+        version: followerDatabase.fd_version,
+        lastModified: followerDatabase.fd_lastModified
+      });
+    }
+
+    var apps = await db.selectFrom('awesum.App as a')
+      .innerJoin('awesum.FollowerRequest as fr', 'fr.leaderAppId', 'a.id')
+      .where(({ eb }) =>
+        eb('followerAppId', '=', appId))
+      .select((eb) => [
+        'a.id',
+        'a.version',
+        'a.lastModified',
+      ])
+      .execute();
+
+    for (const app of apps) {
+      result.push({
+        type: "App",
+        id: app.id,
+        version: app.version,
+        lastModified: app.lastModified
+      });
+    }
+
+
+
+    var apps = await db.selectFrom('awesum.App as a')
+      .innerJoin('awesum.FollowerRequest as fr', 'fr.followerAppId', 'a.id')
+      .where(({ eb }) =>
+        eb('leaderAppId', '=', appId))
+      .select((eb) => [
+        'a.id',
+        'a.version',
+        'a.lastModified',
+      ])
+      .execute();
+
+    for (const app of apps) {
+      result.push({
+        type: "App",
+        id: app.id,
+        version: app.version,
+        lastModified: app.lastModified
+      });
+    }
+
+    res.json(result);
+
+  },
+);
+
+app.get(
+  "/api/databaseCompletionsChecksum",
+  async (req: express.Request, res: express.Response) => {
+    if (!(req as any).user) {
+      res.status(401).json({
+        error: req.t!(resources.Authentication_Is_Required.key),
+      });
+      return;
+    }
+
+    var mostRecentLastModified = req.query.mostRecentLastModified as string;
+
+    var email = (req as any).user.emails[0];
+    var appId = await getAppIdFromEmail(email);
+
+    if (!appId) {
+      res.status(400).json({
+        error: "unknown user"
+      });
+      return;
+    }
+
+    var foundFollowerDatabaseCompletions = await db.selectFrom('awesum.FollowerDatabaseCompletion as fdc')
+      .innerJoin('awesum.FollowerRequest as fr', 'fr.id', 'fdc.followerRequestId')
+      .where(({ eb }) =>
+        eb.and([eb('fr.leaderAppId', '=', appId).or('fr.followerAppId', '=', appId),
+        eb('fdc.lastModified', '>=', parseInt(mostRecentLastModified))])
+      )
+      .selectAll('fdc')
+      .execute();
+
+    const result = [] as ServerSyncResponseInterface[];
+
+    for (const followerDatabaseCompletion of foundFollowerDatabaseCompletions) {
+      result.push(
+        {
+          id: followerDatabaseCompletion.id,
+          values: followerDatabaseCompletion,
+          action: syncAction.add,
+          level: ItemLevel.followerDatabaseCompletion
+        }
+      );
+    }
+
+    res.json(result);
+  },
+);
+
 
 
 // Logout route

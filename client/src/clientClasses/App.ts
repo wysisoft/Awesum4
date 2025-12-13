@@ -38,13 +38,13 @@
     public set uniqueName(v:string) {if(this._uniqueName != v){this.version++;this.lastModified=new Date().getTime();this._uniqueName=v;awesum.setTablePropertyValueById(this.id, 'uniqueName',v,this.table)}}
     private _version: number = 0;
     public get version():number { return this._version; }
-    public set version(v:number) {if(this._version != v){this._version=v;awesum.setTablePropertyValueById(this.id, 'version',v,this.table)}}
+    public set version(v:number) {if(this._version != v){this._version=v;}}
     private _touched: boolean = false;
     public get touched():boolean { return this._touched; }
-    public set touched(v:boolean) {if(this._touched != v){this.version++;this.lastModified=new Date().getTime();this._touched=v;awesum.setTablePropertyValueById(this.id, 'touched',v,this.table)}}
+    public set touched(v:boolean) {if(this._touched != v){this._touched=v;}}
     private _lastModified: number = 0;
     public get lastModified():number { return this._lastModified; }
-    public set lastModified(v:number) {if(this._lastModified != v){this._lastModified=v;awesum.setTablePropertyValueById(this.id, 'lastModified',v,this.table)}}
+    public set lastModified(v:number) {if(this._lastModified != v){this._lastModified=v;}}
     private _homePageImageType: number = 0;
     public get homePageImageType():number { return this._homePageImageType; }
     public set homePageImageType(v:number) {if(this._homePageImageType != v){this.version++;this.lastModified=new Date().getTime();this._homePageImageType=v;awesum.setTablePropertyValueById(this.id, 'homePageImageType',v,this.table)}}
@@ -65,7 +65,7 @@
     public set groups(v:string) {if(this._groups != v){this.version++;this.lastModified=new Date().getTime();this._groups=v;awesum.setTablePropertyValueById(this.id, 'groups',v,this.table)}}
     private _id: string = "";
     public get id():string { return this._id; }
-    public set id(v:string) {if(this._id != v){this._id=v;awesum.setTablePropertyValueById(this.id, 'id',v,this.table)}}
+    public set id(v:string) {if(this._id != v){this._id=v;}}
     private _lastSync: number = 0;
     public get lastSync():number { return this._lastSync; }
     public set lastSync(v:number) {if(this._lastSync != v){this.version++;this.lastModified=new Date().getTime();this._lastSync=v;awesum.setTablePropertyValueById(this.id, 'lastSync',v,this.table)}}
