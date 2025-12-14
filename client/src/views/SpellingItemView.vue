@@ -500,8 +500,14 @@ export default {
   },
 
   methods: {
+    async beforeRouteLeave() {
+      document.getElementById('fireworksCanvas')!.remove();
+      document.getElementById('balloonCanvas')!.remove();
+      document.getElementById('emojiCanvas')!.remove();
+      document.getElementById('confettiCanvas')!.remove();
+      
+    },
     async beforeRouteEnter() {
-
       let imageSrc = await awesum.AwesumDexieDB.serverMedia.get((awesum.currentDatabaseItemTemp as ServerSpellingDatabaseItemInterface).data.image);
       if (imageSrc) {
         awesum.currentDatabaseItemAsyncData.imageSrc = imageSrc.data;
@@ -973,7 +979,6 @@ export default {
 
 <template>
   <div>
-    <div>{{ console.log('here') }}</div>
     <div class="view" ref="view"
       style="display: flex;justify-items: center;height: 100%;flex-direction: column;align-items: center;position:relative;overflow: hidden;">
 

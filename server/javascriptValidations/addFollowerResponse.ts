@@ -16,7 +16,7 @@ default: '00000000-0000-0000-0000-000000000000',
 format: 'uuid',
 type: 'string'},
 id: {
-default: '019b148f-9161-730a-bb36-beb69d63cb33',
+default: '019b19c9-249e-75e8-b6b4-0d43971f92d1',
 format: 'uuid',
 type: 'string'},
 followerName: {

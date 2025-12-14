@@ -95,8 +95,7 @@ const modifications = ref(new Map<string, any>());
       return false;
     },
     beforeEnter(el: any) {
-      if (this.$router.options.history.length  == 0) {
-        debugger;
+      if (!this.$router.options.history.length || this.$router.options.history.length  == 0) {
         return;
       }
       // Called before the new component enters
@@ -127,8 +126,12 @@ const modifications = ref(new Map<string, any>());
     },
 
     leave(el: any, done: any) {
+      if (!this.currentElement) {
+        done();
+        return;
+      }
       var interval = setInterval(() => {
-        if (!this.areImagesLoading(this.currentElement! as HTMLElement)) {
+        if ( !this.areImagesLoading(this.currentElement! as HTMLElement)) {
           clearInterval(interval);
           el.style.display = 'none';
           (this.currentElement! as HTMLElement).style.display = this.currentElementDisplay;
@@ -148,8 +151,10 @@ const modifications = ref(new Map<string, any>());
       this.toggle();
     },
     showEdit() {
-      return this.$awesum.currentApp && this.$awesum.currentApp.id == this.$awesum.ownerApp.id && this.$awesum.currentApp.uniqueName
-        && !this.$route.fullPath.startsWith("/" + I18nGlobal.t(resources.i.key) + "/")
+      return this.$awesum.currentApp && this.$awesum.currentApp.id == this.$awesum.ownerApp.id 
+      && this.$awesum.currentApp.uniqueName
+        && !this.$route.fullPath.startsWith("/" + I18nGlobal.t(resources.i.key) + "/") &&
+        this.$router.currentRoute.value.name != 'unitCompleted'
         
     },
     showPlay() {

@@ -150,7 +150,7 @@ export default {
 
         <router-link custom :to="{ path: $awesum.getDynamicUrl(database as ServerDatabaseInterface, $route) }"
           v-slot="{ href }" style="margin-right:1svmin;">
-          <button class="btn btn-primary" style="margin-left:2svmin;" @click="$router.push(href)">
+          <button class="btn btn-primary appEditDatabaseButton" style="margin-left:2svmin;" @click="$router.push(href)">
             <span>{{ $t($resources.Edit.key) }}</span>
           </button>
         </router-link>

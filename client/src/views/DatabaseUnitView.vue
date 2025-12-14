@@ -42,14 +42,17 @@ export default {
         </router-link> to edit items</div>
 
       <div v-for="item in $awesum.currentDatabaseItems" class="listItem" style="display:flex;align-items: baseline;">
-        
         <router-link custom :to="{path:$awesum.getDynamicUrl(item as ServerDatabaseItemInterface, $route)}" v-slot="{ href }">
-          <!--<button class="btn btn-primary" :style="{backgroundColor: awesum.currentDatabaseItemCompletions.has(item.id) ? '#68ff68' : '', color: awesum.currentDatabaseItemCompletions.has(item.id) ? 'black' : '',}" style="margin-left:2svmin;"  @click="$router.push(href)">-->
+          
             
           <button class="btn btn-primary"
-              :style="{backgroundColor: $awesum.currentDatabaseCompletions.has(item.id) ? '#68ff68' : '', color: $awesum.currentDatabaseCompletions.has(item.id) ? 'black' : '',}"
+              :style="{backgroundColor: $awesum.currentDatabaseCompletions.has(item.id) ||
+                $awesum.currentDatabaseCompletions.has($awesum.currentDatabaseUnit.id)  ? '#68ff68' : '', color: $awesum.currentDatabaseCompletions.has(item.id)
+                || $awesum.currentDatabaseCompletions.has($awesum.currentDatabaseUnit.id) ? 'black' : '',}"
           style="margin-left:2svmin;margin-right:1svmin;margin-bottom:1svmin;"  @click="$router.push(href)">
-            <span>{{ $t($resources.Lets_Go.key) }}</span>
+            <span>{{$awesum.currentDatabaseCompletions.has(item.id)
+            || $awesum.currentDatabaseCompletions.has($awesum.currentDatabaseUnit.id) 
+            ? $t($resources.Completed.key) : $t($resources.Lets_Go.key) }}</span>
           </button> 
         </router-link>
 
@@ -90,25 +93,7 @@ export default {
   text-align: center !important;
 }
 
-/* Add this new style to set the font size for the DataTable */
-#completionDataTable {
-  font-size: 2.2svmin;
-}
 
-/* Set the font size for the DataTable header */
-#completionDataTable thead th {
-  font-size: 2.5svmin;
-}
-
-/* Adjust the button size to match the table font size */
-#completionDataTable .btn {
-  font-size: 2.2svmin;
-  padding: 0.3svmin 0.8svmin;
-}
-
-#completionDataTable_wrapper .dt-layout-table {
-  font-size: 2.2svmin;
-}
 
 .dt-layout-table tbody {
   font-size: 2.2svmin;

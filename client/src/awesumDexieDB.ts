@@ -138,8 +138,6 @@ export class AwesumDexieDB extends Dexie {
                     version: 0,
                 } as ServerFollowerDatabaseInterface)
 
-
-
                 var dbUnitId = uuid();
                 trans.table('serverDatabaseUnits').put({
                     name: 'Unit 1',

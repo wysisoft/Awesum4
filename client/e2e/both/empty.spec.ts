@@ -68,8 +68,10 @@ async function launchWithRecorder(dataDir: string, windowTop: number, windowLeft
     windowId: (await session.send('Browser.getWindowForTarget')).windowId,
     bounds: { top: windowTop, left: windowLeft, width: windowWidth, height: windowHeight }
   });
-
   
+  page.exposeFunction('openInspector', async () => {
+    await page.pause();
+  });
 
 
   return browser!;
@@ -85,12 +87,9 @@ let isPaused = false;
 
 
 const wildert = await wildertBrowser.pages()[0];
-await wildert.pause();
+
 instrumentPage(wildert, wildertBrowser);
-wildert.exposeFunction('openInspector', async () => {
-  console.log('Inspector triggered');
-  await wildert.pause();
-});
+
 await wildert.goto('https://dev.awesum.app/');
 
 await wildert.getByRole('link', { name: 'Settings' }).click();
@@ -140,7 +139,27 @@ await demobrat.getByRole('button', { name: 'Manage Leaders' }).click();
 await demobrat.getByRole('button', { name: 'Respond' }).click();
 await demobrat.getByRole('button', { name: 'Approve' }).click();
 
-await wildert.evaluate(() => eval('debugger'));
-await wildert.getByRole('button', { name: 'Sync' }).click();
 
+await wildert.getByRole('button', { name: 'Sync' }).click();
 await wildert.getByRole('button', { name: 'Settings' }).click();
+
+await wildert.getByRole('button', { name: 'Home' }).click();
+await wildert.getByRole('button', { name: 'Lets Go' }).click();
+await wildert.getByRole('link', { name: 'edit' }).click();
+
+await wildert.getByRole('button', { name: 'Add Database' }).click();
+await wildert.locator('.appEditDatabaseButton').first().click();
+
+await wildert.getByRole('button', { name: 'Add Unit' }).click();
+await wildert.getByRole('link', { name: 'Edit' }).first().click();
+await wildert.locator('.multiselect__select').first().click();
+await wildert.locator('span').filter({ hasText: 'Spelling' }).nth(2).click();
+await wildert.locator('.unitEditItemButton').first().click();
+await wildert.getByRole('textbox', { name: 'Item Text' }).fill('Calvin');
+await wildert.getByRole('textbox', { name: 'Item Text' }).press('Tab');
+await wildert.getByRole('textbox', { name: 'Visual Hint' }).press('Tab');
+await wildert.getByRole('textbox', { name: 'Letters' }).press('ControlOrMeta+a');
+await wildert.getByRole('textbox', { name: 'Letters' }).fill('');
+await wildert.getByRole('button', { name: 'Play' }).click();
+
+await wildert.pause();

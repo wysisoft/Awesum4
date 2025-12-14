@@ -1284,7 +1284,7 @@ export default {
             }
 
             if ((awesum.currentDatabaseItem as ServerOneByOneMathDatabaseItemInterface).data.successAnimations.indexOf('Fireworks') > -1) {
-
+debugger;
               let fireworksCanvas = document.getElementById('fireworksCanvas') as HTMLCanvasElement
               fireworksCanvas.style.display = '';
 
@@ -1323,10 +1323,10 @@ export default {
 
             confettiCanvas.style.display = 'none';
 
-            if (this.fireworks.stop) {
-              this.fireworks.stop();
-              this.fireworks = {} as Fireworks;
-            }
+            // if (this.fireworks.stop) {
+            //   this.fireworks.stop();
+            //   this.fireworks = {} as Fireworks;
+            // }
 
             if (this.balloons.removeBalloons) {
               this.balloons.removeBalloons();

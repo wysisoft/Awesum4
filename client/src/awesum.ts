@@ -1,5 +1,5 @@
 import { reactive, shallowRef } from "vue";
-import { getDefault } from "../../server/typebox";
+import { followerRequestStatus, getDefault } from "../../server/typebox";
 import { AwesumDexieGlobalDB } from "./awesumDexieGlobalDB";
 import { ClientApp } from "./clientClasses/App";
 import type { AwesumDexieDB as AwesumDexieDB } from "./awesumDexieDB";
@@ -229,9 +229,7 @@ export const awesum = reactive({
       .first();
 
     if (followerRequest) {
-      var followerDatabase = await this.AwesumDexieDB.serverFollowerDatabases.where('followerRequestId').equals(followerRequest.id)
-        .first();
-
+    
       const items = await this.AwesumDexieDB.serverFollowerDatabaseCompletions
         .where('followerRequestId').equals(followerRequest.id)
         .toArray();
@@ -565,8 +563,28 @@ export const awesum = reactive({
           if (!awesum.ownerApp.id) {
             await awesum.putOwnerAppInsideDatabase(item.values as ServerAppInterface);
           }
+
+          var defaultFollowerRequest = getDefault(Value.Default(types.filter((x) => x.$id == "followerRequest")[0],{} )as ServerFollowerRequestInterface);
+          defaultFollowerRequest.leaderAppId = awesum.ownerApp.id;
+          defaultFollowerRequest.followerAppId = awesum.ownerApp.id;
+          defaultFollowerRequest.followerName = awesum.ownerApp.name;
+          defaultFollowerRequest.leaderName = awesum.ownerApp.name;
+          defaultFollowerRequest.followerEmail = awesum.ownerApp.email;
+          defaultFollowerRequest.leaderEmail = awesum.ownerApp.email;
+          defaultFollowerRequest.status = followerRequestStatus.Approved;
+          await awesum.AwesumDexieDB.serverFollowerRequests.put(defaultFollowerRequest);
+          await awesum.refreshServerFollowerRequests();
+          debugger;
+
         }
         if (item.level == ItemLevel.followerRequest) {
+          await awesum.AwesumDexieDB.serverFollowerRequests.put(item.values as ServerFollowerRequestInterface);
+          await awesum.refreshServerFollowerRequests();
+          debugger;
+        }
+      }
+      if(item.action == syncAction.modify) {
+        if(item.level == ItemLevel.followerRequest) {
           await awesum.AwesumDexieDB.serverFollowerRequests.put(item.values as ServerFollowerRequestInterface);
           await awesum.refreshServerFollowerRequests();
         }

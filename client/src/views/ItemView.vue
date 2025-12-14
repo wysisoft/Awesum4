@@ -100,9 +100,38 @@ export default {
 
     await next();
   },
+  async beforeRouteLeave(to, from, next) {
+    
+    let currentView = null;
+
+    if (awesum.currentDatabaseItemTemp.itemType == itemType.spelling) {
+      currentView = SpellingItemView;
+    } else if (
+      awesum.currentDatabaseItemTemp.itemType == itemType.oneByTwoDigraphs
+    ) {
+      currentView = OneByTwoDigraphsView;
+    } else if (
+      awesum.currentDatabaseItemTemp.itemType == itemType.oneByOneMultiplication
+    ) {
+      currentView = Multiplication1x1ItemView;
+    } else if (
+      awesum.currentDatabaseItemTemp.itemType == itemType.oneByOneAddition
+    ) {
+      currentView = Addition1x1ItemView;
+    } else {
+      alert("Item type not found");
+    }
+    
+
+    if (currentView && currentView.methods && (currentView.methods as any).beforeRouteLeave) {
+      await (currentView.methods as any).beforeRouteLeave();
+    }
+    next();
+  },
 };
 </script>
 <template>
-  <!-- dynamically render whichever view is chosen -->
-  <component :key="$route.fullPath " :is="currentView" v-bind="passThroughProps" />
+  <div>
+  <component :key="$route.fullPath + $awesum.refreshNumber " :is="currentView" v-bind="passThroughProps" />
+  </div>
 </template>

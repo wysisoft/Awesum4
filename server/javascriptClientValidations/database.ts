@@ -8,7 +8,7 @@ lastModified: { default: 0, type: 'number' },
 version: { default: 0, minimum: 0, type: 'integer' },
 appId: { format: 'uuid', type: 'string' },
 id: {
-default: '019b148f-9161-730a-bb36-b554a467dcbd',
+default: '019b19c9-249e-75e8-b6b4-06db471f4469',
 format: 'uuid',
 type: 'string'},
 order: { default: 0, minimum: 0, type: 'integer' },

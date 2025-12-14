@@ -48,7 +48,7 @@ export default {
     };
   },
   async mounted() {
-
+debugger;
     if (this.$awesum.currentDatabaseUnit.successAnimations.indexOf('Balloons') > -1) {
       var balloonCanvas = document.getElementById('balloonCanvas') as HTMLCanvasElement;
       balloonCanvas.style.display = '';
@@ -173,7 +173,9 @@ export default {
     }
 
     var currentFollowerRequest = this.$awesum.followerRequests.filter((o) => {
-      return o.leaderAppId == this.$awesum.currentApp.id && o.followerAppId == this.$awesum.ownerApp.id && o.status == followerRequestStatus.Approved
+      return o.leaderAppId == this.$awesum.currentApp.id 
+      && o.followerAppId == this.$awesum.ownerApp.id 
+      && o.status == followerRequestStatus.Approved
     })[0];
 
     let completionData = {} as ServerFollowerDatabaseCompletionInterface;
@@ -535,7 +537,7 @@ export default {
 <template>
   <div class="pageView">
     <img id="successImage"
-      style="display:none;z-index: 9999;object-fit: contain;width: 100svmin;height: 81svmin;pointer-events: none;position: absolute;margin: auto;margin-top: 17svmin;" />
+      style="display:none;z-index: 9999;object-fit: contain;width: 97svmin;height: 81svmin;pointer-events: none;position: absolute;margin: auto;margin-top: 8svmin;" />
 
     <div id="balloonCanvas"
       style="display: none; position:absolute;width:100svmin;height:100svmin;margin:auto;z-index:9999;pointer-events:none;">
