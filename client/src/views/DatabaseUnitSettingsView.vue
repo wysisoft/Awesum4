@@ -509,9 +509,9 @@ export default {
         <label style="width:25svmin;" class="input-group-text" for="inputGroupSelect01">Success Video</label>
         <select @change="successVideoTypeChanged" class="form-select"
           v-model="$awesum.currentDatabaseUnit.successVideoType" style="width:68svmin;">
-          <option value="0">None</option>
-          <option value="1">From YouTube</option>
-          <option value="2">From Giphy</option>
+          <option :value="successVideoType.None">None</option>
+          <option :value="successVideoType.YouTube">From YouTube</option>
+          <option :value="successVideoType.Giphy">From Giphy</option>
         </select>
       </div>
 

@@ -48,7 +48,6 @@ export default {
     };
   },
   async mounted() {
-debugger;
     if (this.$awesum.currentDatabaseUnit.successAnimations.indexOf('Balloons') > -1) {
       var balloonCanvas = document.getElementById('balloonCanvas') as HTMLCanvasElement;
       balloonCanvas.style.display = '';
@@ -547,7 +546,7 @@ debugger;
     <canvas id="confettiCanvas"
       style="background:transparent;display: none;position:absolute;width:100svmin;height:100svmin;margin:auto;z-index:9999;pointer-events:none;"></canvas>
     <canvas id="fireworksCanvas"
-      style="background:transparent;display: none;position:absolute;width:100svmin;height:100svmin;margin:auto;z-index:9999;pointer-events:none;"></canvas>
+      style="background:transparent;display: none;position:absolute;width:100svmin;height:87svmin;margin:auto;z-index:9999;pointer-events:none;"></canvas>
     <div style="display: none;width:100%;height:100%;position:absolute;margin:auto;z-index:9998;" id="player">
     </div>
 

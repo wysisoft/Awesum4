@@ -11,7 +11,7 @@ version: { minimum: 0, type: 'integer' },
 id: { format: 'uuid', type: 'string' },
 appId: { format: 'uuid', type: 'string' },
 databaseId: { format: 'uuid', type: 'string' },
-successVideoType: { default: 0, minimum: 0, maximum: 2, type: 'integer' },
+successVideoType: { default: 2, minimum: 0, maximum: 2, type: 'integer' },
 successVideoUrl: { maxLength: 100, type: 'string' },
 successAnimations: { default: 'Fireworks', maxLength: 100, type: 'string' },
 successSound: {

@@ -322,8 +322,8 @@ export const awesum = reactive({
   },
 
   async refreshCurrentFollowerDatabases() {
-    this.currentFollowerDatabases = await this.AwesumDexieDB.serverFollowerDatabases
-      .where({ databaseId: this.currentDatabase.id }).toArray();
+    this.currentFollowerDatabases = await this.AwesumDexieDB.serverFollowerDatabases.toArray();
+      
   },
 
   async refreshCurrentDatabases() {
@@ -574,13 +574,19 @@ export const awesum = reactive({
           defaultFollowerRequest.status = followerRequestStatus.Approved;
           await awesum.AwesumDexieDB.serverFollowerRequests.put(defaultFollowerRequest);
           await awesum.refreshServerFollowerRequests();
-          debugger;
 
         }
         if (item.level == ItemLevel.followerRequest) {
+          console.log('adding follower request', item.values);
           await awesum.AwesumDexieDB.serverFollowerRequests.put(item.values as ServerFollowerRequestInterface);
           await awesum.refreshServerFollowerRequests();
+        }
+
+
+        if (item.level == ItemLevel.followerDatabase) {
           debugger;
+          await awesum.AwesumDexieDB.serverFollowerDatabases.put(item.values as ServerFollowerDatabaseInterface);
+          await awesum.refreshCurrentFollowerDatabases();
         }
       }
       if(item.action == syncAction.modify) {

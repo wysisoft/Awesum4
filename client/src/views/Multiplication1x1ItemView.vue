@@ -1284,7 +1284,6 @@ export default {
             }
 
             if ((awesum.currentDatabaseItem as ServerOneByOneMathDatabaseItemInterface).data.successAnimations.indexOf('Fireworks') > -1) {
-debugger;
               let fireworksCanvas = document.getElementById('fireworksCanvas') as HTMLCanvasElement
               fireworksCanvas.style.display = '';
 

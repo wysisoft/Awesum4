@@ -129,13 +129,13 @@ await wildert.getByRole('button', { name: 'Search' }).press('Enter');
 await wildert.getByRole('button', { name: 'Search' }).click();
 await wildert.getByRole('button', { name: 'Submit' }).click();
 
-//await demobrat.evaluate(() => eval('debugger'));
 
 await demobrat.getByRole('button', { name: 'Sync' }).click();
 await demobrat.getByRole('button', { name: 'Settings' }).click();
 
 await demobrat.getByRole('link', { name: 'Manage Leaders and Followers' }).click();
 await demobrat.getByRole('button', { name: 'Manage Leaders' }).click();
+
 await demobrat.getByRole('button', { name: 'Respond' }).click();
 await demobrat.getByRole('button', { name: 'Approve' }).click();
 
@@ -161,5 +161,18 @@ await wildert.getByRole('textbox', { name: 'Visual Hint' }).press('Tab');
 await wildert.getByRole('textbox', { name: 'Letters' }).press('ControlOrMeta+a');
 await wildert.getByRole('textbox', { name: 'Letters' }).fill('');
 await wildert.getByRole('button', { name: 'Play' }).click();
+
+
+
+await wildert.getByRole('button', { name: 'Database' }).click();
+await wildert.getByRole('button', { name: 'Edit' }).click();
+await wildert.getByRole('button', { name: 'Add Assignment' }).click();
+
+await wildert.getByLabel('Select user').selectOption({index: 1});
+
+await wildert.getByRole('button', { name: 'Submit' }).click();
+await wildert.getByRole('button', { name: 'Home' }).click();
+
+await demobrat.getByRole('button', { name: 'Sync' }).click();
 
 await wildert.pause();

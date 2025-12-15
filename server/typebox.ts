@@ -412,7 +412,7 @@ export const types = [
                 formatMessage: "Must_be_a_valid_UUID",
             }),
             successVideoType: Type.Integer({
-                default: successVideoType.Giphy,
+                default: successVideoType.None,
                 minimum: 0,
                 minimumMessage: "Must_be_greater_than_or_equal_to_0",
                 maximum: Math.max(
