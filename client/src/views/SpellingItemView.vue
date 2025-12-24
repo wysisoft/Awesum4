@@ -733,7 +733,7 @@ export default {
 
 
           //search for a completion with the current item id
-          if (!this.$awesum.currentDatabaseCompletions.get(awesum.currentDatabaseItem.id)) {
+          if (!this.$awesum.currentDatabaseCompletions.has(awesum.currentDatabaseItem.id)) {
 
             var newId = uuid();
 
@@ -750,7 +750,11 @@ export default {
               this.clearingUnitItemCompletions = true;
             }
 
-            await this.$awesum.AwesumDexieDB.transaction('rw', this.$awesum.AwesumDexieDB.serverFollowerDatabaseCompletions, async () => {
+            await this.$awesum.AwesumDexieDB.transaction('rw', 
+            this.$awesum.AwesumDexieDB.serverFollowerDatabaseCompletions,
+            this.$awesum.AwesumDexieDB.additions,
+            this.$awesum.AwesumDexieDB.serverDatabases,
+            async () => {
               // if (doneWithUnit) {
 
               //   // await Global.awesumDb.serverFollowerDatabaseCompletions.where('unitId').equals(awesum.currentDatabaseUnit.id).and((followerDatabaseCompletion: ServerFollowerDatabaseCompletion) => followerDatabaseCompletion.itemId != '').delete();
@@ -1093,7 +1097,7 @@ export default {
         width :5svmin;
         padding-Left: .5svmin;
         padding-right: .5svmin;
-        " v-bind:style="{ backgroundColor: clearingUnitItemCompletions || $awesum.currentDatabaseCompletions.get(item.id) ? '#68ff68' : '', border: $awesum.currentDatabaseItem.order == item.order ? '.5svmin dashed black' : '' }"
+        " v-bind:style="{ backgroundColor: clearingUnitItemCompletions || $awesum.currentDatabaseCompletions.has(item.id) ? '#68ff68' : '', border: $awesum.currentDatabaseItem.order == item.order ? '.5svmin dashed black' : '' }"
             @click="footerButtonClick($event, item)">
             <span>{{ item.order }}</span>
 

@@ -1,7 +1,7 @@
 <script lang="ts">
 import { ref } from 'vue';
 import type { ServerDatabaseUnitInterface } from '../../../server/serverInterfaces/ServerDatabaseUnitInterface';
-import { itemType } from '../../../server/typebox';
+import { itemType, ItemLevel } from '../../../server/typebox';
 
 export default {
   setup() {
@@ -9,10 +9,17 @@ export default {
 
     return {
       background,
-      itemType
+      itemType,
     }
   },
+  async beforeCreate() {
+    
+  },
   async mounted() {
+
+
+    
+
     var mediaItem = await this.$awesum.AwesumDexieDB.serverMedia.get(this.$awesum.currentDatabase.homePageIcon);
     if (mediaItem) {
       this.background = 'url("' + mediaItem.data + '")';

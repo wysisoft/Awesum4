@@ -89,11 +89,13 @@ let groups = reactive({value:''});
       }
 
       var syncRequest:Array<ServerSyncRequestInterface> = [];
+      var appSyncRequest = await awesum.getAppSyncRequest(awesum.ownerApp.id);
+      syncRequest.push(appSyncRequest);
       syncRequest.push({
         action: syncAction.add,
-        id:this.payload.id,
-        level:ItemLevel.followerRequest,
-        values:this.payload,
+        id: this.payload.id,
+        level: ItemLevel.followerRequest,
+        values: this.payload,
       });
       
       await awesum.sync(syncRequest);

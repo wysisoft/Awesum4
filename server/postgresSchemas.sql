@@ -21,7 +21,9 @@
 DROP TABLE IF EXISTS awesum."Deletion";
     CREATE TABLE awesum."Deletion" (
   "id" UUID PRIMARY KEY NOT NULL,
-  "level" INTEGER NOT NULL
+  "databaseId" UUID NOT NULL,
+  "level" INTEGER NOT NULL,
+  "lastModified" NUMERIC NOT NULL
 );
 
 DROP TABLE IF EXISTS awesum."Modification";
@@ -50,7 +52,10 @@ DROP TABLE IF EXISTS awesum."Database";
   "order" INTEGER NOT NULL,
   "homePageIconType" INTEGER NOT NULL,
   "homePageIcon" UUID NOT NULL,
-  "touched" BOOLEAN NOT NULL
+  "touched" BOOLEAN NOT NULL,
+  "unitLastModified" NUMERIC NOT NULL,
+  "itemLastModified" NUMERIC NOT NULL,
+  "mediaLastModified" NUMERIC NOT NULL
 );
 
 DROP TABLE IF EXISTS awesum."DatabaseUnit";
@@ -88,7 +93,7 @@ DROP TABLE IF EXISTS awesum."DatabaseItem";
   "databaseId" UUID NOT NULL,
   "id" UUID PRIMARY KEY NOT NULL,
   "dataText" VARCHAR(8000) NOT NULL,
-  "data" TEXT NOT NULL
+  "data" TEXT NULL
 );
 
 DROP TABLE IF EXISTS awesum."FollowerDatabase";
@@ -98,13 +103,7 @@ DROP TABLE IF EXISTS awesum."FollowerDatabase";
   "databaseId" UUID NOT NULL,
   "lastModified" NUMERIC NOT NULL,
   "touched" BOOLEAN NOT NULL,
-  "version" INTEGER NOT NULL,
-  "databaseVersion" INTEGER NOT NULL,
-  "databaseLastModified" NUMERIC NOT NULL,
-  "unitVersion" INTEGER NOT NULL,
-  "unitLastModified" NUMERIC NOT NULL,
-  "itemVersion" INTEGER NOT NULL,
-  "itemLastModified" NUMERIC NOT NULL
+  "version" INTEGER NOT NULL
 );
 
 DROP TABLE IF EXISTS awesum."FollowerRequest";

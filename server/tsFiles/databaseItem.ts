@@ -9,5 +9,5 @@ export type databaseItem = {
   databaseId: string
   id: string
   dataText: string
-  data: any
+  data?: any
 }

@@ -7,6 +7,8 @@
 
 export interface ServerDeletionInterface {
   id: string;
+  databaseId: string;
   level: number;
+  lastModified: number;
   
 }

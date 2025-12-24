@@ -56,6 +56,9 @@ export interface Database {
   homePageIconType: number;
   homePageIcon: string;
   touched: boolean;
+  unitLastModified: number;
+  itemLastModified: number;
+  mediaLastModified: number;
   
 }
 export interface DatabaseUnit {
@@ -91,7 +94,7 @@ export interface DatabaseItem {
   databaseId: string;
   id: string;
   dataText: string;
-  data: unknown;
+  data?: unknown;
   
 }
 export interface FollowerRequest {
@@ -118,12 +121,6 @@ export interface FollowerDatabase {
   lastModified: number;
   touched: boolean;
   version: number;
-  databaseVersion: number;
-  databaseLastModified: number;
-  unitVersion: number;
-  unitLastModified: number;
-  itemVersion: number;
-  itemLastModified: number;
   
 }
 export interface FollowerDatabaseCompletion {

@@ -229,16 +229,12 @@ export default {
         await this.$awesum.AwesumDexieDB.serverDatabaseItems.add({
           id: uuid(),
           unitId: this.$awesum.currentDatabaseUnit.id,
-          name: "Item " + (maxOrder + 1),
           order: maxOrder + 1,
           databaseId: this.$awesum.currentDatabase.id,
           lastModified: new Date().getTime(),
-          deleted: false,
           version: 0,
           appId: this.$awesum.currentApp.id,
-          created: new Date().getTime(),
           touched: true,
-          completed: false,
           dataText: "",
           data: {
             letters: 'w,o,r\no,r,d\nr,d,e\nd,e,l',
@@ -257,22 +253,18 @@ export default {
           } as ServerSpellingDatabaseItemDataInterface,
           itemType: itemType.spelling,
 
-        } as ServerSpellingDatabaseItemInterface);
+        } satisfies ServerSpellingDatabaseItemInterface);
       }
       else if (type == itemType.oneByTwoDigraphs) {
         await this.$awesum.AwesumDexieDB.serverDatabaseItems.add({
           id: uuid(),
           unitId: this.$awesum.currentDatabaseUnit.id,
-          name: "Item " + (maxOrder + 1),
           order: maxOrder + 1,
           databaseId: this.$awesum.currentDatabase.id,
           lastModified: new Date().getTime(),
-          deleted: false,
           version: 0,
           appId: this.$awesum.currentApp.id,
-          created: new Date().getTime(),
           touched: true,
-          completed: false,
           dataText: "",
           data: {
             leftDigraphs: 'c,b,s,h,r',
@@ -292,22 +284,18 @@ export default {
           },
           itemType: itemType.oneByTwoDigraphs,
 
-        } as ServerOneByTwoDigraphsDatabaseItemInterface);
+        } satisfies ServerOneByTwoDigraphsDatabaseItemInterface);
       }
       else if (type == itemType.oneByOneMultiplication) {
         await this.$awesum.AwesumDexieDB.serverDatabaseItems.add({
           id: uuid(),
           unitId: this.$awesum.currentDatabaseUnit.id,
-          name: "Item " + (maxOrder + 1),
           order: maxOrder + 1,
           databaseId: this.$awesum.currentDatabase.id,
           lastModified: new Date().getTime(),
-          deleted: false,
           version: 0,
           appId: this.$awesum.currentApp.id,
-          created: new Date().getTime(),
           touched: true,
-          completed: false,
           dataText: "",
           data: {
             firstNumber: 2,
@@ -324,22 +312,18 @@ export default {
           },
           itemType: itemType.oneByOneMultiplication,
 
-        } as ServerOneByOneMathDatabaseItemInterface);
+        } satisfies ServerOneByOneMathDatabaseItemInterface);
       }
       else if (type == itemType.oneByOneAddition) {
         await this.$awesum.AwesumDexieDB.serverDatabaseItems.add({
           id: uuid(),
           unitId: this.$awesum.currentDatabaseUnit.id,
-          name: "Item " + (maxOrder + 1),
           order: maxOrder + 1,
           databaseId: this.$awesum.currentDatabase.id,
           lastModified: new Date().getTime(),
-          deleted: false,
           version: 0,
           appId: this.$awesum.currentApp.id,
-          created: new Date().getTime(),
           touched: true,
-          completed: false,
           dataText: "",
           data: {
             firstNumber: 2,
@@ -355,7 +339,7 @@ export default {
             successImageTime: 3000,
           },
           itemType: itemType.oneByOneAddition,
-        } as ServerOneByOneMathDatabaseItemInterface);
+        } satisfies ServerOneByOneMathDatabaseItemInterface);
       }
 
       

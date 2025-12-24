@@ -2,21 +2,26 @@
 import { I18nGlobal } from '@/i18nGlobal';
 import type { ServerDatabaseItemInterface } from '../../../server/serverInterfaces/ServerDatabaseItemInterface';
 import { ref } from 'vue';
-import { itemType } from '../../../server/typebox';
+import { itemType,ItemLevel } from '../../../server/typebox';
 import { type ServerOneByOneMathDatabaseItemInterface } from '../../../server/serverInterfaces/ServerOneByOneMathDatabaseItemInterface';
 
 export default {
   setup() {
     var background = ref("");
-
+   
     return {
       I18nGlobal,
       background,
-      itemType
+      itemType,
+   
     }
   },
   async beforeCreate() {
-    
+
+
+   
+   
+
     var mediaItem = await this.$awesum.AwesumDexieDB.serverMedia.get(this.$awesum.currentDatabaseUnit.homePageImage);
     
     if (mediaItem) {

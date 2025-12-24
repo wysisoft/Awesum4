@@ -95,7 +95,7 @@ const modifications = ref(new Map<string, any>());
       return false;
     },
     beforeEnter(el: any) {
-      if (!this.$router.options.history.length || this.$router.options.history.length  == 0) {
+      if (!(this.$router.options.history as any).length || (this.$router.options.history as any).length  == 0) {
         return;
       }
       // Called before the new component enters
@@ -207,7 +207,7 @@ const modifications = ref(new Map<string, any>());
           <button class="btn btn-link" @click="$router.push(href)">
             <ChRefresh />
             <span>{{ $t($resources.Sync.key) }}</span>
-            <div v-if="$awesum.updatesToSync.length > 0" style="
+            <!-- <div v-if="$awesum.updatesToSync.length > 0" style="
     font-size: 1vmin;
     position: absolute;
     color: black;
@@ -217,7 +217,7 @@ const modifications = ref(new Map<string, any>());
     left: 16vmin;
 ">
   <span>{{ $awesum.updatesToSync.length }} </span>
-</div>
+</div> -->
           </button>
         </router-link>
 

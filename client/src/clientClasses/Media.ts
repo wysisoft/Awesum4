@@ -32,13 +32,13 @@
     public set id(v:string) {if(this._id != v){this._id=v;}}
     private _size: number = 0;
     public get size():number { return this._size; }
-    public set size(v:number) {if(this._size != v){this.version++;this.lastModified=new Date().getTime();this._size=v;awesum.setTablePropertyValueById(this.id, 'size',v,this.table)}}
+    public set size(v:number) {if(this._size != v){this._size=v;}}
     private _data: string = "";
     public get data():string { return this._data; }
-    public set data(v:string) {if(this._data != v){this.version++;this.lastModified=new Date().getTime();this._data=v;awesum.setTablePropertyValueById(this.id, 'data',v,this.table)}}
+    public set data(v:string) {if(this._data != v){this._data=v;}}
     private _appId: string = "";
     public get appId():string { return this._appId; }
-    public set appId(v:string) {if(this._appId != v){this.version++;this.lastModified=new Date().getTime();this._appId=v;awesum.setTablePropertyValueById(this.id, 'appId',v,this.table)}}
+    public set appId(v:string) {if(this._appId != v){this._appId=v;}}
     private _touched: boolean = false;
     public get touched():boolean { return this._touched; }
     public set touched(v:boolean) {if(this._touched != v){this._touched=v;}}

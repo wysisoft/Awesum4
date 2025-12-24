@@ -4,19 +4,25 @@ import { ref } from 'vue';
 import { I18nGlobal } from '@/i18nGlobal';
 import type { ServerDatabaseInterface } from '../../../server/serverInterfaces/ServerDatabaseInterface';
 import type { ServerRouterInterface } from '../../../server/serverInterfaces/ServerRouterInterface';
+import type { ServerFollowerDatabaseCompletionInterface } from '../../../server/serverInterfaces/ServerFollowerDatabaseCompletionInterface';
+import { ItemLevel } from '../../../server/typebox';
 
 export default {
   setup() {
     var background = ref("");
     var routerStatuses = ref<{[key: string]: any}>({});
 
+
     return {
       I18nGlobal,
       background,
-      routerStatuses
+      routerStatuses,
     }
   }, 
   async beforeCreate() {
+
+
+
     var mediaItem = await this.$awesum.AwesumDexieDB.serverMedia.get(this.$awesum.currentApp.homePageImage);
     if (mediaItem) {
       this.background = 'url("'  +  mediaItem.data + '")';
@@ -46,8 +52,9 @@ export default {
         <div v-for="database in $awesum.currentDatabases" class="listItem" style="display:flex;flex-direction:row;align-items:baseline;">
           <router-link custom :to="{ path: $awesum.getDynamicUrl(database as ServerDatabaseInterface,$route) }"
             v-slot="{ href }">
-            <button class="btn btn-primary" style="margin-left: 2svmin;margin-bottom:1svmin;" @click="$router.push(href)">
-              <span>{{ $t($resources.Lets_Go.key) }}</span>
+            <button class="btn btn-primary" style="margin-left: 2svmin;margin-bottom:1svmin;" 
+            v-bind:style="{ backgroundColor: $awesum.currentDatabaseCompletions.has(database.id) ? '#68ff68' : '', color: $awesum.currentDatabaseCompletions.has(database.id) ? 'black' : '' }" @click="$router.push(href)">
+              <span>{{ $awesum.currentDatabaseCompletions.has(database.id) ? $t($resources.Completed.key) : $t($resources.Lets_Go.key) }}</span>
             </button>
           </router-link>
           <div class="areaNameDiv">{{ database.name }}</div>

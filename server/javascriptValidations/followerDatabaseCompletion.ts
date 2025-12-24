@@ -4,7 +4,7 @@ $id: 'followerDatabaseCompletion',
 type: 'object',
 properties: {
 id: {
-default: '019b2018-64e3-77bf-a300-ef70da79d1d9',
+default: '019b4b67-3343-718d-8250-5e0e49c8b24c',
 format: 'uuid',
 type: 'string'},
 followerRequestId: { format: 'uuid', type: 'string' },

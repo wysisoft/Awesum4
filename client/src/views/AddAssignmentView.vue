@@ -22,13 +22,13 @@ export default {
   },
   setup() {
     //awesum.serverApp.groups is a comma separated string of groups
-    let addAssignmentPayload = getDefault(Value.Default(types.filter((x) => x.$id == "followerDatabase")[0],{} )as ServerFollowerDatabaseInterface);
+    let addAssignmentPayload = getDefault(Value.Default(types.filter((x) => x.$id == "followerDatabase")[0], {}) as ServerFollowerDatabaseInterface);
 
     let users = ref({});
     let groups = ref({});
     let assignmentType = ref<'user' | 'group'>('user');
     let selectedUserOrGroup = ref('');
-    let existingAssignments = ref<Array<{followerDatabase: ServerFollowerDatabaseInterface, displayName: string, isGroup: boolean}>>([]);
+    let existingAssignments = ref<Array<{ followerDatabase: ServerFollowerDatabaseInterface, displayName: string, isGroup: boolean }>>([]);
 
     const isSelectionValid = computed(() => {
       return selectedUserOrGroup.value !== '';
@@ -64,14 +64,14 @@ export default {
       var followerDatabases = await this.$awesum.AwesumDexieDB.serverFollowerDatabases
         .where("databaseId").equals(this.$awesum.currentDatabase.id)
         .toArray() as ServerFollowerDatabaseInterface[];
-      
-      var assignments: Array<{followerDatabase: ServerFollowerDatabaseInterface, displayName: string, isGroup: boolean}> = [];
-      
+
+      var assignments: Array<{ followerDatabase: ServerFollowerDatabaseInterface, displayName: string, isGroup: boolean }> = [];
+
       for (const followerDatabase of followerDatabases) {
         // Check if it's a group (followerRequestId matches a group name)
         const groupNames = this.$awesum.ownerApp.groups.split(',').map(g => g.trim()).filter(g => g);
         const isGroup = groupNames.includes(followerDatabase.followerRequestId);
-        
+
         if (isGroup) {
           assignments.push({
             followerDatabase,
@@ -83,7 +83,7 @@ export default {
           const followerRequest = await this.$awesum.AwesumDexieDB.serverFollowerRequests
             .where("id").equals(followerDatabase.followerRequestId)
             .first() as ServerFollowerRequestInterface | undefined;
-          
+
           if (followerRequest) {
             assignments.push({
               followerDatabase,
@@ -99,7 +99,7 @@ export default {
           }
         }
       }
-      
+
       this.existingAssignments = assignments;
     },
     setAssignmentType(type: 'user' | 'group') {
@@ -108,9 +108,11 @@ export default {
     },
     async addAssignment() {
 
+      var syncRequests = new Array<ServerSyncRequestInterface>();
 
       if (this.assignmentType === 'user') {
-        await awesum.sync([{
+
+        syncRequests.push({
           id: this.addAssignmentPayload.id,
           action: syncAction.add,
           level: ItemLevel.followerDatabase,
@@ -118,14 +120,21 @@ export default {
             databaseId: this.$awesum.currentDatabase.id,
             followerRequestId: this.selectedUserOrGroup,
           } as ServerFollowerDatabaseInterface
-        }])
+        });
+
+        var databaseSyncRequests = await awesum.getDatabaseSyncRequests(this.$awesum.currentDatabase.id);
+        for (const databaseSyncRequest of databaseSyncRequests) {
+          syncRequests.push(databaseSyncRequest);
+        }
+
+        await awesum.sync(syncRequests);
       }
       else {
         alert('not implemented yet');
       }
 
       await this.loadExistingAssignments();
-      
+
       this.$awesum.router.push({
         path: awesum.getDynamicUrl(this.$awesum.currentDatabase as ServerDatabaseInterface, this.$awesum.router.currentRoute)
       });

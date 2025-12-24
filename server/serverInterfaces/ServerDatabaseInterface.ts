@@ -15,5 +15,8 @@ export interface ServerDatabaseInterface {
   homePageIconType: number;
   homePageIcon: string;
   touched: boolean;
+  unitLastModified: number;
+  itemLastModified: number;
+  mediaLastModified: number;
   
 }

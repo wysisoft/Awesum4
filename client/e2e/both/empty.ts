@@ -144,3 +144,9 @@ await wildert.evaluate(() => eval('debugger'));
 await wildert.getByRole('button', { name: 'Sync' }).click();
 
 await wildert.getByRole('button', { name: 'Settings' }).click();
+
+await demobrat.getByRole('button', { name: 'Home' }).click();
+await demobrat.getByRole('button', { name: 'Lets Go' }).first().click();
+await demobrat.getByRole('button', { name: 'Lets Go' }).click();
+await demobrat.getByRole('button', { name: 'Lets Go' }).click();
+await demobrat.locator('body').press('Tab');

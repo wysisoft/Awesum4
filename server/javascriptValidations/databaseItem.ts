@@ -25,8 +25,7 @@ required: [
 'version',
 'databaseId',
 'id',
-'dataText',
-'data'
+'dataText'
 ]
 }
 const formats2 = /^(?:urn:uuid:)?[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/i
@@ -52,8 +51,7 @@ if (
 (data.version === undefined && (missing0 = 'version')) ||
 (data.databaseId === undefined && (missing0 = 'databaseId')) ||
 (data.id === undefined && (missing0 = 'id')) ||
-(data.dataText === undefined && (missing0 = 'dataText')) ||
-(data.data === undefined && (missing0 = 'data'))
+(data.dataText === undefined && (missing0 = 'dataText'))
 ) {errors.push(
 {
 instancePath,

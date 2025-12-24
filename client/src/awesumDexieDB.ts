@@ -126,6 +126,14 @@ export class AwesumDexieDB extends Dexie {
                     homePageIconType: imageType.WebAddress,
                     homePageIcon: awesum.defaultDatabaseBackgroundGuid,
                     touched: false,
+                    unitVersion: 0,
+                    unitLastModified: 0,
+                    itemVersion: 0,
+                    itemLastModified: 0,
+                    completionVersion: 0,
+                    completionLastModified: 0,
+                    mediaVersion: 0,
+                    mediaLastModified: 0,
                 } as ServerDatabaseInterface)
 
 
@@ -631,6 +639,78 @@ export class AwesumDexieDB extends Dexie {
     constructor() {
         super("awesum_" + awesum.serverEmail);
 
+        const origAdd = this.Table.prototype.add;
+        const origPut = this.Table.prototype.put;
+        const origDelete = this.Table.prototype.delete;
+
+        const origBulkPut = this.Table.prototype.bulkPut;
+
+        this.Table.prototype.add = function (...args) {
+            const db = this.db;
+            const tableName = this.name;
+
+            // If already inside a transaction → don't wrap
+            if (Dexie.currentTransaction &&
+                Dexie.currentTransaction.storeNames.includes('additions') &&
+                Dexie.currentTransaction.storeNames.includes('serverDatabases')
+            ) {
+                return origAdd.apply(this, args);
+            }
+
+            // Start a widened transaction
+            return db.transaction('rw', [tableName, 'additions', 'serverDatabases'], () =>
+                origAdd.apply(this, args)
+            );
+        };
+
+        this.Table.prototype.put = function (...args) {
+            const db = this.db;
+            const tableName = this.name;
+
+            if (Dexie.currentTransaction &&
+                Dexie.currentTransaction.storeNames.includes('additions') &&
+                Dexie.currentTransaction.storeNames.includes('serverDatabases')
+            ) {
+                return origPut.apply(this, args);
+            }
+
+            return db.transaction('rw', [tableName, 'additions', 'serverDatabases'], () =>
+                origPut.apply(this, args)
+            );
+        };
+
+        this.Table.prototype.delete = function (...args) {
+            const db = this.db;
+            const tableName = this.name;
+
+            if (Dexie.currentTransaction &&
+                Dexie.currentTransaction.storeNames.includes('deletions') &&
+                Dexie.currentTransaction.storeNames.includes('serverDatabases') &&
+                Dexie.currentTransaction.storeNames.includes('additions')
+            ) {
+                return origDelete.apply(this, args);
+            }
+
+            return db.transaction('rw', [tableName, 'deletions', 'serverDatabases', 'additions'], () =>
+                origDelete.apply(this, args)
+            );
+        };
+
+        this.Table.prototype.bulkPut = function (...args: any[]) {
+            const db = this.db;
+            const tableName = this.name;
+
+            if (Dexie.currentTransaction &&
+                Dexie.currentTransaction.storeNames.includes('additions') &&
+                Dexie.currentTransaction.storeNames.includes('serverDatabases')
+            ) {
+                return origBulkPut.apply(this, args as any);
+            }
+
+            return db.transaction('rw', [tableName, 'additions', 'serverDatabases'], () =>
+                origBulkPut.apply(this, args as any)
+            );
+        };
         this.version(1).stores({
             internal: "id",
             deletions: "id",
@@ -639,10 +719,10 @@ export class AwesumDexieDB extends Dexie {
             serverFollowerRequests: "id,touched,followerAppId,leaderAppId",
             serverFollowerDatabases: "id,databaseId,touched,followerRequestId",
             serverFollowerDatabaseCompletions:
-                "id,databaseId,touched,itemId,parentItemId,followerRequestId,lastModified",
+                "id,databaseId,touched,itemId,parentItemId,followerRequestId,lastModified,itemLevel",
             serverApps: "id,email,touched",
             serverMedia: "id,appId,touched,order",
-            serverDatabaseItems: "id,unitId,touched,appId",
+            serverDatabaseItems: "id,databaseId,unitId,touched,appId",
             serverDatabaseUnits: "id,databaseId,touched,appId",
             serverRouters: "id,appId",
         }).upgrade((tx) => {
@@ -696,34 +776,64 @@ export class AwesumDexieDB extends Dexie {
                         primKey.startsWith("00000000-0000-0000-0000")) {
                         return;
                     }
-                    setTimeout(() => {
-                        var promise = this.additions.add({ id: primKey }) as unknown as Function;
-                        (promise as any).apply = () => { }
-                        awesum.dexiePromises.push(promise);
-                        awesum.updatesToSync.push(primKey);
-                    }, 0
-                    );
+
+
+                    var promise = this.additions.add({ id: primKey });
+                    (promise as any).apply = () => { }
+                    awesum.dexiePromises.push(promise as any);
+                    awesum.updatesToSync.push(primKey);
+
+                    if (table.name == "serverDatabaseItems"
+                    ) {
+                        var p1 = awesum.AwesumDexieDB.serverDatabases.update(
+                            obj.databaseId,
+                            {
+                                itemLastModified: obj.lastModified,
+                                touched: true
+                            }
+                        );
+                        (p1 as any).apply = () => { }
+                        awesum.dexiePromises.push(p1 as any);
+                    }
+                    else if (table.name == "serverDatabaseUnits"
+                    ) {
+                        var p1 = awesum.AwesumDexieDB.serverDatabases.update(
+                            obj.databaseId,
+                            {
+                                unitLastModified: obj.lastModified,
+                                touched: true
+                            }
+                        );
+                        (p1 as any).apply = () => { }
+                        awesum.dexiePromises.push(p1 as any);
+                    }
                 });
                 table.hook("deleting", async (primKey, obj, transaction) => {
-                    setTimeout(() => {
-                        var itemLevel = table.name == "serverDatabases" ? ItemLevel.database
-                            : table.name == "serverDatabaseUnits" ? ItemLevel.databaseUnit
-                                : table.name == "serverDatabaseItems" ? ItemLevel.databaseItem
-                                    : table.name == "serverFollowerDatabases" ? ItemLevel.followerDatabase
-                                        : table.name == "serverFollowerDatabaseCompletions" ? ItemLevel.followerDatabaseCompletion
-                                            : table.name == "serverFollowerRequests" ? ItemLevel.followerRequest
-                                                : table.name == "serverMedia" ? ItemLevel.media
-                                                    : table.name == "serverRouters" ? ItemLevel.router : 0;
 
+                    var deletion = {} as ServerDeletionInterface;
+                    deletion.id = obj.id;
+                    deletion.lastModified = new Date().getTime();
 
-                        var promise = this.additions.delete(obj.id);
-                        (promise as any).apply = () => { }
-                        awesum.dexiePromises.push(promise as any);
-                        var promise1 = this.deletions.add({ id: obj.id, level: itemLevel });
-                        (promise1 as any).apply = () => { }
-                        awesum.dexiePromises.push(promise1 as any);
-                        awesum.updatesToSync.push(obj.id);
-                    }, 0);
+                    deletion.level = table.name == "serverDatabases" ? ItemLevel.database
+                        : table.name == "serverDatabaseUnits" ? ItemLevel.databaseUnit
+                            : table.name == "serverDatabaseItems" ? ItemLevel.databaseItem
+                                : table.name == "serverFollowerDatabases" ? ItemLevel.followerDatabase
+                                    : table.name == "serverFollowerDatabaseCompletions" ? ItemLevel.followerDatabaseCompletion
+                                        : table.name == "serverFollowerRequests" ? ItemLevel.followerRequest
+                                            : table.name == "serverMedia" ? ItemLevel.media
+                                                : table.name == "serverRouters" ? ItemLevel.router : 0;
+
+                    deletion.databaseId = table.name == "serverDatabases" ? obj.id :
+                        table.name == "serverDatabaseUnits" ? obj.databaseId :
+                            table.name == "serverDatabaseItems" ? obj.databaseId : undefined;
+
+                    var promise = this.additions.delete(obj.id);
+                    (promise as any).apply = () => { }
+                    awesum.dexiePromises.push(promise as any);
+                    var promise1 = this.deletions.add(deletion);
+                    (promise1 as any).apply = () => { }
+                    awesum.dexiePromises.push(promise1 as any);
+                    awesum.updatesToSync.push(obj.id);
                 });
             }
         });

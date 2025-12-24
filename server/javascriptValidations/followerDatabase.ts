@@ -8,7 +8,7 @@ default: '00000000-0000-0000-0000-000000000000',
 format: 'uuid',
 type: 'string'},
 id: {
-default: '019b2018-64e3-77bf-a300-e32d9b784e34',
+default: '019b4b67-3343-718d-8250-514eb26eb943',
 format: 'uuid',
 type: 'string'},
 databaseId: {
@@ -17,13 +17,7 @@ format: 'uuid',
 type: 'string'},
 lastModified: { default: 0, type: 'number' },
 touched: { default: true, type: 'boolean' },
-version: { default: 0, minimum: 0, type: 'integer' },
-databaseVersion: { default: 0, minimum: 0, type: 'integer' },
-databaseLastModified: { default: 0, type: 'number' },
-unitVersion: { default: 0, minimum: 0, type: 'integer' },
-unitLastModified: { default: 0, type: 'number' },
-itemVersion: { default: 0, minimum: 0, type: 'integer' },
-itemLastModified: { default: 0, type: 'number' }
+version: { default: 0, minimum: 0, type: 'integer' }
 },
 required: [
 'followerRequestId',
@@ -31,13 +25,7 @@ required: [
 'databaseId',
 'lastModified',
 'touched',
-'version',
-'databaseVersion',
-'databaseLastModified',
-'unitVersion',
-'unitLastModified',
-'itemVersion',
-'itemLastModified'
+'version'
 ]
 }
 const formats2 = /^(?:urn:uuid:)?[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/i
@@ -59,16 +47,7 @@ if (
 (data.databaseId === undefined && (missing0 = 'databaseId')) ||
 (data.lastModified === undefined && (missing0 = 'lastModified')) ||
 (data.touched === undefined && (missing0 = 'touched')) ||
-(data.version === undefined && (missing0 = 'version')) ||
-(data.databaseVersion === undefined &&
-(missing0 = 'databaseVersion')) ||
-(data.databaseLastModified === undefined &&
-(missing0 = 'databaseLastModified')) ||
-(data.unitVersion === undefined && (missing0 = 'unitVersion')) ||
-(data.unitLastModified === undefined &&
-(missing0 = 'unitLastModified')) ||
-(data.itemVersion === undefined && (missing0 = 'itemVersion')) ||
-(data.itemLastModified === undefined && (missing0 = 'itemLastModified'))
+(data.version === undefined && (missing0 = 'version'))
 ) {errors.push(
 {
 instancePath,
@@ -250,193 +229,6 @@ params: { comparison: '>=', limit: 0 },
 var valid0 = _errs11 === errors
 } else {
 var valid0 = true
-}
-if (valid0) {
-if (data.databaseVersion !== undefined) {
-let data6 = data.databaseVersion
-const _errs13 = errors
-if (
-!(
-typeof data6 == 'number' &&
-!(data6 % 1) &&
-!isNaN(data6) &&
-isFinite(data6)
-)
-) {errors.push(
-{
-instancePath: instancePath + '/databaseVersion',
-schemaPath: '#/properties/databaseVersion/type',
-keyword: 'type',
-params: { type: 'integer' },
- message: "Must_be_an_integer"
-}
-);
-}
-if (true) {
-if (typeof data6 == 'number' && isFinite(data6)) {
-if (data6 < 0 || isNaN(data6)) {errors.push(
-{
-instancePath: instancePath + '/databaseVersion',
-schemaPath: '#/properties/databaseVersion/minimum',
-keyword: 'minimum',
-params: { comparison: '>=', limit: 0 },
- message: "Must_be_greater_than_or_equal_to_0"
-}
-);
-}
-}
-}
-var valid0 = _errs13 === errors
-} else {
-var valid0 = true
-}
-if (valid0) {
-if (data.databaseLastModified !== undefined) {
-let data7 = data.databaseLastModified
-const _errs15 = errors
-if (!(typeof data7 == 'number' && isFinite(data7))) {errors.push(
-{
-instancePath: instancePath + '/databaseLastModified',
-schemaPath: '#/properties/databaseLastModified/type',
-keyword: 'type',
-params: { type: 'number' },
- message: "Must_be_a_number"
-}
-);
-}
-var valid0 = _errs15 === errors
-} else {
-var valid0 = true
-}
-if (valid0) {
-if (data.unitVersion !== undefined) {
-let data8 = data.unitVersion
-const _errs17 = errors
-if (
-!(
-typeof data8 == 'number' &&
-!(data8 % 1) &&
-!isNaN(data8) &&
-isFinite(data8)
-)
-) {errors.push(
-{
-instancePath: instancePath + '/unitVersion',
-schemaPath: '#/properties/unitVersion/type',
-keyword: 'type',
-params: { type: 'integer' },
- message: "Must_be_an_integer"
-}
-);
-}
-if (true) {
-if (typeof data8 == 'number' && isFinite(data8)) {
-if (data8 < 0 || isNaN(data8)) {errors.push(
-{
-instancePath: instancePath + '/unitVersion',
-schemaPath: '#/properties/unitVersion/minimum',
-keyword: 'minimum',
-params: { comparison: '>=', limit: 0 },
- message: "Must_be_greater_than_or_equal_to_0"
-}
-);
-}
-}
-}
-var valid0 = _errs17 === errors
-} else {
-var valid0 = true
-}
-if (valid0) {
-if (data.unitLastModified !== undefined) {
-let data9 = data.unitLastModified
-const _errs19 = errors
-if (
-!(typeof data9 == 'number' && isFinite(data9))
-) {errors.push(
-{
-instancePath: instancePath + '/unitLastModified',
-schemaPath: '#/properties/unitLastModified/type',
-keyword: 'type',
-params: { type: 'number' },
- message: "Must_be_a_number"
-}
-);
-}
-var valid0 = _errs19 === errors
-} else {
-var valid0 = true
-}
-if (valid0) {
-if (data.itemVersion !== undefined) {
-let data10 = data.itemVersion
-const _errs21 = errors
-if (
-!(
-typeof data10 == 'number' &&
-!(data10 % 1) &&
-!isNaN(data10) &&
-isFinite(data10)
-)
-) {errors.push(
-{
-instancePath: instancePath + '/itemVersion',
-schemaPath: '#/properties/itemVersion/type',
-keyword: 'type',
-params: { type: 'integer' },
- message: "Must_be_an_integer"
-}
-);
-}
-if (true) {
-if (
-typeof data10 == 'number' &&
-isFinite(data10)
-) {
-if (data10 < 0 || isNaN(data10)) {errors.push(
-{
-instancePath: instancePath + '/itemVersion',
-schemaPath: '#/properties/itemVersion/minimum',
-keyword: 'minimum',
-params: { comparison: '>=', limit: 0 },
- message: "Must_be_greater_than_or_equal_to_0"
-}
-);
-}
-}
-}
-var valid0 = _errs21 === errors
-} else {
-var valid0 = true
-}
-if (valid0) {
-if (data.itemLastModified !== undefined) {
-let data11 = data.itemLastModified
-const _errs23 = errors
-if (
-!(
-typeof data11 == 'number' &&
-isFinite(data11)
-)
-) {errors.push(
-{
-instancePath: instancePath + '/itemLastModified',
-schemaPath: '#/properties/itemLastModified/type',
-keyword: 'type',
-params: { type: 'number' },
- message: "Must_be_a_number"
-}
-);
-}
-var valid0 = _errs23 === errors
-} else {
-var valid0 = true
-}
-}
-}
-}
-}
-}
 }
 }
 }

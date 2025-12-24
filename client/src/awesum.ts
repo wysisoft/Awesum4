@@ -32,6 +32,7 @@ import type { ServerOneByOneMathDatabaseItemInterface } from "../../server/serve
 import { useToast } from "vue-toastification";
 import type { Server } from "http";
 import type { ServerModificationInterface } from "../../server/serverInterfaces/ServerModificationInterface";
+import type { AwesumDatabaseItem } from "../../server/db/db";
 
 //@ts-ignore
 const appVersion = __APP_VERSION__;
@@ -79,7 +80,7 @@ export const awesum = reactive({
   currentDatabase: {} as ServerDatabaseInterface,
   currentDatabases: Array<ServerDatabaseInterface>(),
   currentDatabaseUnits: Array<ServerDatabaseUnitInterface>(),
-  currentDatabaseCompletions: new Map<string, ServerFollowerDatabaseCompletionInterface>(),
+  currentDatabaseCompletions: new Set<string>(),
   currentDatabaseUnit: {} as ServerDatabaseUnitInterface,
   currentDatabaseItems: Array<ServerDatabaseItemInterface>(),
   currentDatabaseItem: {} as ServerDatabaseItemInterface,
@@ -222,29 +223,47 @@ export const awesum = reactive({
 
   async refreshCurrentDatabaseCompletions() {
 
-    this.currentDatabaseCompletions = new Map();
+    this.currentDatabaseCompletions = new Set<string>();
 
     var followerRequest = await this.AwesumDexieDB.serverFollowerRequests.where('followerAppId').equals(this.ownerApp.id)
       .and((x) => x.leaderAppId == this.currentApp.id)
       .first();
 
     if (followerRequest) {
-    
+
       const items = await this.AwesumDexieDB.serverFollowerDatabaseCompletions
         .where('followerRequestId').equals(followerRequest.id)
         .toArray();
 
       for (const element of items) {
-        this.currentDatabaseCompletions.set(element.itemId, element);
+        this.currentDatabaseCompletions.add(element.itemId);
+
+        if(element.itemLevel == ItemLevel.databaseUnit) {
+          var itemsInUnit = await this.AwesumDexieDB.serverDatabaseItems.where('unitId').equals(element.itemId).toArray();
+          for (const item of itemsInUnit) {
+            this.currentDatabaseCompletions.add(item.id);
+          }
+        }
+        if(element.itemLevel == ItemLevel.database) {
+          var unitsInDatabase = await this.AwesumDexieDB.serverDatabaseUnits.where('databaseId').equals(element.itemId).toArray();
+          for (const unit of unitsInDatabase) {
+            this.currentDatabaseCompletions.add(unit.id);
+          }
+        }
       }
     }
   },
 
 
   async refreshCurrentDatabaseUnits() {
-    this.currentDatabaseUnits = await this.AwesumDexieDB.serverDatabaseUnits
-      .where({ databaseId: this.currentDatabase.id })
-      .sortBy("order");
+    if(this.currentDatabase && this.currentDatabase.id){
+      this.currentDatabaseUnits = await this.AwesumDexieDB.serverDatabaseUnits
+        .where({ databaseId: this.currentDatabase.id })
+        .sortBy("order");
+    }
+    else {
+      this.currentDatabaseUnits = [];
+    }
   },
 
   /* async refreshGlobalMedia() {
@@ -316,20 +335,35 @@ export const awesum = reactive({
   },
 
   async refreshCurrentDatabaseItems() {
+    if(this.currentDatabaseUnit && this.currentDatabaseUnit.id){
     this.currentDatabaseItems = await this.AwesumDexieDB.serverDatabaseItems
-      .where({ unitId: this.currentDatabaseUnit.id })
-      .sortBy("order");
+        .where({ unitId: this.currentDatabaseUnit.id })
+        .sortBy("order");
+    }
+    else {
+      this.currentDatabaseItems = [];
+    }
   },
 
   async refreshCurrentFollowerDatabases() {
-    this.currentFollowerDatabases = await this.AwesumDexieDB.serverFollowerDatabases.toArray();
-      
+    if(this.currentDatabase && this.currentDatabase.id){
+      this.currentFollowerDatabases = await this.AwesumDexieDB.serverFollowerDatabases
+        .where({ databaseId: this.currentDatabase.id }).toArray();
+    }
+    else {
+      this.currentFollowerDatabases = [];
+    }
   },
 
   async refreshCurrentDatabases() {
-    this.currentDatabases = await this.AwesumDexieDB.serverDatabases
+    if(this.currentApp && this.currentApp.id){
+      this.currentDatabases = await this.AwesumDexieDB.serverDatabases
       .where({ appId: this.currentApp.id })
       .sortBy("order");
+    }
+    else {
+      this.currentDatabases = [];
+    }
   },
 
   async refreshCurrentAppRouters() {
@@ -417,12 +451,12 @@ export const awesum = reactive({
   async getFullSyncRequests(): Promise<ServerSyncRequestInterface[]> {
 
 
-    var additions = await awesum.AwesumDexieDB.additions.toArray();
-    //convert to set by id
-    var additionsSet = new Set<string>();
-    for (const addition of additions) {
-      additionsSet.add(addition.id);
-    }
+    // var additions = await awesum.AwesumDexieDB.additions.toArray();
+    // //convert to set by id
+    // var additionsSet = new Set<string>();
+    // for (const addition of additions) {
+    //   additionsSet.add(addition.id);
+    // }
     //wait for all dexie adding/deleting hooks to finish
     await awesum.waitForDexie();
     var syncRequests = new Array<ServerSyncRequestInterface>();
@@ -455,12 +489,13 @@ export const awesum = reactive({
       syncRequest.level = ItemLevel.followerRequest;
       syncRequest.values = {};
       syncRequests.push(syncRequest);
-      if (additionsSet.has(followerRequest.id)) {
-        syncRequest.action = syncAction.add;
-        syncRequest.values = awesum.toPOJO(followerRequest);
+      // if (additionsSet.has(followerRequest.id)) {
+      //   syncRequest.action = syncAction.add;
+      //   syncRequest.values = awesum.toPOJO(followerRequest);
 
-      }
-      else if (followerRequest.touched) {
+      // }
+      // else 
+      if (followerRequest.touched) {
         syncRequest.action = syncAction.modify;
         syncRequest.values = awesum.toPOJO(followerRequest);
       }
@@ -479,6 +514,10 @@ export const awesum = reactive({
       syncRequest.id = deletion.id;
       syncRequest.level = deletion.level;
       syncRequest.action = syncAction.delete;
+      syncRequest.values = {
+        lastModified: deletion.lastModified,
+        
+      }
       syncRequests.push(syncRequest);
     }
     var followerDatabases = await awesum.AwesumDexieDB.serverFollowerDatabases.toArray();
@@ -537,6 +576,118 @@ export const awesum = reactive({
   },
 
 
+  async getDatabaseSyncRequests(databaseId: string): Promise<ServerSyncRequestInterface[]> {
+    
+    var additionsQuery = await awesum.AwesumDexieDB.additions.toArray();
+    var additions = new Set<string>();
+    for (const addition of additionsQuery) {
+      additions.add(addition.id);
+    }
+
+    var syncRequests = new Array<ServerSyncRequestInterface>();
+    var database = await awesum.AwesumDexieDB.serverDatabases.get(databaseId);
+    if (!database) {
+      throw new Error('Database not found');
+    }
+
+    var syncRequest = {} as ServerSyncRequestInterface;
+    syncRequest.id = database.id;
+    syncRequest.level = ItemLevel.database;
+    syncRequests.push(syncRequest);
+    if (additions.has(database.id)) {
+      syncRequest.action = syncAction.add;
+      syncRequest.values = awesum.toPOJO(database);
+    }
+    else if (database.touched) {
+      syncRequest.action = syncAction.modify;
+      syncRequest.values = awesum.toPOJO(database);
+    }
+    else {
+      syncRequest.action = syncAction.receiveChanges;
+      syncRequest.values = {
+        lastModified: database.lastModified,
+        version: database.version,
+        unitLastModified: database.unitLastModified,
+        itemLastModified: database.itemLastModified,
+        mediaLastModified: database.mediaLastModified,
+      }
+    }
+    syncRequests.push(syncRequest);
+    var units = await awesum.AwesumDexieDB.serverDatabaseUnits.where('databaseId').equals(databaseId).toArray();
+    for (const unit of units) {
+      var syncRequest = {} as ServerSyncRequestInterface;
+      syncRequest.id = unit.id;
+      syncRequest.level = ItemLevel.databaseUnit;
+      syncRequests.push(syncRequest);
+      if (additions.has(unit.id)) {
+        syncRequest.action = syncAction.add;
+        syncRequest.values = awesum.toPOJO(unit);
+      }
+      else if (unit.touched) {
+        syncRequest.action = syncAction.modify;
+        syncRequest.values = awesum.toPOJO(unit);
+      }
+      else {
+        syncRequest.action = syncAction.receiveChanges;
+        syncRequest.values = {
+          lastModified: unit.lastModified,
+          version: unit.version,
+        }
+      }
+      syncRequests.push(syncRequest);
+    }
+    var items = await awesum.AwesumDexieDB.serverDatabaseItems.where('databaseId').equals(databaseId).toArray();
+    for (const item of items) {
+      
+      var syncRequest = {} as ServerSyncRequestInterface;
+      syncRequest.id = item.id;
+      syncRequest.level = ItemLevel.databaseItem;
+      syncRequests.push(syncRequest);
+      if (additions.has(item.id)) {
+        syncRequest.action = syncAction.add;
+        syncRequest.values = awesum.toPOJO(item);
+        (syncRequest.values as AwesumDatabaseItem).dataText = JSON.stringify(awesum.toPOJO(item.data));
+      }
+      else if (item.touched) {
+        syncRequest.action = syncAction.modify;
+        syncRequest.values = awesum.toPOJO(item);
+        (syncRequest.values as AwesumDatabaseItem).dataText = JSON.stringify(awesum.toPOJO(item.data));
+      }
+      else {
+        syncRequest.action = syncAction.receiveChanges;
+        syncRequest.values = {
+          lastModified: item.lastModified,
+          version: item.version,
+        }
+      }
+      syncRequests.push(syncRequest);
+    }
+    return syncRequests;
+  },
+
+  async getAppSyncRequest(appId: string): Promise<ServerSyncRequestInterface> {
+    var app = await awesum.AwesumDexieDB.serverApps.get(appId);
+    if (!app) {
+      throw new Error('App not found');
+    }
+    var syncRequest = {} as ServerSyncRequestInterface;
+    syncRequest.id = app.id;
+    syncRequest.level = ItemLevel.app;
+    syncRequest.values = {};
+    if (app.touched) {
+      syncRequest.action = syncAction.modify;
+      syncRequest.values = awesum.toPOJO(app);
+    }
+    else {
+      syncRequest.action = syncAction.receiveChanges;
+      syncRequest.values = {
+        lastModified: app.lastModified,
+        version: app.version,
+      }
+    }
+    return syncRequest;
+  },
+
   async processSyncResponse(syncResponse: ServerSyncResponseInterface[], redirectToErrorPage: boolean = true): Promise<ServerSyncResponseInterface[]> {
     var errorMessages = new Array<string>();
     for (const item of syncResponse) {
@@ -562,19 +713,23 @@ export const awesum = reactive({
         if (item.level == ItemLevel.app) {
           if (!awesum.ownerApp.id) {
             await awesum.putOwnerAppInsideDatabase(item.values as ServerAppInterface);
+
+
+            var defaultFollowerRequest = getDefault(Value.Default(types.filter((x) => x.$id == "followerRequest")[0], {}) as ServerFollowerRequestInterface);
+            defaultFollowerRequest.leaderAppId = awesum.ownerApp.id;
+            defaultFollowerRequest.followerAppId = awesum.ownerApp.id;
+            defaultFollowerRequest.followerName = awesum.ownerApp.name;
+            defaultFollowerRequest.leaderName = awesum.ownerApp.name;
+            defaultFollowerRequest.followerEmail = awesum.ownerApp.email;
+            defaultFollowerRequest.leaderEmail = awesum.ownerApp.email;
+            defaultFollowerRequest.status = followerRequestStatus.Approved;
+            await awesum.AwesumDexieDB.serverFollowerRequests.put(defaultFollowerRequest);
+            await awesum.refreshServerFollowerRequests();
           }
-
-          var defaultFollowerRequest = getDefault(Value.Default(types.filter((x) => x.$id == "followerRequest")[0],{} )as ServerFollowerRequestInterface);
-          defaultFollowerRequest.leaderAppId = awesum.ownerApp.id;
-          defaultFollowerRequest.followerAppId = awesum.ownerApp.id;
-          defaultFollowerRequest.followerName = awesum.ownerApp.name;
-          defaultFollowerRequest.leaderName = awesum.ownerApp.name;
-          defaultFollowerRequest.followerEmail = awesum.ownerApp.email;
-          defaultFollowerRequest.leaderEmail = awesum.ownerApp.email;
-          defaultFollowerRequest.status = followerRequestStatus.Approved;
-          await awesum.AwesumDexieDB.serverFollowerRequests.put(defaultFollowerRequest);
-          await awesum.refreshServerFollowerRequests();
-
+          else {
+            await awesum.AwesumDexieDB.serverApps.put(item.values as ServerAppInterface);
+            await awesum.refreshServerApps();
+          }
         }
         if (item.level == ItemLevel.followerRequest) {
           console.log('adding follower request', item.values);
@@ -584,13 +739,26 @@ export const awesum = reactive({
 
 
         if (item.level == ItemLevel.followerDatabase) {
-          debugger;
           await awesum.AwesumDexieDB.serverFollowerDatabases.put(item.values as ServerFollowerDatabaseInterface);
           await awesum.refreshCurrentFollowerDatabases();
         }
+        if (item.level == ItemLevel.database) {
+          await awesum.AwesumDexieDB.serverDatabases.put(item.values as ServerDatabaseInterface);
+          await awesum.refreshCurrentDatabases();
+        }
+        if (item.level == ItemLevel.databaseUnit) {
+          await awesum.AwesumDexieDB.serverDatabaseUnits.put(item.values as ServerDatabaseUnitInterface);
+          await awesum.refreshCurrentDatabaseUnits();
+        }
+        if (item.level == ItemLevel.databaseItem) {
+          var itemValues = item.values as ServerDatabaseItemInterface;
+          itemValues.data = JSON.parse(itemValues.dataText);
+          await awesum.AwesumDexieDB.serverDatabaseItems.put(itemValues);
+          await awesum.refreshCurrentDatabaseItems();
+        }
       }
-      if(item.action == syncAction.modify) {
-        if(item.level == ItemLevel.followerRequest) {
+      if (item.action == syncAction.modify) {
+        if (item.level == ItemLevel.followerRequest) {
           await awesum.AwesumDexieDB.serverFollowerRequests.put(item.values as ServerFollowerRequestInterface);
           await awesum.refreshServerFollowerRequests();
         }

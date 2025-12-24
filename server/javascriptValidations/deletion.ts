@@ -4,9 +4,11 @@ $id: 'deletion',
 type: 'object',
 properties: {
 id: { format: 'uuid', type: 'string' },
-level: { minimum: 0, maximum: 9, type: 'integer' }
+databaseId: { format: 'uuid', type: 'string' },
+level: { minimum: 0, maximum: 9, type: 'integer' },
+lastModified: { default: 0, type: 'number' }
 },
-required: ['id', 'level']
+required: ['id', 'databaseId', 'level', 'lastModified']
 }
 const formats2 = /^(?:urn:uuid:)?[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/i
 import type { ErrorObject } from 'ajv'
@@ -22,7 +24,9 @@ if (data && typeof data == 'object' && !Array.isArray(data)) {
 let missing0
 if (
 (data.id === undefined && (missing0 = 'id')) ||
-(data.level === undefined && (missing0 = 'level'))
+(data.databaseId === undefined && (missing0 = 'databaseId')) ||
+(data.level === undefined && (missing0 = 'level')) ||
+(data.lastModified === undefined && (missing0 = 'lastModified'))
 ) {errors.push(
 {
 instancePath,
@@ -66,15 +70,48 @@ var valid0 = _errs1 === errors
 var valid0 = true
 }
 if (valid0) {
-if (data.level !== undefined) {
-let data1 = data.level
+if (data.databaseId !== undefined) {
+let data1 = data.databaseId
 const _errs3 = errors
+if (true) {
+if (true) {
+if (typeof data1 === 'string') {
+if (!formats2.test(data1)) {errors.push(
+{
+instancePath: instancePath + '/databaseId',
+schemaPath: '#/properties/databaseId/format',
+keyword: 'format',
+params: { format: 'uuid' },
+ message: "Must_be_a_valid_UUID"
+}
+);
+}
+} else {errors.push(
+{
+instancePath: instancePath + '/databaseId',
+schemaPath: '#/properties/databaseId/type',
+keyword: 'type',
+params: { type: 'string' },
+message: 'must be string'
+}
+);
+}
+}
+}
+var valid0 = _errs3 === errors
+} else {
+var valid0 = true
+}
+if (valid0) {
+if (data.level !== undefined) {
+let data2 = data.level
+const _errs5 = errors
 if (
 !(
-typeof data1 == 'number' &&
-!(data1 % 1) &&
-!isNaN(data1) &&
-isFinite(data1)
+typeof data2 == 'number' &&
+!(data2 % 1) &&
+!isNaN(data2) &&
+isFinite(data2)
 )
 ) {errors.push(
 {
@@ -87,8 +124,8 @@ params: { type: 'integer' },
 );
 }
 if (true) {
-if (typeof data1 == 'number' && isFinite(data1)) {
-if (data1 > 9 || isNaN(data1)) {errors.push(
+if (typeof data2 == 'number' && isFinite(data2)) {
+if (data2 > 9 || isNaN(data2)) {errors.push(
 {
 instancePath: instancePath + '/level',
 schemaPath: '#/properties/level/maximum',
@@ -98,7 +135,7 @@ params: { comparison: '<=', limit: 9 },
 }
 );
 } else {
-if (data1 < 0 || isNaN(data1)) {errors.push(
+if (data2 < 0 || isNaN(data2)) {errors.push(
 {
 instancePath: instancePath + '/level',
 schemaPath: '#/properties/level/minimum',
@@ -111,9 +148,29 @@ params: { comparison: '>=', limit: 0 },
 }
 }
 }
-var valid0 = _errs3 === errors
+var valid0 = _errs5 === errors
 } else {
 var valid0 = true
+}
+if (valid0) {
+if (data.lastModified !== undefined) {
+let data3 = data.lastModified
+const _errs7 = errors
+if (!(typeof data3 == 'number' && isFinite(data3))) {errors.push(
+{
+instancePath: instancePath + '/lastModified',
+schemaPath: '#/properties/lastModified/type',
+keyword: 'type',
+params: { type: 'number' },
+ message: "Must_be_a_number"
+}
+);
+}
+var valid0 = _errs7 === errors
+} else {
+var valid0 = true
+}
+}
 }
 }
 }

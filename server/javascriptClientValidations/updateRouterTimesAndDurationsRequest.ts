@@ -56,7 +56,7 @@ required: [
 }
 const formats2 = /^(?:urn:uuid:)?[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/i
 import * as formats from 'ajv-formats/dist/formats'
-const formats100 = formats.fullFormats.regex as any
+const formats102 = formats.fullFormats.regex as any
 const pattern2 = new RegExp('^([0-9]{2}:[0-9]{2})\\|([0-9]+)$', 'u')
 import type { ErrorObject } from 'ajv'
 import * as serverAndClientFunctions from '../serverAndClientFunctions'
@@ -287,7 +287,7 @@ vErrors.push(err13)
 }
 
 }
-if (!formats100(data2)) {
+if (!formats102(data2)) {
 const err14 = {
 instancePath: instancePath + '/mondayTimesAndDurations',
 schemaPath: '#/properties/mondayTimesAndDurations/format',
@@ -336,7 +336,7 @@ vErrors.push(err16)
 }
 
 }
-if (!formats100(data3)) {
+if (!formats102(data3)) {
 const err17 = {
 instancePath: instancePath + '/tuesdayTimesAndDurations',
 schemaPath: '#/properties/tuesdayTimesAndDurations/format',
@@ -385,7 +385,7 @@ vErrors.push(err19)
 }
 
 }
-if (!formats100(data4)) {
+if (!formats102(data4)) {
 const err20 = {
 instancePath: instancePath + '/wednesdayTimesAndDurations',
 schemaPath: '#/properties/wednesdayTimesAndDurations/format',
@@ -434,7 +434,7 @@ vErrors.push(err22)
 }
 
 }
-if (!formats100(data5)) {
+if (!formats102(data5)) {
 const err23 = {
 instancePath: instancePath + '/thursdayTimesAndDurations',
 schemaPath: '#/properties/thursdayTimesAndDurations/format',
@@ -483,7 +483,7 @@ vErrors.push(err25)
 }
 
 }
-if (!formats100(data6)) {
+if (!formats102(data6)) {
 const err26 = {
 instancePath: instancePath + '/fridayTimesAndDurations',
 schemaPath: '#/properties/fridayTimesAndDurations/format',
@@ -532,7 +532,7 @@ vErrors.push(err28)
 }
 
 }
-if (!formats100(data7)) {
+if (!formats102(data7)) {
 const err29 = {
 instancePath: instancePath + '/saturdayTimesAndDurations',
 schemaPath: '#/properties/saturdayTimesAndDurations/format',
@@ -581,7 +581,7 @@ vErrors.push(err31)
 }
 
 }
-if (!formats100(data8)) {
+if (!formats102(data8)) {
 const err32 = {
 instancePath: instancePath + '/sundayTimesAndDurations',
 schemaPath: '#/properties/sundayTimesAndDurations/format',

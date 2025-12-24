@@ -8,7 +8,7 @@ lastModified: { default: 0, type: 'number' },
 version: { default: 0, minimum: 0, type: 'integer' },
 appId: { format: 'uuid', type: 'string' },
 id: {
-default: '019b2018-64e2-74dc-b86c-251ef9347e63',
+default: '019b4b67-3343-718d-8250-4e0197a47c49',
 format: 'uuid',
 type: 'string'},
 order: { default: 0, minimum: 0, type: 'integer' },
@@ -17,7 +17,10 @@ homePageIcon: {
 default: '00000000-0000-0000-0000-000000000002',
 format: 'uuid',
 type: 'string'},
-touched: { default: true, type: 'boolean' }
+touched: { default: true, type: 'boolean' },
+unitLastModified: { default: 0, type: 'number' },
+itemLastModified: { default: 0, type: 'number' },
+mediaLastModified: { default: 0, type: 'number' }
 },
 required: [
 'name',
@@ -28,7 +31,10 @@ required: [
 'order',
 'homePageIconType',
 'homePageIcon',
-'touched'
+'touched',
+'unitLastModified',
+'itemLastModified',
+'mediaLastModified'
 ]
 }
 import * as ucs2length from 'ajv/dist/runtime/ucs2length';const func4 = ucs2length.default;
@@ -177,16 +183,13 @@ vErrors.push(err8)
 }
 
 }
-if (data.name !== undefined) {
-let data0 = data.name
-if (typeof data0 === 'string') {
-if (func4(data0) > 100) {
+if (data.unitLastModified === undefined) {
 const err9 = {
-instancePath: instancePath + '/name',
-schemaPath: '#/properties/name/maxLength',
-keyword: 'maxLength',
-params: { limit: 100 },
- message: "Must_be_less_than_100_characters"
+instancePath,
+schemaPath: '#/required',
+keyword: 'required',
+params: { missingProperty: 'unitLastModified' },
+ message: "Required"
 }
 if (vErrors === null) {
 vErrors = [err9]
@@ -195,12 +198,12 @@ vErrors.push(err9)
 }
 
 }
-if (func4(data0) < 1) {
+if (data.itemLastModified === undefined) {
 const err10 = {
-instancePath: instancePath + '/name',
-schemaPath: '#/properties/name/minLength',
-keyword: 'minLength',
-params: { limit: 1 },
+instancePath,
+schemaPath: '#/required',
+keyword: 'required',
+params: { missingProperty: 'itemLastModified' },
  message: "Required"
 }
 if (vErrors === null) {
@@ -210,13 +213,13 @@ vErrors.push(err10)
 }
 
 }
-} else {
+if (data.mediaLastModified === undefined) {
 const err11 = {
-instancePath: instancePath + '/name',
-schemaPath: '#/properties/name/type',
-keyword: 'type',
-params: { type: 'string' },
-message: 'must be string'
+instancePath,
+schemaPath: '#/required',
+keyword: 'required',
+params: { missingProperty: 'mediaLastModified' },
+ message: "Required"
 }
 if (vErrors === null) {
 vErrors = [err11]
@@ -225,11 +228,59 @@ vErrors.push(err11)
 }
 
 }
+if (data.name !== undefined) {
+let data0 = data.name
+if (typeof data0 === 'string') {
+if (func4(data0) > 100) {
+const err12 = {
+instancePath: instancePath + '/name',
+schemaPath: '#/properties/name/maxLength',
+keyword: 'maxLength',
+params: { limit: 100 },
+ message: "Must_be_less_than_100_characters"
+}
+if (vErrors === null) {
+vErrors = [err12]
+} else {
+vErrors.push(err12)
+}
+
+}
+if (func4(data0) < 1) {
+const err13 = {
+instancePath: instancePath + '/name',
+schemaPath: '#/properties/name/minLength',
+keyword: 'minLength',
+params: { limit: 1 },
+ message: "Required"
+}
+if (vErrors === null) {
+vErrors = [err13]
+} else {
+vErrors.push(err13)
+}
+
+}
+} else {
+const err14 = {
+instancePath: instancePath + '/name',
+schemaPath: '#/properties/name/type',
+keyword: 'type',
+params: { type: 'string' },
+message: 'must be string'
+}
+if (vErrors === null) {
+vErrors = [err14]
+} else {
+vErrors.push(err14)
+}
+
+}
 }
 if (data.lastModified !== undefined) {
 let data1 = data.lastModified
 if (!(typeof data1 == 'number' && isFinite(data1))) {
-const err12 = {
+const err15 = {
 instancePath: instancePath + '/lastModified',
 schemaPath: '#/properties/lastModified/type',
 keyword: 'type',
@@ -237,9 +288,9 @@ params: { type: 'number' },
  message: "Must_be_a_number"
 }
 if (vErrors === null) {
-vErrors = [err12]
+vErrors = [err15]
 } else {
-vErrors.push(err12)
+vErrors.push(err15)
 }
 
 }
@@ -254,7 +305,7 @@ typeof data2 == 'number' &&
 isFinite(data2)
 )
 ) {
-const err13 = {
+const err16 = {
 instancePath: instancePath + '/version',
 schemaPath: '#/properties/version/type',
 keyword: 'type',
@@ -262,15 +313,15 @@ params: { type: 'integer' },
  message: "Must_be_an_integer"
 }
 if (vErrors === null) {
-vErrors = [err13]
+vErrors = [err16]
 } else {
-vErrors.push(err13)
+vErrors.push(err16)
 }
 
 }
 if (typeof data2 == 'number' && isFinite(data2)) {
 if (data2 < 0 || isNaN(data2)) {
-const err14 = {
+const err17 = {
 instancePath: instancePath + '/version',
 schemaPath: '#/properties/version/minimum',
 keyword: 'minimum',
@@ -278,9 +329,9 @@ params: { comparison: '>=', limit: 0 },
  message: "Must_be_greater_than_or_equal_to_0"
 }
 if (vErrors === null) {
-vErrors = [err14]
+vErrors = [err17]
 } else {
-vErrors.push(err14)
+vErrors.push(err17)
 }
 
 }
@@ -290,7 +341,7 @@ if (data.appId !== undefined) {
 let data3 = data.appId
 if (typeof data3 === 'string') {
 if (!formats2.test(data3)) {
-const err15 = {
+const err18 = {
 instancePath: instancePath + '/appId',
 schemaPath: '#/properties/appId/format',
 keyword: 'format',
@@ -298,14 +349,14 @@ params: { format: 'uuid' },
  message: "Must_be_a_valid_UUID"
 }
 if (vErrors === null) {
-vErrors = [err15]
+vErrors = [err18]
 } else {
-vErrors.push(err15)
+vErrors.push(err18)
 }
 
 }
 } else {
-const err16 = {
+const err19 = {
 instancePath: instancePath + '/appId',
 schemaPath: '#/properties/appId/type',
 keyword: 'type',
@@ -313,9 +364,9 @@ params: { type: 'string' },
 message: 'must be string'
 }
 if (vErrors === null) {
-vErrors = [err16]
+vErrors = [err19]
 } else {
-vErrors.push(err16)
+vErrors.push(err19)
 }
 
 }
@@ -324,7 +375,7 @@ if (data.id !== undefined) {
 let data4 = data.id
 if (typeof data4 === 'string') {
 if (!formats2.test(data4)) {
-const err17 = {
+const err20 = {
 instancePath: instancePath + '/id',
 schemaPath: '#/properties/id/format',
 keyword: 'format',
@@ -332,14 +383,14 @@ params: { format: 'uuid' },
  message: "Must_be_a_valid_UUID"
 }
 if (vErrors === null) {
-vErrors = [err17]
+vErrors = [err20]
 } else {
-vErrors.push(err17)
+vErrors.push(err20)
 }
 
 }
 } else {
-const err18 = {
+const err21 = {
 instancePath: instancePath + '/id',
 schemaPath: '#/properties/id/type',
 keyword: 'type',
@@ -347,9 +398,9 @@ params: { type: 'string' },
 message: 'must be string'
 }
 if (vErrors === null) {
-vErrors = [err18]
+vErrors = [err21]
 } else {
-vErrors.push(err18)
+vErrors.push(err21)
 }
 
 }
@@ -364,7 +415,7 @@ typeof data5 == 'number' &&
 isFinite(data5)
 )
 ) {
-const err19 = {
+const err22 = {
 instancePath: instancePath + '/order',
 schemaPath: '#/properties/order/type',
 keyword: 'type',
@@ -372,15 +423,15 @@ params: { type: 'integer' },
  message: "Must_be_an_integer"
 }
 if (vErrors === null) {
-vErrors = [err19]
+vErrors = [err22]
 } else {
-vErrors.push(err19)
+vErrors.push(err22)
 }
 
 }
 if (typeof data5 == 'number' && isFinite(data5)) {
 if (data5 < 0 || isNaN(data5)) {
-const err20 = {
+const err23 = {
 instancePath: instancePath + '/order',
 schemaPath: '#/properties/order/minimum',
 keyword: 'minimum',
@@ -388,9 +439,9 @@ params: { comparison: '>=', limit: 0 },
  message: "Must_be_greater_than_or_equal_to_0"
 }
 if (vErrors === null) {
-vErrors = [err20]
+vErrors = [err23]
 } else {
-vErrors.push(err20)
+vErrors.push(err23)
 }
 
 }
@@ -406,63 +457,12 @@ typeof data6 == 'number' &&
 isFinite(data6)
 )
 ) {
-const err21 = {
+const err24 = {
 instancePath: instancePath + '/homePageIconType',
 schemaPath: '#/properties/homePageIconType/type',
 keyword: 'type',
 params: { type: 'integer' },
  message: "Must_be_an_integer"
-}
-if (vErrors === null) {
-vErrors = [err21]
-} else {
-vErrors.push(err21)
-}
-
-}
-if (typeof data6 == 'number' && isFinite(data6)) {
-if (data6 > 3 || isNaN(data6)) {
-const err22 = {
-instancePath: instancePath + '/homePageIconType',
-schemaPath: '#/properties/homePageIconType/maximum',
-keyword: 'maximum',
-params: { comparison: '<=', limit: 3 },
- message: "Must_be_less_than_or_equal_to_maximum"
-}
-if (vErrors === null) {
-vErrors = [err22]
-} else {
-vErrors.push(err22)
-}
-
-}
-if (data6 < 0 || isNaN(data6)) {
-const err23 = {
-instancePath: instancePath + '/homePageIconType',
-schemaPath: '#/properties/homePageIconType/minimum',
-keyword: 'minimum',
-params: { comparison: '>=', limit: 0 },
- message: "Must_be_greater_than_or_equal_to_0"
-}
-if (vErrors === null) {
-vErrors = [err23]
-} else {
-vErrors.push(err23)
-}
-
-}
-}
-}
-if (data.homePageIcon !== undefined) {
-let data7 = data.homePageIcon
-if (typeof data7 === 'string') {
-if (!formats2.test(data7)) {
-const err24 = {
-instancePath: instancePath + '/homePageIcon',
-schemaPath: '#/properties/homePageIcon/format',
-keyword: 'format',
-params: { format: 'uuid' },
- message: "Must_be_a_valid_UUID"
 }
 if (vErrors === null) {
 vErrors = [err24]
@@ -471,13 +471,14 @@ vErrors.push(err24)
 }
 
 }
-} else {
+if (typeof data6 == 'number' && isFinite(data6)) {
+if (data6 > 3 || isNaN(data6)) {
 const err25 = {
-instancePath: instancePath + '/homePageIcon',
-schemaPath: '#/properties/homePageIcon/type',
-keyword: 'type',
-params: { type: 'string' },
-message: 'must be string'
+instancePath: instancePath + '/homePageIconType',
+schemaPath: '#/properties/homePageIconType/maximum',
+keyword: 'maximum',
+params: { comparison: '<=', limit: 3 },
+ message: "Must_be_less_than_or_equal_to_maximum"
 }
 if (vErrors === null) {
 vErrors = [err25]
@@ -486,15 +487,13 @@ vErrors.push(err25)
 }
 
 }
-}
-if (data.touched !== undefined) {
-if (typeof data.touched !== 'boolean') {
+if (data6 < 0 || isNaN(data6)) {
 const err26 = {
-instancePath: instancePath + '/touched',
-schemaPath: '#/properties/touched/type',
-keyword: 'type',
-params: { type: 'boolean' },
- message: "Must_be_a_boolean"
+instancePath: instancePath + '/homePageIconType',
+schemaPath: '#/properties/homePageIconType/minimum',
+keyword: 'minimum',
+params: { comparison: '>=', limit: 0 },
+ message: "Must_be_greater_than_or_equal_to_0"
 }
 if (vErrors === null) {
 vErrors = [err26]
@@ -504,8 +503,114 @@ vErrors.push(err26)
 
 }
 }
-} else {
+}
+if (data.homePageIcon !== undefined) {
+let data7 = data.homePageIcon
+if (typeof data7 === 'string') {
+if (!formats2.test(data7)) {
 const err27 = {
+instancePath: instancePath + '/homePageIcon',
+schemaPath: '#/properties/homePageIcon/format',
+keyword: 'format',
+params: { format: 'uuid' },
+ message: "Must_be_a_valid_UUID"
+}
+if (vErrors === null) {
+vErrors = [err27]
+} else {
+vErrors.push(err27)
+}
+
+}
+} else {
+const err28 = {
+instancePath: instancePath + '/homePageIcon',
+schemaPath: '#/properties/homePageIcon/type',
+keyword: 'type',
+params: { type: 'string' },
+message: 'must be string'
+}
+if (vErrors === null) {
+vErrors = [err28]
+} else {
+vErrors.push(err28)
+}
+
+}
+}
+if (data.touched !== undefined) {
+if (typeof data.touched !== 'boolean') {
+const err29 = {
+instancePath: instancePath + '/touched',
+schemaPath: '#/properties/touched/type',
+keyword: 'type',
+params: { type: 'boolean' },
+ message: "Must_be_a_boolean"
+}
+if (vErrors === null) {
+vErrors = [err29]
+} else {
+vErrors.push(err29)
+}
+
+}
+}
+if (data.unitLastModified !== undefined) {
+let data9 = data.unitLastModified
+if (!(typeof data9 == 'number' && isFinite(data9))) {
+const err30 = {
+instancePath: instancePath + '/unitLastModified',
+schemaPath: '#/properties/unitLastModified/type',
+keyword: 'type',
+params: { type: 'number' },
+ message: "Must_be_a_number"
+}
+if (vErrors === null) {
+vErrors = [err30]
+} else {
+vErrors.push(err30)
+}
+
+}
+}
+if (data.itemLastModified !== undefined) {
+let data10 = data.itemLastModified
+if (!(typeof data10 == 'number' && isFinite(data10))) {
+const err31 = {
+instancePath: instancePath + '/itemLastModified',
+schemaPath: '#/properties/itemLastModified/type',
+keyword: 'type',
+params: { type: 'number' },
+ message: "Must_be_a_number"
+}
+if (vErrors === null) {
+vErrors = [err31]
+} else {
+vErrors.push(err31)
+}
+
+}
+}
+if (data.mediaLastModified !== undefined) {
+let data11 = data.mediaLastModified
+if (!(typeof data11 == 'number' && isFinite(data11))) {
+const err32 = {
+instancePath: instancePath + '/mediaLastModified',
+schemaPath: '#/properties/mediaLastModified/type',
+keyword: 'type',
+params: { type: 'number' },
+ message: "Must_be_a_number"
+}
+if (vErrors === null) {
+vErrors = [err32]
+} else {
+vErrors.push(err32)
+}
+
+}
+}
+} else {
+const err33 = {
 instancePath,
 schemaPath: '#/type',
 keyword: 'type',
@@ -513,9 +618,9 @@ params: { type: 'object' },
 message: 'must be object'
 }
 if (vErrors === null) {
-vErrors = [err27]
+vErrors = [err33]
 } else {
-vErrors.push(err27)
+vErrors.push(err33)
 }
 
 }

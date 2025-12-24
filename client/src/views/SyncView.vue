@@ -70,16 +70,37 @@ export default {
             syncRequest.values = {};
             syncRequests.push(syncRequest);
             if (followerRequest.touched) {
-               syncRequest.action = syncAction.modify;
-               syncRequest.values = awesum.toPOJO(followerRequest);
+                syncRequest.action = syncAction.modify;
+                syncRequest.values = awesum.toPOJO(followerRequest);
             }
             else {
                 syncRequest.action = syncAction.receiveChanges;
                 syncRequest.values = {
                     lastModified: followerRequest.lastModified,
                     version: followerRequest.version,
+                    leaderAppId: followerRequest.leaderAppId,
                 }
             }
+
+            var followerDatabases = await awesum.AwesumDexieDB.serverFollowerDatabases.where('followerRequestId').equals(followerRequest.id).toArray();
+            for (const followerDatabase of followerDatabases) {
+                var syncRequest = {} as ServerSyncRequestInterface;
+                syncRequest.id = followerDatabase.id;
+                syncRequest.level = ItemLevel.followerDatabase;
+                syncRequest.action = syncAction.receiveChanges;
+                syncRequest.values = {
+                    lastModified: followerDatabase.lastModified,
+                    version: followerDatabase.version,
+                }
+                syncRequests.push(syncRequest);
+
+                var databaseSyncRequests = await awesum.getDatabaseSyncRequests(followerDatabase.databaseId);
+                for (const databaseSyncRequest of databaseSyncRequests) {
+                    syncRequests.push(databaseSyncRequest);
+                }
+            }
+
+
 
             var followerDatabaseCompletions = await awesum.AwesumDexieDB.serverFollowerDatabaseCompletions.where('followerRequestId').equals(followerRequest.id).toArray();
             for (const followerDatabaseCompletion of followerDatabaseCompletions) {

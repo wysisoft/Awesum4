@@ -56,7 +56,7 @@ required: [
 }
 const formats2 = /^(?:urn:uuid:)?[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/i
 import * as formats from 'ajv-formats/dist/formats'
-const formats100 = formats.fullFormats.regex as any
+const formats102 = formats.fullFormats.regex as any
 const pattern2 = new RegExp('^([0-9]{2}:[0-9]{2})\\|([0-9]+)$', 'u')
 import type { ErrorObject } from 'ajv'
 import * as serverAndClientFunctions from '../serverAndClientFunctions'
@@ -175,7 +175,7 @@ pattern: '^([0-9]{2}:[0-9]{2})\\|([0-9]+)$'},
 }
 );
 } else {
-if (!formats100(data2)) {errors.push(
+if (!formats102(data2)) {errors.push(
 {
 instancePath: instancePath + '/mondayTimesAndDurations',
 schemaPath: '#/properties/mondayTimesAndDurations/format',
@@ -220,7 +220,7 @@ pattern: '^([0-9]{2}:[0-9]{2})\\|([0-9]+)$'},
 }
 );
 } else {
-if (!formats100(data3)) {errors.push(
+if (!formats102(data3)) {errors.push(
 {
 instancePath: instancePath + '/tuesdayTimesAndDurations',
 schemaPath: '#/properties/tuesdayTimesAndDurations/format',
@@ -265,7 +265,7 @@ pattern: '^([0-9]{2}:[0-9]{2})\\|([0-9]+)$'},
 }
 );
 } else {
-if (!formats100(data4)) {errors.push(
+if (!formats102(data4)) {errors.push(
 {
 instancePath: instancePath + '/wednesdayTimesAndDurations',
 schemaPath: '#/properties/wednesdayTimesAndDurations/format',
@@ -310,7 +310,7 @@ pattern: '^([0-9]{2}:[0-9]{2})\\|([0-9]+)$'},
 }
 );
 } else {
-if (!formats100(data5)) {errors.push(
+if (!formats102(data5)) {errors.push(
 {
 instancePath: instancePath + '/thursdayTimesAndDurations',
 schemaPath: '#/properties/thursdayTimesAndDurations/format',
@@ -355,7 +355,7 @@ pattern: '^([0-9]{2}:[0-9]{2})\\|([0-9]+)$'},
 }
 );
 } else {
-if (!formats100(data6)) {errors.push(
+if (!formats102(data6)) {errors.push(
 {
 instancePath: instancePath + '/fridayTimesAndDurations',
 schemaPath: '#/properties/fridayTimesAndDurations/format',
@@ -400,7 +400,7 @@ pattern: '^([0-9]{2}:[0-9]{2})\\|([0-9]+)$'},
 }
 );
 } else {
-if (!formats100(data7)) {errors.push(
+if (!formats102(data7)) {errors.push(
 {
 instancePath: instancePath + '/saturdayTimesAndDurations',
 schemaPath: '#/properties/saturdayTimesAndDurations/format',
@@ -445,7 +445,7 @@ pattern: '^([0-9]{2}:[0-9]{2})\\|([0-9]+)$'},
 }
 );
 } else {
-if (!formats100(data8)) {errors.push(
+if (!formats102(data8)) {errors.push(
 {
 instancePath: instancePath + '/sundayTimesAndDurations',
 schemaPath: '#/properties/sundayTimesAndDurations/format',

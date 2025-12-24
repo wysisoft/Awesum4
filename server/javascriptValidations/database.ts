@@ -8,7 +8,7 @@ lastModified: { default: 0, type: 'number' },
 version: { default: 0, minimum: 0, type: 'integer' },
 appId: { format: 'uuid', type: 'string' },
 id: {
-default: '019b2018-64e2-74dc-b86c-251ef9347e63',
+default: '019b4b67-3343-718d-8250-4e0197a47c49',
 format: 'uuid',
 type: 'string'},
 order: { default: 0, minimum: 0, type: 'integer' },
@@ -17,7 +17,10 @@ homePageIcon: {
 default: '00000000-0000-0000-0000-000000000002',
 format: 'uuid',
 type: 'string'},
-touched: { default: true, type: 'boolean' }
+touched: { default: true, type: 'boolean' },
+unitLastModified: { default: 0, type: 'number' },
+itemLastModified: { default: 0, type: 'number' },
+mediaLastModified: { default: 0, type: 'number' }
 },
 required: [
 'name',
@@ -28,7 +31,10 @@ required: [
 'order',
 'homePageIconType',
 'homePageIcon',
-'touched'
+'touched',
+'unitLastModified',
+'itemLastModified',
+'mediaLastModified'
 ]
 }
 import ucs2length from 'ajv/dist/runtime/ucs2length';const func4 = (ucs2length as any).default;
@@ -54,7 +60,13 @@ if (
 (data.homePageIconType === undefined &&
 (missing0 = 'homePageIconType')) ||
 (data.homePageIcon === undefined && (missing0 = 'homePageIcon')) ||
-(data.touched === undefined && (missing0 = 'touched'))
+(data.touched === undefined && (missing0 = 'touched')) ||
+(data.unitLastModified === undefined &&
+(missing0 = 'unitLastModified')) ||
+(data.itemLastModified === undefined &&
+(missing0 = 'itemLastModified')) ||
+(data.mediaLastModified === undefined &&
+(missing0 = 'mediaLastModified'))
 ) {errors.push(
 {
 instancePath,
@@ -367,6 +379,72 @@ params: { type: 'boolean' },
 var valid0 = _errs17 === errors
 } else {
 var valid0 = true
+}
+if (valid0) {
+if (data.unitLastModified !== undefined) {
+let data9 = data.unitLastModified
+const _errs19 = errors
+if (
+!(typeof data9 == 'number' && isFinite(data9))
+) {errors.push(
+{
+instancePath: instancePath + '/unitLastModified',
+schemaPath: '#/properties/unitLastModified/type',
+keyword: 'type',
+params: { type: 'number' },
+ message: "Must_be_a_number"
+}
+);
+}
+var valid0 = _errs19 === errors
+} else {
+var valid0 = true
+}
+if (valid0) {
+if (data.itemLastModified !== undefined) {
+let data10 = data.itemLastModified
+const _errs21 = errors
+if (
+!(typeof data10 == 'number' && isFinite(data10))
+) {errors.push(
+{
+instancePath: instancePath + '/itemLastModified',
+schemaPath: '#/properties/itemLastModified/type',
+keyword: 'type',
+params: { type: 'number' },
+ message: "Must_be_a_number"
+}
+);
+}
+var valid0 = _errs21 === errors
+} else {
+var valid0 = true
+}
+if (valid0) {
+if (data.mediaLastModified !== undefined) {
+let data11 = data.mediaLastModified
+const _errs23 = errors
+if (
+!(
+typeof data11 == 'number' &&
+isFinite(data11)
+)
+) {errors.push(
+{
+instancePath: instancePath + '/mediaLastModified',
+schemaPath: '#/properties/mediaLastModified/type',
+keyword: 'type',
+params: { type: 'number' },
+ message: "Must_be_a_number"
+}
+);
+}
+var valid0 = _errs23 === errors
+} else {
+var valid0 = true
+}
+}
+}
 }
 }
 }

@@ -16,6 +16,6 @@ export interface ServerDatabaseItemInterface {
   databaseId: string;
   id: string;
   dataText: string;
-  data: unknown;
+  data?: unknown;
   
 }

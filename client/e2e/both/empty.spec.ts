@@ -1,5 +1,12 @@
 //import { chromium } from 'playwright-extra';
 import { Browser, chromium, Page } from 'playwright';
+import { Kysely, PostgresDialect, HandleEmptyInListsPlugin, type HandleEmptyInListsOptions, pushValueIntoList } from 'kysely';
+import { Pool } from 'pg';
+
+import { type AwesumApp, type AwesumFollowerRequest, type AwesumFollowerDatabase, type DB, 
+  type AwesumFollowerDatabaseCompletion, type AwesumDatabaseUnit, type AwesumDatabaseItem, 
+  type AwesumRouter, type AwesumDatabase, type AwesumDnsEntry } from '../../../server/db/db.js';
+
 
 // import stealth from 'puppeteer-extra-plugin-stealth'
 // var stealthPlugin = stealth();
@@ -19,7 +26,7 @@ function instrumentPage(page: any, browser: any) {
     const result = await originalClick(...args);
     await waitUntilNotPaused(browser);
     return result;
-  };  
+  };
   var originalFill = page.fill.bind(page);
   page.fill = async function (...args: any[]) {
     const result = await originalFill(...args);
@@ -43,6 +50,7 @@ async function launchWithRecorder(dataDir: string, windowTop: number, windowLeft
       '--no-first-run',
       '--disable-session-crashed-bubble', // ⚡ hides the restore popup
       '--disable-infobars',                // optional: hide other infobars
+      '--hide-crash-restore-bubble',
     ],
   });
 
@@ -52,23 +60,23 @@ async function launchWithRecorder(dataDir: string, windowTop: number, windowLeft
   browser.setDefaultNavigationTimeout(0);
 
   const session = await browser.newCDPSession(page);
-  browser.session = session;
+  (browser as any).session = session;
 
   // Node / Playwright
   await session.send('Debugger.enable'); // start listening
 
   session.on('Debugger.paused', () => {
-    browser.isPaused = true;
+    (browser as any).isPaused = true;
   });
   session.on('Debugger.resumed', () => {
-    browser.isPaused = false;
+    (browser as any).isPaused = false;
   });
 
   await session.send('Browser.setWindowBounds', {
     windowId: (await session.send('Browser.getWindowForTarget')).windowId,
     bounds: { top: windowTop, left: windowLeft, width: windowWidth, height: windowHeight }
   });
-  
+
   page.exposeFunction('openInspector', async () => {
     await page.pause();
   });
@@ -81,7 +89,7 @@ async function launchWithRecorder(dataDir: string, windowTop: number, windowLeft
 
 
 
-const wildertBrowser = await launchWithRecorder('./../wildert/UserDataDir', 100, 0, 600, 600).catch(console.error);
+const wildertBrowser = await launchWithRecorder('./../wildert/UserDataDir', 0, 0, 650, 1000).catch(console.error);
 
 let isPaused = false;
 
@@ -91,6 +99,11 @@ const wildert = await wildertBrowser.pages()[0];
 instrumentPage(wildert, wildertBrowser);
 
 await wildert.goto('https://dev.awesum.app/');
+
+await wildert.getByRole('button', { name: 'Settings' }).click();
+await wildert.getByRole('button', { name: 'Delete All Browser Data' }).nth(1).click();
+await wildert.locator('#resetEverythingValueInput').fill('38');
+await wildert.getByRole('button', { name: 'Submit' }).click();
 
 await wildert.getByRole('link', { name: 'Settings' }).click();
 await wildert.getByRole('button', { name: 'Create App' }).click();
@@ -104,11 +117,15 @@ await wildert.getByRole('button', { name: 'Lets Go!' }).click();
 
 
 
-const demobratBrowser = await launchWithRecorder('./../demobrat/UserDataDir', 600, 100, 600, 600).catch(console.error);
+const demobratBrowser = await launchWithRecorder('./../demobrat/UserDataDir', 0, 650, 650, 1000).catch(console.error);
 const demobrat = await demobratBrowser.pages()[0];
 instrumentPage(demobrat, demobratBrowser);
 await demobrat.goto('https://dev.awesum.app/');
 
+await demobrat.getByRole('button', { name: 'Settings' }).click();
+await demobrat.getByRole('button', { name: 'Delete All Browser Data' }).nth(1).click();
+await demobrat.locator('#resetEverythingValueInput').fill('38');
+await demobrat.getByRole('button', { name: 'Submit' }).click();
 
 await demobrat.getByRole('link', { name: 'Settings' }).click();
 await demobrat.getByRole('button', { name: 'Create App' }).click();
@@ -129,6 +146,45 @@ await wildert.getByRole('button', { name: 'Search' }).press('Enter');
 await wildert.getByRole('button', { name: 'Search' }).click();
 await wildert.getByRole('button', { name: 'Submit' }).click();
 
+//use kysely to wait loop for a row to exist in the serverFollowerRequest table where followerEmail = 'demobrat@gmail.com' and leaderEmail = 'wildert@gmail.com' and status = 1
+
+// Define a custom logger (you can use any logging library you prefer)
+const logger = {
+  log: (message: string) => console.log(message),  // Here we use console.log for simplicity
+}
+
+const db = new Kysely<DB>({
+  dialect: new PostgresDialect({
+    pool: new Pool({
+      connectionString: process.env.DATABASE_URL!.replace('awesum', 'awesumDev'),
+    }),
+  }),
+  plugins: [
+    new HandleEmptyInListsPlugin({
+      strategy: pushValueIntoList('__kysely_no_values_were_provided__') // choose a unique value for not in. has to be something with zero chance being in the data.
+    })
+  ],
+  log: (event) => {
+    // Log the SQL query and parameters
+    if (event.level === 'query') {
+      logger.log(`🧱 SQL Query: ${event.query.sql}`)
+      logger.log(`🧱 Query: ${event.query.query}`)
+      logger.log(`🪄 Parameters: ${JSON.stringify(event.query.parameters)}`)
+    }
+    // Log the result after query execution
+  },
+
+});
+
+while (true) {
+  const followerRequest = await db.selectFrom('awesum.FollowerRequest as fr')
+  .where('followerEmail', '=', 'demobrat@gmail.com')
+  .executeTakeFirst();
+  if (followerRequest) {
+    break;
+  }
+  await demobrat.waitForTimeout(1000);
+}
 
 await demobrat.getByRole('button', { name: 'Sync' }).click();
 await demobrat.getByRole('button', { name: 'Settings' }).click();
@@ -168,11 +224,27 @@ await wildert.getByRole('button', { name: 'Database' }).click();
 await wildert.getByRole('button', { name: 'Edit' }).click();
 await wildert.getByRole('button', { name: 'Add Assignment' }).click();
 
-await wildert.getByLabel('Select user').selectOption({index: 1});
+await wildert.getByLabel('Select user').selectOption({ index: 1 });
 
 await wildert.getByRole('button', { name: 'Submit' }).click();
 await wildert.getByRole('button', { name: 'Home' }).click();
 
 await demobrat.getByRole('button', { name: 'Sync' }).click();
+
+await demobrat.getByRole('button', { name: 'Home' }).click();
+await demobrat.getByRole('button', { name: 'Lets Go' }).first().click();
+await demobrat.waitForTimeout(3000);
+await demobrat.getByRole('button', { name: 'Lets Go' }).click();
+await demobrat.getByRole('button', { name: 'Lets Go' }).click();
+await demobrat.getByRole('button', { name: 'Lets Go' }).click();
+await demobrat.locator('body').click();
+await demobrat.locator('body').press('Tab');
+await demobrat.keyboard.press('C');
+await demobrat.keyboard.press('A');
+await demobrat.keyboard.press('L');
+await demobrat.keyboard.press('V')
+await demobrat.keyboard.press('I');
+await demobrat.keyboard.press('N');
+
 
 await wildert.pause();

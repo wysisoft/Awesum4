@@ -48,6 +48,7 @@ export default {
     };
   },
   async mounted() {
+    debugger;
     if (this.$awesum.currentDatabaseUnit.successAnimations.indexOf('Balloons') > -1) {
       var balloonCanvas = document.getElementById('balloonCanvas') as HTMLCanvasElement;
       balloonCanvas.style.display = '';
@@ -186,7 +187,9 @@ export default {
           this.$awesum.AwesumDexieDB.serverFollowerDatabaseCompletions,
           this.$awesum.AwesumDexieDB.serverFollowerRequests,
           this.$awesum.AwesumDexieDB.serverFollowerDatabases,
-          this.$awesum.AwesumDexieDB.serverDatabaseUnits
+          this.$awesum.AwesumDexieDB.serverDatabaseUnits,
+          this.$awesum.AwesumDexieDB.additions,
+          this.$awesum.AwesumDexieDB.serverDatabases,
         ],
         async () => {
 
@@ -206,15 +209,11 @@ export default {
             completionData = {
               id: uuid(),
               followerRequestId: currentFollowerRequest.id,
-              description: '',
-              created: Date.now(),
               lastModified: Date.now(),
-              version: 0,
               itemId: this.$awesum.currentDatabase.id,
               parentItemId: this.$awesum.currentApp.id,
               itemLevel: ItemLevel.database,
-              touched: false,
-            } as ServerFollowerDatabaseCompletionInterface;
+            } satisfies ServerFollowerDatabaseCompletionInterface;
 
             await this.$awesum.AwesumDexieDB.serverFollowerDatabaseCompletions.add(completionData);
           }
@@ -273,7 +272,7 @@ export default {
     //   }
 
     // }
-    if (doneUnit.id) {
+    else if (doneUnit.id) {
 
 
 
@@ -282,7 +281,9 @@ export default {
         [
           this.$awesum.AwesumDexieDB.serverFollowerDatabaseCompletions,
           this.$awesum.AwesumDexieDB.serverFollowerRequests,
-          this.$awesum.AwesumDexieDB.serverFollowerDatabases
+          this.$awesum.AwesumDexieDB.serverFollowerDatabases,
+          this.$awesum.AwesumDexieDB.additions,
+          this.$awesum.AwesumDexieDB.serverDatabases,
         ], async () => {
 
           await this.$awesum.AwesumDexieDB.serverFollowerDatabaseCompletions.where('parentItemId').equals(this.$awesum.currentDatabaseUnit.id).and((followerDatabaseCompletion: ServerFollowerDatabaseCompletionInterface) => followerDatabaseCompletion.itemId != '').delete();
@@ -292,15 +293,11 @@ export default {
             completionData = {
               id: uuid(),
               followerRequestId: currentFollowerRequest.id,
-              description: '',
-              created: Date.now(),
               lastModified: Date.now(),
-              version: 0,
               itemId: this.$awesum.currentDatabaseUnit.id,
               parentItemId: this.$awesum.currentDatabase.id,
               itemLevel: ItemLevel.databaseUnit,
-              touched: false,
-            } as ServerFollowerDatabaseCompletionInterface;
+            } satisfies ServerFollowerDatabaseCompletionInterface;
 
             await this.$awesum.AwesumDexieDB.serverFollowerDatabaseCompletions.add(completionData);
           }

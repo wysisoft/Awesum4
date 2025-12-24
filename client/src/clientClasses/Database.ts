@@ -54,5 +54,14 @@
     private _touched: boolean = false;
     public get touched():boolean { return this._touched; }
     public set touched(v:boolean) {if(this._touched != v){this._touched=v;}}
+    private _unitLastModified: number = 0;
+    public get unitLastModified():number { return this._unitLastModified; }
+    public set unitLastModified(v:number) {if(this._unitLastModified != v){this.version++;this.lastModified=new Date().getTime();this._unitLastModified=v;awesum.setTablePropertyValueById(this.id, 'unitLastModified',v,this.table)}}
+    private _itemLastModified: number = 0;
+    public get itemLastModified():number { return this._itemLastModified; }
+    public set itemLastModified(v:number) {if(this._itemLastModified != v){this.version++;this.lastModified=new Date().getTime();this._itemLastModified=v;awesum.setTablePropertyValueById(this.id, 'itemLastModified',v,this.table)}}
+    private _mediaLastModified: number = 0;
+    public get mediaLastModified():number { return this._mediaLastModified; }
+    public set mediaLastModified(v:number) {if(this._mediaLastModified != v){this.version++;this.lastModified=new Date().getTime();this._mediaLastModified=v;awesum.setTablePropertyValueById(this.id, 'mediaLastModified',v,this.table)}}
   }
   

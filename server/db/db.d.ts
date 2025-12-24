@@ -29,16 +29,19 @@ export interface AwesumDatabase {
   homePageIcon: string;
   homePageIconType: number;
   id: string;
+  itemLastModified: number;
   lastModified: number;
+  mediaLastModified: number;
   name: string;
   order: number;
   touched: boolean;
+  unitLastModified: number;
   version: number;
 }
 
 export interface AwesumDatabaseItem {
   appId: string;
-  data: string;
+  data: string | null;
   databaseId: string;
   dataText: string;
   id: string;
@@ -73,7 +76,9 @@ export interface AwesumDatabaseUnit {
 }
 
 export interface AwesumDeletion {
+  databaseId: string;
   id: string;
+  lastModified: number;
   level: number;
 }
 
@@ -86,16 +91,10 @@ export interface AwesumDnsEntry {
 
 export interface AwesumFollowerDatabase {
   databaseId: string;
-  databaseLastModified: number;
-  databaseVersion: number;
   followerRequestId: string;
   id: string;
-  itemLastModified: number;
-  itemVersion: number;
   lastModified: number;
   touched: boolean;
-  unitLastModified: number;
-  unitVersion: number;
   version: number;
 }
 

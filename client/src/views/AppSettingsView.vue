@@ -101,17 +101,18 @@ export default {
       //if there are no databases, set order to 0, otherwise set order to the highest order + 1
       defaultDatabase.order = this.$awesum.currentDatabases.length == 0 ? 0 : this.$awesum.currentDatabases.reduce((max, database) => Math.max(max, database.order), 0) + 1;
       defaultDatabase.name = 'Database ' + (defaultDatabase.order).toString();
+
       await this.$awesum.AwesumDexieDB.serverDatabases.add(defaultDatabase);
 
       await this.$awesum.refreshCurrentDatabases();
 
-      var ownFollowerRequest = awesum.followerRequests.find((x) => x.leaderAppId == this.$awesum.ownerApp.id && x.followerAppId == this.$awesum.ownerApp.id);
+      var ownFollowerRequest = awesum.followerRequests.find((x) => x.leaderAppId == this.$awesum.ownerApp.id && x.followerAppId == this.$awesum.ownerApp.id)!;
       if (!ownFollowerRequest) {
         alert('No follower request found');
       }
 
       var followerDatabase = getDefault(Value.Default(types.filter((x) => x.$id == "followerDatabase")[0], {}) as ServerFollowerDatabaseInterface);
-      followerDatabase.followerRequestId = ownFollowerRequest?.id;
+      followerDatabase.followerRequestId = ownFollowerRequest.id;
       followerDatabase.databaseId = defaultDatabase.id;
 
 

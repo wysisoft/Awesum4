@@ -269,6 +269,10 @@ export const types = [
                 format: "uuid",
                 formatMessage: "Must_be_a_valid_UUID",
             }),
+            databaseId: Type.String({
+                format: "uuid",
+                formatMessage: "Must_be_a_valid_UUID",
+            }),
             level: Type.Integer({
                 minimum: 0,
                 minimumMessage: "Must_be_greater_than_or_equal_to_0",
@@ -280,6 +284,11 @@ export const types = [
                 ),
                 maximumMessage: "Must_be_less_than_or_equal_to_maximum",
             }),
+            lastModified: Type.Number({
+                default: 0,
+                typeMessage: "Must_be_a_number"
+            }),
+           
         },
         { $id: "deletion" },
     ),
@@ -367,6 +376,21 @@ export const types = [
                 default: true,
                 typeMessage: "Must_be_a_boolean",
             }),
+            
+            unitLastModified: Type.Number({
+                default: 0,
+                typeMessage: "Must_be_a_number",
+            }),
+            
+            itemLastModified: Type.Number({
+                default: 0,
+                typeMessage: "Must_be_a_number",
+            }),
+            
+            mediaLastModified: Type.Number({
+                default: 0,
+                typeMessage: "Must_be_a_number",
+            })
         },
         { $id: "database" },
     ),
@@ -538,7 +562,7 @@ export const types = [
                 maxLength: 8000,
                 maxLengthMessage: "Must_be_less_than_8000_characters",
             }),
-            data: Type.Any(),
+            data: Type.Optional(Type.Any()),
         },
         { $id: "databaseItem" },
     ),
@@ -852,37 +876,7 @@ export const types = [
                 minimum: 0,
                 minimumMessage: "Must_be_greater_than_or_equal_to_0",
                 typeMessage: "Must_be_an_integer",
-            }),
-            databaseVersion: Type.Integer({
-                default: 0,
-                minimum: 0,
-                minimumMessage: "Must_be_greater_than_or_equal_to_0",
-                typeMessage: "Must_be_an_integer",
-            }),
-            databaseLastModified: Type.Number({
-                default: 0,
-                typeMessage: "Must_be_a_number",
-            }),
-            unitVersion: Type.Integer({
-                default: 0,
-                minimum: 0,
-                minimumMessage: "Must_be_greater_than_or_equal_to_0",
-                typeMessage: "Must_be_an_integer",
-            }),
-            unitLastModified: Type.Number({
-                default: 0,
-                typeMessage: "Must_be_a_number",
-            }),
-            itemVersion: Type.Integer({
-                default: 0,
-                minimum: 0,
-                minimumMessage: "Must_be_greater_than_or_equal_to_0",
-                typeMessage: "Must_be_an_integer",
-            }),
-            itemLastModified: Type.Number({
-                default: 0,
-                typeMessage: "Must_be_a_number",
-            }),
+            })
         },
         { $id: "followerDatabase" },
     ),

@@ -29,6 +29,9 @@ export type syncRequest = {
     homePageIconType: number
     homePageIcon: string
     touched: boolean
+    unitLastModified: number
+    itemLastModified: number
+    mediaLastModified: number
   }
   databaseUnit?: {
     name: string
@@ -62,7 +65,7 @@ export type syncRequest = {
     databaseId: string
     id: string
     dataText: string
-    data: any
+    data?: any
   }
   followerRequest?: {
     leaderAppId: string
@@ -87,12 +90,6 @@ export type syncRequest = {
     lastModified: number
     touched: boolean
     version: number
-    databaseVersion: number
-    databaseLastModified: number
-    unitVersion: number
-    unitLastModified: number
-    itemVersion: number
-    itemLastModified: number
   }
   router?: {
     id: string
