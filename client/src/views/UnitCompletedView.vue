@@ -48,7 +48,6 @@ export default {
     };
   },
   async mounted() {
-    debugger;
     if (this.$awesum.currentDatabaseUnit.successAnimations.indexOf('Balloons') > -1) {
       var balloonCanvas = document.getElementById('balloonCanvas') as HTMLCanvasElement;
       balloonCanvas.style.display = '';
@@ -222,7 +221,7 @@ export default {
 
         });
 
-      if (awesum.serverEmail != "" && currentFollowerRequest.followerAppId != currentFollowerRequest.leaderAppId) {
+      if (completionData && completionData.id && awesum.serverEmail != "" && currentFollowerRequest.followerAppId != currentFollowerRequest.leaderAppId) {
         await this.syncCompletion(completionData);
       }
     }
@@ -347,7 +346,7 @@ export default {
 
         });
       //}
-      if (awesum.serverEmail != "" && currentFollowerRequest.followerAppId != currentFollowerRequest.leaderAppId) {
+      if (completionData && completionData.id && awesum.serverEmail != "" && currentFollowerRequest.followerAppId != currentFollowerRequest.leaderAppId) {
         await this.syncCompletion(completionData);
       }
     }
@@ -457,6 +456,15 @@ export default {
     async syncCompletion(completionData: ServerFollowerDatabaseCompletionInterface) {
       // Create a sync request with only the completion data
       var allData = Array<ServerSyncRequestInterface>();
+
+      allData.push({
+        id: completionData.id,
+        level: ItemLevel.followerDatabaseCompletion,
+        values: completionData,
+        action: syncAction.add,
+      });
+
+      
 
       allData.push({
         id: completionData.id,

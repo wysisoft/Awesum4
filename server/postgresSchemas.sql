@@ -103,7 +103,8 @@ DROP TABLE IF EXISTS awesum."FollowerDatabase";
   "databaseId" UUID NOT NULL,
   "lastModified" NUMERIC NOT NULL,
   "touched" BOOLEAN NOT NULL,
-  "version" INTEGER NOT NULL
+  "version" INTEGER NOT NULL,
+  "completionLastModified" NUMERIC NOT NULL
 );
 
 DROP TABLE IF EXISTS awesum."FollowerRequest";

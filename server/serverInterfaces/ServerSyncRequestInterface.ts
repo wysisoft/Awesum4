@@ -119,6 +119,7 @@ export interface FollowerDatabase {
   lastModified: number;
   touched: boolean;
   version: number;
+  completionLastModified: number;
   
 }
 export interface Router {

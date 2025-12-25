@@ -90,6 +90,7 @@ export type syncRequest = {
     lastModified: number
     touched: boolean
     version: number
+    completionLastModified: number
   }
   router?: {
     id: string

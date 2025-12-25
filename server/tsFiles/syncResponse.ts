@@ -90,6 +90,7 @@ export type syncResponse = {
     lastModified: number
     touched: boolean
     version: number
+    completionLastModified: number
   }
   followerDatabaseCompletion?: {
     id: string

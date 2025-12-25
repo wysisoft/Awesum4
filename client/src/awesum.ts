@@ -77,9 +77,11 @@ export const awesum = reactive({
   ownerApp: {} as ClientApp,
   currentRouter: {} as ServerRouterInterface,
   currentApp: {} as ServerAppInterface,
+  
   currentDatabase: {} as ServerDatabaseInterface,
   currentDatabases: Array<ServerDatabaseInterface>(),
   currentDatabaseUnits: Array<ServerDatabaseUnitInterface>(),
+  currentFollowerDatabase: {} as ServerFollowerDatabaseInterface,
   currentDatabaseCompletions: new Set<string>(),
   currentDatabaseUnit: {} as ServerDatabaseUnitInterface,
   currentDatabaseItems: Array<ServerDatabaseItemInterface>(),
@@ -87,6 +89,7 @@ export const awesum = reactive({
   currentDatabaseItemTemp: {} as ServerDatabaseItemInterface,
   currentDatabaseItemAsyncData: shallowRef({} as any),
   currentFollowerDatabases: Array<ServerFollowerDatabaseInterface>(),
+  currentFollowerRequest: {} as ServerFollowerRequestInterface,
   apps: Array<ServerAppInterface>(),
   followerRequests: Array<ServerFollowerRequestInterface>(),
   currentAppRouters: Array<ServerRouterInterface>(),
@@ -221,6 +224,13 @@ export const awesum = reactive({
     }
   },
 
+  async refreshCurrentFollowerDatabase() {
+    if(this.currentDatabase && this.currentDatabase.id){
+      this.currentFollowerDatabase = await this.AwesumDexieDB.serverFollowerDatabases.where('databaseId')
+      .equals(this.currentDatabase.id).first() as ServerFollowerDatabaseInterface;
+    }
+  },
+
   async refreshCurrentDatabaseCompletions() {
 
     this.currentDatabaseCompletions = new Set<string>();
@@ -342,6 +352,13 @@ export const awesum = reactive({
     }
     else {
       this.currentDatabaseItems = [];
+    }
+  },
+
+  async refreshCurrentFollowerRequest() {
+    if(this.currentApp){
+      this.currentFollowerRequest = await this.AwesumDexieDB.serverFollowerRequests
+      .where('followerAppId').equals(this.currentApp.id).first() as ServerFollowerRequestInterface;
     }
   },
 

@@ -5,4 +5,5 @@ export type followerDatabase = {
   lastModified: number
   touched: boolean
   version: number
+  completionLastModified: number
 }

@@ -413,6 +413,7 @@ router.beforeEach(async (to: RouteLocationNormalized, from: RouteLocationNormali
       });
       awesum.currentApp = foundApp;
       await awesum.refreshCurrentDatabases();
+      await awesum.refreshCurrentFollowerRequest();
     }
   }
 
@@ -442,7 +443,6 @@ router.beforeEach(async (to: RouteLocationNormalized, from: RouteLocationNormali
 
       awesum.currentDatabase = foundDatabase;
       await awesum.refreshCurrentDatabaseUnits();
-
       await awesum.refreshCurrentFollowerDatabases();
       await awesum.refreshCurrentDatabaseCompletions();
     }

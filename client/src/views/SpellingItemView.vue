@@ -711,8 +711,8 @@ export default {
         (this.$refs.spellingOutlineDiv as HTMLDivElement).style.display = 'none';
 
         var rect = document.getElementById('outlineRect') as HTMLOrSVGElement;
-        (rect as SVGRectElement).setAttribute('width', ((this.$awesum.currentDatabaseItem as ServerSpellingDatabaseItemInterface).data.text.length * 7.6 + .1) + '%');
-        (rect as SVGRectElement).setAttribute('x', ((100 - (this.$awesum.currentDatabaseItem as ServerSpellingDatabaseItemInterface).data.text.length * 7.6) / 2 - .5) + '%');
+        (rect as SVGRectElement).setAttribute('width', ((this.$awesum.currentDatabaseItem as ServerSpellingDatabaseItemInterface).data.text.length * 7.6 +1) + '%');
+        (rect as SVGRectElement).setAttribute('x', ((100 - (this.$awesum.currentDatabaseItem as ServerSpellingDatabaseItemInterface).data.text.length * 7.6) / 2 -1) + '%');
         animate(rect,
           {
             //@ts-ignore
@@ -1066,7 +1066,7 @@ export default {
         style="display:none;position:absolute;width:100svmin;height: 100svmin;left:0svmin;top:0svmin;">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"
           style="position:absolute;top:1.1svmin;user-select:none;">
-          <rect id="outlineRect" x="0" y="40%" width="100%" height="8%" fill="none" stroke="green" stroke-width=".3">
+          <rect id="outlineRect" x="0" y="40%" width="100%" height="8.5%" fill="none" stroke="green" stroke-width=".3">
           </rect>
         </svg>
       </div>
