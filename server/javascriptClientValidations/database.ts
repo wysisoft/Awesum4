@@ -4,11 +4,11 @@ $id: 'database',
 type: 'object',
 properties: {
 name: { minLength: 1, maxLength: 100, type: 'string' },
-lastModified: { default: 0, type: 'number' },
+lastModified: { default: 0, type: 'integer' },
 version: { default: 0, minimum: 0, type: 'integer' },
 appId: { format: 'uuid', type: 'string' },
 id: {
-default: '019b57de-fd76-747c-b304-04e220c16b11',
+default: '019b5b8d-43e8-77df-9534-308f2b6ef371',
 format: 'uuid',
 type: 'string'},
 order: { default: 0, minimum: 0, type: 'integer' },
@@ -18,9 +18,9 @@ default: '00000000-0000-0000-0000-000000000002',
 format: 'uuid',
 type: 'string'},
 touched: { default: true, type: 'boolean' },
-unitLastModified: { default: 0, type: 'number' },
-itemLastModified: { default: 0, type: 'number' },
-mediaLastModified: { default: 0, type: 'number' }
+unitLastModified: { default: 0, type: 'integer' },
+itemLastModified: { default: 0, type: 'integer' },
+mediaLastModified: { default: 0, type: 'integer' }
 },
 required: [
 'name',
@@ -279,12 +279,19 @@ vErrors.push(err14)
 }
 if (data.lastModified !== undefined) {
 let data1 = data.lastModified
-if (!(typeof data1 == 'number' && isFinite(data1))) {
+if (
+!(
+typeof data1 == 'number' &&
+!(data1 % 1) &&
+!isNaN(data1) &&
+isFinite(data1)
+)
+) {
 const err15 = {
 instancePath: instancePath + '/lastModified',
 schemaPath: '#/properties/lastModified/type',
 keyword: 'type',
-params: { type: 'number' },
+params: { type: 'integer' },
  message: "Must_be_a_number"
 }
 if (vErrors === null) {
@@ -557,12 +564,19 @@ vErrors.push(err29)
 }
 if (data.unitLastModified !== undefined) {
 let data9 = data.unitLastModified
-if (!(typeof data9 == 'number' && isFinite(data9))) {
+if (
+!(
+typeof data9 == 'number' &&
+!(data9 % 1) &&
+!isNaN(data9) &&
+isFinite(data9)
+)
+) {
 const err30 = {
 instancePath: instancePath + '/unitLastModified',
 schemaPath: '#/properties/unitLastModified/type',
 keyword: 'type',
-params: { type: 'number' },
+params: { type: 'integer' },
  message: "Must_be_a_number"
 }
 if (vErrors === null) {
@@ -575,12 +589,19 @@ vErrors.push(err30)
 }
 if (data.itemLastModified !== undefined) {
 let data10 = data.itemLastModified
-if (!(typeof data10 == 'number' && isFinite(data10))) {
+if (
+!(
+typeof data10 == 'number' &&
+!(data10 % 1) &&
+!isNaN(data10) &&
+isFinite(data10)
+)
+) {
 const err31 = {
 instancePath: instancePath + '/itemLastModified',
 schemaPath: '#/properties/itemLastModified/type',
 keyword: 'type',
-params: { type: 'number' },
+params: { type: 'integer' },
  message: "Must_be_a_number"
 }
 if (vErrors === null) {
@@ -593,12 +614,19 @@ vErrors.push(err31)
 }
 if (data.mediaLastModified !== undefined) {
 let data11 = data.mediaLastModified
-if (!(typeof data11 == 'number' && isFinite(data11))) {
+if (
+!(
+typeof data11 == 'number' &&
+!(data11 % 1) &&
+!isNaN(data11) &&
+isFinite(data11)
+)
+) {
 const err32 = {
 instancePath: instancePath + '/mediaLastModified',
 schemaPath: '#/properties/mediaLastModified/type',
 keyword: 'type',
-params: { type: 'number' },
+params: { type: 'integer' },
  message: "Must_be_a_number"
 }
 if (vErrors === null) {

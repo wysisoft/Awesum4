@@ -74,7 +74,7 @@ export const databaseItemProperties = {
         format: "uuid",
         formatMessage: "Must_be_a_valid_UUID",
     }),
-    lastModified: Type.Number({
+    lastModified: Type.Integer({
         default: 0,
         typeMessage: "Must_be_a_number"
     }),
@@ -201,7 +201,7 @@ export const types = [
                 typeMessage: "Must_be_a_boolean",
             }),
 
-            lastModified: Type.Number({
+            lastModified: Type.Integer({
                 default: new Date().getTime(),
                 typeMessage: "Must_be_a_number",
             }),
@@ -255,7 +255,7 @@ export const types = [
                 minLength: 36,
                 minLengthMessage: "Must_be_36_characters",
             }),
-            lastSync: Type.Number({
+            lastSync: Type.Integer({
                 default: 0,
                 typeMessage: "Must_be_a_number",
             }),
@@ -284,7 +284,7 @@ export const types = [
                 ),
                 maximumMessage: "Must_be_less_than_or_equal_to_maximum",
             }),
-            lastModified: Type.Number({
+            lastModified: Type.Integer({
                 default: 0,
                 typeMessage: "Must_be_a_number"
             }),
@@ -314,7 +314,7 @@ export const types = [
                 format: "uuid",
                 formatMessage: "Must_be_a_valid_UUID",
             }),
-            lastModified: Type.Number({
+            lastModified: Type.Integer({
                 default: 0,
                 typeMessage: "Must_be_a_number"
             }),
@@ -330,7 +330,7 @@ export const types = [
                 maxLengthMessage: "Must_be_less_than_100_characters",
             }),
 
-            lastModified: Type.Number({
+            lastModified: Type.Integer({
                 default: 0,
                 typeMessage: "Must_be_a_number"
             }),
@@ -377,17 +377,17 @@ export const types = [
                 typeMessage: "Must_be_a_boolean",
             }),
             
-            unitLastModified: Type.Number({
+            unitLastModified: Type.Integer({
                 default: 0,
                 typeMessage: "Must_be_a_number",
             }),
             
-            itemLastModified: Type.Number({
+            itemLastModified: Type.Integer({
                 default: 0,
                 typeMessage: "Must_be_a_number",
             }),
             
-            mediaLastModified: Type.Number({
+            mediaLastModified: Type.Integer({
                 default: 0,
                 typeMessage: "Must_be_a_number",
             })
@@ -409,7 +409,7 @@ export const types = [
                 typeMessage: "Must_be_an_integer",
             }),
 
-            lastModified: Type.Number({
+            lastModified: Type.Integer({
                 default: 0,
                 typeMessage: "Must_be_a_number"
             }),
@@ -495,7 +495,7 @@ export const types = [
                 format: "uuid",
                 formatMessage: "Must_be_a_valid_UUID",
             }),
-            routerTime: Type.Number({
+            routerTime: Type.Integer({
                 typeMessage: "Must_be_a_number",
             }),
             routerTimeImmediate: Type.Boolean({
@@ -537,7 +537,7 @@ export const types = [
                 format: "uuid",
                 formatMessage: "Must_be_a_valid_UUID",
             }),
-            lastModified: Type.Number({
+            lastModified: Type.Integer({
                 default: 0,
                 typeMessage: "Must_be_a_number"
             }),
@@ -863,7 +863,7 @@ export const types = [
                 formatMessage: "Must_be_a_valid_UUID",
             }),
 
-            lastModified: Type.Number({
+            lastModified: Type.Integer({
                 default: 0,
                 typeMessage: "Must_be_a_number"
             }),
@@ -959,7 +959,7 @@ export const types = [
                 typeMessage: "Must_be_a_boolean",
             }),
 
-            lastModified: Type.Number({
+            lastModified: Type.Integer({
                 default: 0,
                 typeMessage: "Must_be_a_number"
             }),
@@ -994,7 +994,7 @@ export const types = [
                 minimumMessage: "Must_be_greater_than_or_equal_to_0",
                 typeMessage: "Must_be_an_integer",
             }),
-            completionLastModified: Type.Number({
+            completionLastModified: Type.Integer({
                 default: 0,
                 typeMessage: "Must_be_a_number",
             }),
@@ -1074,7 +1074,7 @@ export const types = [
                 maximumMessage: "Must_be_less_than_or_equal_to_maximum",
                 typeMessage: "Must_be_an_integer",
             }),
-            lastModified: Type.Number({
+            lastModified: Type.Integer({
                 default: 0,
                 typeMessage: "Must_be_a_number"
             }),
@@ -1189,7 +1189,7 @@ export const types = [
                 typeMessage: "Must_be_an_integer",
             }),
 
-            lastModified: Type.Number({
+            lastModified: Type.Integer({
                 default: 0,
                 typeMessage: "Must_be_a_number",
             }),
@@ -1425,10 +1425,10 @@ types.push(
     Type.Object(
         {
             status: Type.String(),
-            remainingTime: Type.Number(),
-            remainingImmediateTime: Type.Number(),
-            startTime: Type.Number(),
-            duration: Type.Number(),
+            remainingTime: Type.Integer(),
+            remainingImmediateTime: Type.Integer(),
+            startTime: Type.Integer(),
+            duration: Type.Integer(),
         },
         { $id: "getRouterStatusResponse" },
     ) as any,
@@ -1503,10 +1503,10 @@ types.push(
         {
             type: Type.Literal("updateRouterStatusRequest"),
             status: Type.String(),
-            remainingTime: Type.Number(),
-            remainingImmediateTime: Type.Number(),
-            startTime: Type.Number(),
-            duration: Type.Number(),
+            remainingTime: Type.Integer(),
+            remainingImmediateTime: Type.Integer(),
+            startTime: Type.Integer(),
+            duration: Type.Integer(),
         },
         { $id: "updateRouterStatusRequest" },
     ) as any,
@@ -1515,7 +1515,7 @@ types.push(
 types.push(
     Type.Object(
         {
-            timestamp: Type.Number(),
+            timestamp: Type.Integer(),
             domain: Type.String(),
             routerId: Type.String({
                 default: uuidv7(),

@@ -3,14 +3,14 @@ const schema45 = {
 $id: 'dnsEntry',
 type: 'object',
 properties: {
-timestamp: { type: 'number' },
+timestamp: { type: 'integer' },
 domain: { type: 'string' },
 routerId: {
-default: '019b57de-fd77-73a5-a03e-e305c8ef39cc',
+default: '019b5b8d-43e9-7712-a981-a756e9eec031',
 format: 'uuid',
 type: 'string'},
 id: {
-default: '019b57de-fd77-73a5-a03e-e794f5fe6ec5',
+default: '019b5b8d-43e9-7712-a981-aa03c1af54f1',
 format: 'uuid',
 type: 'string'
 }
@@ -47,13 +47,20 @@ params: { missingProperty: missing0 },
 if (data.timestamp !== undefined) {
 let data0 = data.timestamp
 const _errs1 = errors
-if (!(typeof data0 == 'number' && isFinite(data0))) {errors.push(
+if (
+!(
+typeof data0 == 'number' &&
+!(data0 % 1) &&
+!isNaN(data0) &&
+isFinite(data0)
+)
+) {errors.push(
 {
 instancePath: instancePath + '/timestamp',
 schemaPath: '#/properties/timestamp/type',
 keyword: 'type',
-params: { type: 'number' },
-message: 'must be number'
+params: { type: 'integer' },
+message: 'must be integer'
 }
 );
 }

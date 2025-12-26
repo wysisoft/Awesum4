@@ -5,7 +5,7 @@ type: 'object',
 properties: {
 name: { minLength: 1, maxLength: 100, type: 'string' },
 order: { minimum: 0, type: 'integer' },
-lastModified: { default: 0, type: 'number' },
+lastModified: { default: 0, type: 'integer' },
 touched: { default: true, type: 'boolean' },
 version: { minimum: 0, type: 'integer' },
 id: { format: 'uuid', type: 'string' },
@@ -28,7 +28,7 @@ router: {
 default: '00000000-0000-0000-0000-000000000000',
 format: 'uuid',
 type: 'string'},
-routerTime: { type: 'number' },
+routerTime: { type: 'integer' },
 routerTimeImmediate: { default: false, type: 'boolean' },
 points: { default: 0, minimum: 0, type: 'integer' }
 },
@@ -443,12 +443,19 @@ vErrors.push(err23)
 }
 if (data.lastModified !== undefined) {
 let data2 = data.lastModified
-if (!(typeof data2 == 'number' && isFinite(data2))) {
+if (
+!(
+typeof data2 == 'number' &&
+!(data2 % 1) &&
+!isNaN(data2) &&
+isFinite(data2)
+)
+) {
 const err24 = {
 instancePath: instancePath + '/lastModified',
 schemaPath: '#/properties/lastModified/type',
 keyword: 'type',
-params: { type: 'number' },
+params: { type: 'integer' },
  message: "Must_be_a_number"
 }
 if (vErrors === null) {
@@ -963,12 +970,19 @@ vErrors.push(err52)
 }
 if (data.routerTime !== undefined) {
 let data16 = data.routerTime
-if (!(typeof data16 == 'number' && isFinite(data16))) {
+if (
+!(
+typeof data16 == 'number' &&
+!(data16 % 1) &&
+!isNaN(data16) &&
+isFinite(data16)
+)
+) {
 const err53 = {
 instancePath: instancePath + '/routerTime',
 schemaPath: '#/properties/routerTime/type',
 keyword: 'type',
-params: { type: 'number' },
+params: { type: 'integer' },
  message: "Must_be_a_number"
 }
 if (vErrors === null) {

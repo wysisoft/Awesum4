@@ -892,7 +892,7 @@ export default {
           }, 2000);
         }
         else {
-          if (!this.$awesum.currentDatabaseCompletions.get(awesum.currentDatabaseItem.id)) {
+          if (!this.$awesum.currentDatabaseCompletions.has(awesum.currentDatabaseItem.id)) {
             var newId = uuid();
 
             var itemsInUnit = await this.$awesum.AwesumDexieDB.serverDatabaseItems.where('unitId').equals(awesum.currentDatabaseUnit.id).toArray();
@@ -1158,7 +1158,7 @@ export default {
         width :5svmin;
         padding-Left: .5svmin;
         padding-right: .5svmin;
-        " v-bind:style="{ backgroundColor: clearingUnitItemCompletions || $awesum.currentDatabaseCompletions.get(item.id) ? '#68ff68' : '', border: $awesum.currentDatabaseItem.order == item.order ? '.5svmin dashed black' : '' }"
+        " v-bind:style="{ backgroundColor: clearingUnitItemCompletions || $awesum.currentDatabaseCompletions.has(item.id) ? '#68ff68' : '', border: $awesum.currentDatabaseItem.order == item.order ? '.5svmin dashed black' : '' }"
           @click="footerButtonClick($event, item)">
           <span>{{ item.order }}</span>
         </button>

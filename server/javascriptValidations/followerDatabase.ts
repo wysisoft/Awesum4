@@ -8,14 +8,14 @@ default: '00000000-0000-0000-0000-000000000000',
 format: 'uuid',
 type: 'string'},
 id: {
-default: '019b57de-fd76-747c-b304-0a75fad8fc1b',
+default: '019b5b8d-43e9-7712-a981-9190d5796332',
 format: 'uuid',
 type: 'string'},
 databaseId: {
 default: '00000000-0000-0000-0000-000000000000',
 format: 'uuid',
 type: 'string'},
-lastModified: { default: 0, type: 'number' },
+lastModified: { default: 0, type: 'integer' },
 touched: { default: true, type: 'boolean' },
 version: { default: 0, minimum: 0, type: 'integer' }
 },
@@ -160,12 +160,19 @@ if (valid0) {
 if (data.lastModified !== undefined) {
 let data3 = data.lastModified
 const _errs7 = errors
-if (!(typeof data3 == 'number' && isFinite(data3))) {errors.push(
+if (
+!(
+typeof data3 == 'number' &&
+!(data3 % 1) &&
+!isNaN(data3) &&
+isFinite(data3)
+)
+) {errors.push(
 {
 instancePath: instancePath + '/lastModified',
 schemaPath: '#/properties/lastModified/type',
 keyword: 'type',
-params: { type: 'number' },
+params: { type: 'integer' },
  message: "Must_be_a_number"
 }
 );

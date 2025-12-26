@@ -33,7 +33,7 @@ import { ServerFollowerDatabaseInterface } from './serverInterfaces/ServerFollow
 import { ServerFollowerRequestInterface } from './serverInterfaces/ServerFollowerRequestInterface';
 import { Kysely, PostgresDialect, HandleEmptyInListsPlugin, type HandleEmptyInListsOptions, pushValueIntoList } from 'kysely';
 import { type AwesumApp, type AwesumFollowerRequest, type AwesumFollowerDatabase, type DB, type AwesumFollowerDatabaseCompletion, type AwesumDatabaseUnit, type AwesumDatabaseItem, type AwesumRouter, type AwesumDatabase, type AwesumDnsEntry } from './db/db';
-import { Pool } from 'pg';
+import { Pool,types as pgTypes } from 'pg';
 import { constants } from "./constants"
 import { validateDatabase } from './javascriptValidations/database';
 import { validateDatabaseUnit } from './javascriptValidations/databaseUnit';
@@ -44,6 +44,12 @@ import { validateFollowerDatabaseCompletion } from './javascriptValidations/foll
 const logger = {
   log: (message: string) => console.log(message),  // Here we use console.log for simplicity
 }
+
+const int8TypeId = 20
+// Map int8 to number.
+pgTypes.setTypeParser(int8TypeId, (val) => {
+  return parseInt(val, 10)
+})
 
 const db = new Kysely<DB>({
   dialect: new PostgresDialect({
@@ -705,7 +711,7 @@ app.post("/api/sync", express.json({ limit: '1mb' }), async (req: express.Reques
             //get all completions with version greater than foundFollowerDatabase.completionVersion
             var completions = await db.selectFrom('awesum.FollowerDatabaseCompletion as fdc')
               .where(({ eb }) =>
-                eb('fdc.followerRequestId', '=', followerRequest.followerRequestId)
+                eb('fdc.followerRequestId', '=', followerRequest.id)
                 && eb('fdc.lastModified', '>=', followerRequest.completionLastModified)
               )
               .selectAll()

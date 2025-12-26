@@ -31,7 +31,7 @@ transform: ['trim', 'toLowerCase'],
 type: 'string'},
 version: { default: 0, minimum: 0, type: 'integer' },
 touched: { default: false, type: 'boolean' },
-lastModified: { default: 1766705790326, type: 'number' },
+lastModified: { default: 1766767543272, type: 'integer' },
 homePageImageType: {
 default: 0,
 minimum: 0,
@@ -55,11 +55,11 @@ type: 'string'},
 enableNarrator: { default: false, type: 'boolean' },
 groups: { default: '', maxLength: 8000, type: 'string' },
 id: {
-default: '019b57de-fd76-747c-b304-03c369028860',
+default: '019b5b8d-43e8-77df-9534-2de95bdfb012',
 format: 'uuid',
 minLength: 36,
 type: 'string'},
-lastSync: { default: 0, type: 'number' }
+lastSync: { default: 0, type: 'integer' }
 },
 required: [
 'email',
@@ -83,11 +83,11 @@ $id: 'database',
 type: 'object',
 properties: {
 name: { minLength: 1, maxLength: 100, type: 'string' },
-lastModified: { default: 0, type: 'number' },
+lastModified: { default: 0, type: 'integer' },
 version: { default: 0, minimum: 0, type: 'integer' },
 appId: { format: 'uuid', type: 'string' },
 id: {
-default: '019b57de-fd76-747c-b304-04e220c16b11',
+default: '019b5b8d-43e8-77df-9534-308f2b6ef371',
 format: 'uuid',
 type: 'string'},
 order: { default: 0, minimum: 0, type: 'integer' },
@@ -101,9 +101,9 @@ default: '00000000-0000-0000-0000-000000000002',
 format: 'uuid',
 type: 'string'},
 touched: { default: true, type: 'boolean' },
-unitLastModified: { default: 0, type: 'number' },
-itemLastModified: { default: 0, type: 'number' },
-mediaLastModified: { default: 0, type: 'number' }
+unitLastModified: { default: 0, type: 'integer' },
+itemLastModified: { default: 0, type: 'integer' },
+mediaLastModified: { default: 0, type: 'integer' }
 },
 required: [
 'name',
@@ -126,7 +126,7 @@ type: 'object',
 properties: {
 name: { minLength: 1, maxLength: 100, type: 'string' },
 order: { minimum: 0, type: 'integer' },
-lastModified: { default: 0, type: 'number' },
+lastModified: { default: 0, type: 'integer' },
 touched: { default: true, type: 'boolean' },
 version: { minimum: 0, type: 'integer' },
 id: { format: 'uuid', type: 'string' },
@@ -164,7 +164,7 @@ router: {
 default: '00000000-0000-0000-0000-000000000000',
 format: 'uuid',
 type: 'string'},
-routerTime: { type: 'number' },
+routerTime: { type: 'integer' },
 routerTimeImmediate: { default: false, type: 'boolean' },
 points: { default: 0, minimum: 0, type: 'integer' }
 },
@@ -198,7 +198,7 @@ itemType: { minimum: 0, maximum: 5, type: 'integer' },
 order: { minimum: 0, type: 'integer' },
 unitId: { format: 'uuid', type: 'string' },
 appId: { format: 'uuid', type: 'string' },
-lastModified: { default: 0, type: 'number' },
+lastModified: { default: 0, type: 'integer' },
 touched: { default: true, type: 'boolean' },
 version: { minimum: 0, type: 'integer' },
 databaseId: { format: 'uuid', type: 'string' },
@@ -232,7 +232,7 @@ default: '00000000-0000-0000-0000-000000000000',
 format: 'uuid',
 type: 'string'},
 id: {
-default: '019b57de-fd76-747c-b304-0dbbc7213c98',
+default: '019b5b8d-43e9-7712-a981-97844a756ce8',
 format: 'uuid',
 type: 'string'},
 followerName: {
@@ -260,13 +260,13 @@ doesEmailExist: true,
 default: 'leader@example.com',
 type: 'string'},
 initiatedByFollower: { default: false, type: 'boolean' },
-lastModified: { default: 0, type: 'number' },
+lastModified: { default: 0, type: 'integer' },
 touched: { default: true, type: 'boolean' },
 version: { default: 0, minimum: 0, type: 'integer' },
 status: { default: 0, minimum: 0, maximum: 2, type: 'integer' },
 groups: { maxLength: 8000, default: '', type: 'string' },
 points: { default: 0, minimum: 0, type: 'integer' },
-completionLastModified: { default: 0, type: 'number' }
+completionLastModified: { default: 0, type: 'integer' }
 },
 required: [
 'leaderAppId',
@@ -295,14 +295,14 @@ default: '00000000-0000-0000-0000-000000000000',
 format: 'uuid',
 type: 'string'},
 id: {
-default: '019b57de-fd76-747c-b304-0a75fad8fc1b',
+default: '019b5b8d-43e9-7712-a981-9190d5796332',
 format: 'uuid',
 type: 'string'},
 databaseId: {
 default: '00000000-0000-0000-0000-000000000000',
 format: 'uuid',
 type: 'string'},
-lastModified: { default: 0, type: 'number' },
+lastModified: { default: 0, type: 'integer' },
 touched: { default: true, type: 'boolean' },
 version: { default: 0, minimum: 0, type: 'integer' }
 },
@@ -320,14 +320,14 @@ $id: 'followerDatabaseCompletion',
 type: 'object',
 properties: {
 id: {
-default: '019b57de-fd76-747c-b304-15ef70b629f3',
+default: '019b5b8d-43e9-7712-a981-9d93b779f79c',
 format: 'uuid',
 type: 'string'},
 followerRequestId: { format: 'uuid', type: 'string' },
 itemId: { format: 'uuid', type: 'string' },
 parentItemId: { format: 'uuid', type: 'string' },
 itemLevel: { minimum: 0, maximum: 9, type: 'integer' },
-lastModified: { default: 0, type: 'number' }
+lastModified: { default: 0, type: 'integer' }
 },
 required: [
 'id',
@@ -343,7 +343,7 @@ $id: 'router',
 type: 'object',
 properties: {
 id: {
-default: '019b57de-fd76-747c-b304-180c2be7b861',
+default: '019b5b8d-43e9-7712-a981-a36ee4a3c4d0',
 format: 'uuid',
 type: 'string'},
 appId: { format: 'uuid', type: 'string' },
@@ -390,7 +390,7 @@ format: 'regex',
 pattern: '^([0-9]{2}:[0-9]{2})\\|([0-9]+)$',
 type: 'string'},
 version: { default: 0, minimum: 0, type: 'integer' },
-lastModified: { default: 0, type: 'number' },
+lastModified: { default: 0, type: 'integer' },
 touched: { default: true, type: 'boolean' },
 status: { default: 1, maximum: 2, type: 'integer' }
 },
@@ -417,7 +417,7 @@ $id: 'media',
 type: 'object',
 properties: {
 id: {
-default: '019b57de-fd76-747c-b304-11c855f30ea2',
+default: '019b5b8d-43e9-7712-a981-9bf574cf9812',
 format: 'uuid',
 type: 'string'},
 size: { minimum: 0, type: 'integer' },
@@ -1114,12 +1114,19 @@ vErrors.push(err38)
 }
 if (data4.lastModified !== undefined) {
 let data10 = data4.lastModified
-if (!(typeof data10 == 'number' && isFinite(data10))) {
+if (
+!(
+typeof data10 == 'number' &&
+!(data10 % 1) &&
+!isNaN(data10) &&
+isFinite(data10)
+)
+) {
 const err39 = {
 instancePath: instancePath + '/app/lastModified',
 schemaPath: '#/properties/app/properties/lastModified/type',
 keyword: 'type',
-params: { type: 'number' },
+params: { type: 'integer' },
  message: "Must_be_a_number"
 }
 if (vErrors === null) {
@@ -1429,12 +1436,19 @@ vErrors.push(err56)
 }
 if (data4.lastSync !== undefined) {
 let data18 = data4.lastSync
-if (!(typeof data18 == 'number' && isFinite(data18))) {
+if (
+!(
+typeof data18 == 'number' &&
+!(data18 % 1) &&
+!isNaN(data18) &&
+isFinite(data18)
+)
+) {
 const err57 = {
 instancePath: instancePath + '/app/lastSync',
 schemaPath: '#/properties/app/properties/lastSync/type',
 keyword: 'type',
-params: { type: 'number' },
+params: { type: 'integer' },
  message: "Must_be_a_number"
 }
 if (vErrors === null) {
@@ -1695,12 +1709,19 @@ vErrors.push(err73)
 }
 if (data19.lastModified !== undefined) {
 let data21 = data19.lastModified
-if (!(typeof data21 == 'number' && isFinite(data21))) {
+if (
+!(
+typeof data21 == 'number' &&
+!(data21 % 1) &&
+!isNaN(data21) &&
+isFinite(data21)
+)
+) {
 const err74 = {
 instancePath: instancePath + '/database/lastModified',
 schemaPath: '#/properties/database/properties/lastModified/type',
 keyword: 'type',
-params: { type: 'number' },
+params: { type: 'integer' },
  message: "Must_be_a_number"
 }
 if (vErrors === null) {
@@ -1973,12 +1994,19 @@ vErrors.push(err88)
 }
 if (data19.unitLastModified !== undefined) {
 let data29 = data19.unitLastModified
-if (!(typeof data29 == 'number' && isFinite(data29))) {
+if (
+!(
+typeof data29 == 'number' &&
+!(data29 % 1) &&
+!isNaN(data29) &&
+isFinite(data29)
+)
+) {
 const err89 = {
 instancePath: instancePath + '/database/unitLastModified',
 schemaPath: '#/properties/database/properties/unitLastModified/type',
 keyword: 'type',
-params: { type: 'number' },
+params: { type: 'integer' },
  message: "Must_be_a_number"
 }
 if (vErrors === null) {
@@ -1991,12 +2019,19 @@ vErrors.push(err89)
 }
 if (data19.itemLastModified !== undefined) {
 let data30 = data19.itemLastModified
-if (!(typeof data30 == 'number' && isFinite(data30))) {
+if (
+!(
+typeof data30 == 'number' &&
+!(data30 % 1) &&
+!isNaN(data30) &&
+isFinite(data30)
+)
+) {
 const err90 = {
 instancePath: instancePath + '/database/itemLastModified',
 schemaPath: '#/properties/database/properties/itemLastModified/type',
 keyword: 'type',
-params: { type: 'number' },
+params: { type: 'integer' },
  message: "Must_be_a_number"
 }
 if (vErrors === null) {
@@ -2009,12 +2044,19 @@ vErrors.push(err90)
 }
 if (data19.mediaLastModified !== undefined) {
 let data31 = data19.mediaLastModified
-if (!(typeof data31 == 'number' && isFinite(data31))) {
+if (
+!(
+typeof data31 == 'number' &&
+!(data31 % 1) &&
+!isNaN(data31) &&
+isFinite(data31)
+)
+) {
 const err91 = {
 instancePath: instancePath + '/database/mediaLastModified',
 schemaPath: '#/properties/database/properties/mediaLastModified/type',
 keyword: 'type',
-params: { type: 'number' },
+params: { type: 'integer' },
  message: "Must_be_a_number"
 }
 if (vErrors === null) {
@@ -2422,12 +2464,19 @@ vErrors.push(err116)
 }
 if (data32.lastModified !== undefined) {
 let data35 = data32.lastModified
-if (!(typeof data35 == 'number' && isFinite(data35))) {
+if (
+!(
+typeof data35 == 'number' &&
+!(data35 % 1) &&
+!isNaN(data35) &&
+isFinite(data35)
+)
+) {
 const err117 = {
 instancePath: instancePath + '/databaseUnit/lastModified',
 schemaPath: '#/properties/databaseUnit/properties/lastModified/type',
 keyword: 'type',
-params: { type: 'number' },
+params: { type: 'integer' },
  message: "Must_be_a_number"
 }
 if (vErrors === null) {
@@ -2942,12 +2991,19 @@ vErrors.push(err145)
 }
 if (data32.routerTime !== undefined) {
 let data49 = data32.routerTime
-if (!(typeof data49 == 'number' && isFinite(data49))) {
+if (
+!(
+typeof data49 == 'number' &&
+!(data49 % 1) &&
+!isNaN(data49) &&
+isFinite(data49)
+)
+) {
 const err146 = {
 instancePath: instancePath + '/databaseUnit/routerTime',
 schemaPath: '#/properties/databaseUnit/properties/routerTime/type',
 keyword: 'type',
-params: { type: 'number' },
+params: { type: 'integer' },
  message: "Must_be_a_number"
 }
 if (vErrors === null) {
@@ -3355,12 +3411,19 @@ vErrors.push(err169)
 }
 if (data52.lastModified !== undefined) {
 let data57 = data52.lastModified
-if (!(typeof data57 == 'number' && isFinite(data57))) {
+if (
+!(
+typeof data57 == 'number' &&
+!(data57 % 1) &&
+!isNaN(data57) &&
+isFinite(data57)
+)
+) {
 const err170 = {
 instancePath: instancePath + '/databaseItem/lastModified',
 schemaPath: '#/properties/databaseItem/properties/lastModified/type',
 keyword: 'type',
-params: { type: 'number' },
+params: { type: 'integer' },
  message: "Must_be_a_number"
 }
 if (vErrors === null) {
@@ -4153,12 +4216,19 @@ vErrors.push(err218)
 }
 if (data63.lastModified !== undefined) {
 let data72 = data63.lastModified
-if (!(typeof data72 == 'number' && isFinite(data72))) {
+if (
+!(
+typeof data72 == 'number' &&
+!(data72 % 1) &&
+!isNaN(data72) &&
+isFinite(data72)
+)
+) {
 const err219 = {
 instancePath: instancePath + '/followerRequest/lastModified',
 schemaPath: '#/properties/followerRequest/properties/lastModified/type',
 keyword: 'type',
-params: { type: 'number' },
+params: { type: 'integer' },
  message: "Must_be_a_number"
 }
 if (vErrors === null) {
@@ -4363,12 +4433,19 @@ vErrors.push(err229)
 }
 if (data63.completionLastModified !== undefined) {
 let data78 = data63.completionLastModified
-if (!(typeof data78 == 'number' && isFinite(data78))) {
+if (
+!(
+typeof data78 == 'number' &&
+!(data78 % 1) &&
+!isNaN(data78) &&
+isFinite(data78)
+)
+) {
 const err230 = {
 instancePath: instancePath + '/followerRequest/completionLastModified',
 schemaPath: '#/properties/followerRequest/properties/completionLastModified/type',
 keyword: 'type',
-params: { type: 'number' },
+params: { type: 'integer' },
  message: "Must_be_a_number"
 }
 if (vErrors === null) {
@@ -4592,12 +4669,19 @@ vErrors.push(err243)
 }
 if (data79.lastModified !== undefined) {
 let data83 = data79.lastModified
-if (!(typeof data83 == 'number' && isFinite(data83))) {
+if (
+!(
+typeof data83 == 'number' &&
+!(data83 % 1) &&
+!isNaN(data83) &&
+isFinite(data83)
+)
+) {
 const err244 = {
 instancePath: instancePath + '/followerDatabase/lastModified',
 schemaPath: '#/properties/followerDatabase/properties/lastModified/type',
 keyword: 'type',
-params: { type: 'number' },
+params: { type: 'integer' },
  message: "Must_be_a_number"
 }
 if (vErrors === null) {
@@ -4971,12 +5055,19 @@ vErrors.push(err265)
 }
 if (data86.lastModified !== undefined) {
 let data92 = data86.lastModified
-if (!(typeof data92 == 'number' && isFinite(data92))) {
+if (
+!(
+typeof data92 == 'number' &&
+!(data92 % 1) &&
+!isNaN(data92) &&
+isFinite(data92)
+)
+) {
 const err266 = {
 instancePath: instancePath + '/followerDatabaseCompletion/lastModified',
 schemaPath: '#/properties/followerDatabaseCompletion/properties/lastModified/type',
 keyword: 'type',
-params: { type: 'number' },
+params: { type: 'integer' },
  message: "Must_be_a_number"
 }
 if (vErrors === null) {
@@ -5773,12 +5864,19 @@ vErrors.push(err314)
 }
 if (data93.lastModified !== undefined) {
 let data106 = data93.lastModified
-if (!(typeof data106 == 'number' && isFinite(data106))) {
+if (
+!(
+typeof data106 == 'number' &&
+!(data106 % 1) &&
+!isNaN(data106) &&
+isFinite(data106)
+)
+) {
 const err315 = {
 instancePath: instancePath + '/router/lastModified',
 schemaPath: '#/properties/router/properties/lastModified/type',
 keyword: 'type',
-params: { type: 'number' },
+params: { type: 'integer' },
  message: "Must_be_a_number"
 }
 if (vErrors === null) {

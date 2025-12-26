@@ -5,25 +5,25 @@
   "email" VARCHAR(100) NOT NULL,
   "name" VARCHAR(100) NOT NULL,
   "uniqueName" VARCHAR(100) NOT NULL,
-  "version" INTEGER NOT NULL,
+  "version" BIGINT NOT NULL,
   "touched" BOOLEAN NOT NULL,
-  "lastModified" NUMERIC NOT NULL,
-  "homePageImageType" INTEGER NOT NULL,
+  "lastModified" BIGINT NOT NULL,
+  "homePageImageType" BIGINT NOT NULL,
   "homePageImage" UUID NOT NULL,
   "authenticationType" VARCHAR(100) NOT NULL,
   "lang" VARCHAR(100) NOT NULL,
   "enableNarrator" BOOLEAN NOT NULL,
   "groups" VARCHAR(8000) NOT NULL,
   "id" UUID PRIMARY KEY NOT NULL,
-  "lastSync" NUMERIC NOT NULL
+  "lastSync" BIGINT NOT NULL
 );
 
 DROP TABLE IF EXISTS awesum."Deletion";
     CREATE TABLE awesum."Deletion" (
   "id" UUID PRIMARY KEY NOT NULL,
   "databaseId" UUID NOT NULL,
-  "level" INTEGER NOT NULL,
-  "lastModified" NUMERIC NOT NULL
+  "level" BIGINT NOT NULL,
+  "lastModified" BIGINT NOT NULL
 );
 
 DROP TABLE IF EXISTS awesum."Modification";
@@ -39,57 +39,57 @@ DROP TABLE IF EXISTS awesum."Addition";
 DROP TABLE IF EXISTS awesum."Internal";
     CREATE TABLE awesum."Internal" (
   "id" UUID PRIMARY KEY NOT NULL,
-  "lastModified" NUMERIC NOT NULL
+  "lastModified" BIGINT NOT NULL
 );
 
 DROP TABLE IF EXISTS awesum."Database";
     CREATE TABLE awesum."Database" (
   "name" VARCHAR(100) NOT NULL,
-  "lastModified" NUMERIC NOT NULL,
-  "version" INTEGER NOT NULL,
+  "lastModified" BIGINT NOT NULL,
+  "version" BIGINT NOT NULL,
   "appId" UUID NOT NULL,
   "id" UUID PRIMARY KEY NOT NULL,
-  "order" INTEGER NOT NULL,
-  "homePageIconType" INTEGER NOT NULL,
+  "order" BIGINT NOT NULL,
+  "homePageIconType" BIGINT NOT NULL,
   "homePageIcon" UUID NOT NULL,
   "touched" BOOLEAN NOT NULL,
-  "unitLastModified" NUMERIC NOT NULL,
-  "itemLastModified" NUMERIC NOT NULL,
-  "mediaLastModified" NUMERIC NOT NULL
+  "unitLastModified" BIGINT NOT NULL,
+  "itemLastModified" BIGINT NOT NULL,
+  "mediaLastModified" BIGINT NOT NULL
 );
 
 DROP TABLE IF EXISTS awesum."DatabaseUnit";
     CREATE TABLE awesum."DatabaseUnit" (
   "name" VARCHAR(100) NOT NULL,
-  "order" INTEGER NOT NULL,
-  "lastModified" NUMERIC NOT NULL,
+  "order" BIGINT NOT NULL,
+  "lastModified" BIGINT NOT NULL,
   "touched" BOOLEAN NOT NULL,
-  "version" INTEGER NOT NULL,
+  "version" BIGINT NOT NULL,
   "id" UUID PRIMARY KEY NOT NULL,
   "appId" UUID NOT NULL,
   "databaseId" UUID NOT NULL,
-  "successVideoType" INTEGER NOT NULL,
+  "successVideoType" BIGINT NOT NULL,
   "successVideoUrl" VARCHAR(100) NOT NULL,
   "successAnimations" VARCHAR(100) NOT NULL,
   "successSound" UUID NOT NULL,
-  "successSoundType" INTEGER NOT NULL,
-  "homePageImageType" INTEGER NOT NULL,
+  "successSoundType" BIGINT NOT NULL,
+  "homePageImageType" BIGINT NOT NULL,
   "homePageImage" UUID NOT NULL,
   "router" UUID NOT NULL,
-  "routerTime" NUMERIC NOT NULL,
+  "routerTime" BIGINT NOT NULL,
   "routerTimeImmediate" BOOLEAN NOT NULL,
-  "points" INTEGER NOT NULL
+  "points" BIGINT NOT NULL
 );
 
 DROP TABLE IF EXISTS awesum."DatabaseItem";
     CREATE TABLE awesum."DatabaseItem" (
-  "itemType" INTEGER NOT NULL,
-  "order" INTEGER NOT NULL,
+  "itemType" BIGINT NOT NULL,
+  "order" BIGINT NOT NULL,
   "unitId" UUID NOT NULL,
   "appId" UUID NOT NULL,
-  "lastModified" NUMERIC NOT NULL,
+  "lastModified" BIGINT NOT NULL,
   "touched" BOOLEAN NOT NULL,
-  "version" INTEGER NOT NULL,
+  "version" BIGINT NOT NULL,
   "databaseId" UUID NOT NULL,
   "id" UUID PRIMARY KEY NOT NULL,
   "dataText" VARCHAR(8000) NOT NULL,
@@ -101,9 +101,9 @@ DROP TABLE IF EXISTS awesum."FollowerDatabase";
   "followerRequestId" UUID NOT NULL,
   "id" UUID PRIMARY KEY NOT NULL,
   "databaseId" UUID NOT NULL,
-  "lastModified" NUMERIC NOT NULL,
+  "lastModified" BIGINT NOT NULL,
   "touched" BOOLEAN NOT NULL,
-  "version" INTEGER NOT NULL
+  "version" BIGINT NOT NULL
 );
 
 DROP TABLE IF EXISTS awesum."FollowerRequest";
@@ -116,19 +116,19 @@ DROP TABLE IF EXISTS awesum."FollowerRequest";
   "followerEmail" VARCHAR(100) NOT NULL,
   "leaderEmail" VARCHAR(100) NOT NULL,
   "initiatedByFollower" BOOLEAN NOT NULL,
-  "lastModified" NUMERIC NOT NULL,
+  "lastModified" BIGINT NOT NULL,
   "touched" BOOLEAN NOT NULL,
-  "version" INTEGER NOT NULL,
-  "status" INTEGER NOT NULL,
+  "version" BIGINT NOT NULL,
+  "status" BIGINT NOT NULL,
   "groups" VARCHAR(8000) NOT NULL,
-  "points" INTEGER NOT NULL,
-  "completionLastModified" NUMERIC NOT NULL
+  "points" BIGINT NOT NULL,
+  "completionLastModified" BIGINT NOT NULL
 );
 
 DROP TABLE IF EXISTS awesum."Media";
     CREATE TABLE awesum."Media" (
   "id" UUID PRIMARY KEY NOT NULL,
-  "size" INTEGER NOT NULL,
+  "size" BIGINT NOT NULL,
   "data" VARCHAR(8000) NOT NULL,
   "appId" UUID NOT NULL,
   "touched" BOOLEAN NOT NULL
@@ -140,8 +140,8 @@ DROP TABLE IF EXISTS awesum."FollowerDatabaseCompletion";
   "followerRequestId" UUID NOT NULL,
   "itemId" UUID NOT NULL,
   "parentItemId" UUID NOT NULL,
-  "itemLevel" INTEGER NOT NULL,
-  "lastModified" NUMERIC NOT NULL
+  "itemLevel" BIGINT NOT NULL,
+  "lastModified" BIGINT NOT NULL
 );
 
 DROP TABLE IF EXISTS awesum."Router";
@@ -157,15 +157,15 @@ DROP TABLE IF EXISTS awesum."Router";
   "fridayTimesAndDurations" VARCHAR NOT NULL,
   "saturdayTimesAndDurations" VARCHAR NOT NULL,
   "sundayTimesAndDurations" VARCHAR NOT NULL,
-  "version" INTEGER NOT NULL,
-  "lastModified" NUMERIC NOT NULL,
+  "version" BIGINT NOT NULL,
+  "lastModified" BIGINT NOT NULL,
   "touched" BOOLEAN NOT NULL,
-  "status" INTEGER NOT NULL
+  "status" BIGINT NOT NULL
 );
 
 DROP TABLE IF EXISTS awesum."DnsEntry";
     CREATE TABLE awesum."DnsEntry" (
-  "timestamp" NUMERIC NOT NULL,
+  "timestamp" BIGINT NOT NULL,
   "domain" VARCHAR NOT NULL,
   "routerId" UUID NOT NULL,
   "id" UUID PRIMARY KEY NOT NULL

@@ -6,7 +6,7 @@ properties: {
 id: { format: 'uuid', type: 'string' },
 databaseId: { format: 'uuid', type: 'string' },
 level: { minimum: 0, maximum: 9, type: 'integer' },
-lastModified: { default: 0, type: 'number' }
+lastModified: { default: 0, type: 'integer' }
 },
 required: ['id', 'databaseId', 'level', 'lastModified']
 }
@@ -156,12 +156,19 @@ if (valid0) {
 if (data.lastModified !== undefined) {
 let data3 = data.lastModified
 const _errs7 = errors
-if (!(typeof data3 == 'number' && isFinite(data3))) {errors.push(
+if (
+!(
+typeof data3 == 'number' &&
+!(data3 % 1) &&
+!isNaN(data3) &&
+isFinite(data3)
+)
+) {errors.push(
 {
 instancePath: instancePath + '/lastModified',
 schemaPath: '#/properties/lastModified/type',
 keyword: 'type',
-params: { type: 'number' },
+params: { type: 'integer' },
  message: "Must_be_a_number"
 }
 );

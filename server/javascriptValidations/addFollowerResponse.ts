@@ -16,7 +16,7 @@ default: '00000000-0000-0000-0000-000000000000',
 format: 'uuid',
 type: 'string'},
 id: {
-default: '019b57de-fd76-747c-b304-0dbbc7213c98',
+default: '019b5b8d-43e9-7712-a981-97844a756ce8',
 format: 'uuid',
 type: 'string'},
 followerName: {
@@ -44,13 +44,13 @@ doesEmailExist: true,
 default: 'leader@example.com',
 type: 'string'},
 initiatedByFollower: { default: false, type: 'boolean' },
-lastModified: { default: 0, type: 'number' },
+lastModified: { default: 0, type: 'integer' },
 touched: { default: true, type: 'boolean' },
 version: { default: 0, minimum: 0, type: 'integer' },
 status: { default: 0, minimum: 0, maximum: 2, type: 'integer' },
 groups: { maxLength: 8000, default: '', type: 'string' },
 points: { default: 0, minimum: 0, type: 'integer' },
-completionLastModified: { default: 0, type: 'number' }
+completionLastModified: { default: 0, type: 'integer' }
 },
 required: [
 'leaderAppId',
@@ -485,6 +485,8 @@ const _errs19 = errors
 if (
 !(
 typeof data9 == 'number' &&
+!(data9 % 1) &&
+!isNaN(data9) &&
 isFinite(data9)
 )
 ) {errors.push(
@@ -492,7 +494,7 @@ isFinite(data9)
 instancePath: instancePath + '/follower/lastModified',
 schemaPath: '#/properties/follower/properties/lastModified/type',
 keyword: 'type',
-params: { type: 'number' },
+params: { type: 'integer' },
  message: "Must_be_a_number"
 }
 );
@@ -710,6 +712,8 @@ const _errs31 = errors
 if (
 !(
 typeof data15 == 'number' &&
+!(data15 % 1) &&
+!isNaN(data15) &&
 isFinite(data15)
 )
 ) {errors.push(
@@ -717,7 +721,7 @@ isFinite(data15)
 instancePath: instancePath + '/follower/completionLastModified',
 schemaPath: '#/properties/follower/properties/completionLastModified/type',
 keyword: 'type',
-params: { type: 'number' },
+params: { type: 'integer' },
  message: "Must_be_a_number"
 }
 );

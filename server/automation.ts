@@ -50,7 +50,8 @@ function getSQLType(field: TSchema): string {
     return `VARCHAR${maxLength}`;
   }
   if (field.type === "boolean") return "BOOLEAN";
-  if (field.type === "integer") return "INTEGER";
+  if (field.type === "integer") return "BIGINT";
+  if(field.type === "bigint") return "BIGINT";
   if (field.type === "number") return "NUMERIC";
   return "TEXT";
 }
@@ -169,6 +170,7 @@ function getJavascriptType(field: TSchema): string {
   if (field.type === "string") return "string";
   if (field.type === "boolean") return "boolean";
   if (field.type === "integer") return "number";
+  if (field.type === "bigint") return "number";
   if (field.type === "number") return "number";
   return "any";
 }
@@ -177,6 +179,7 @@ function getJavascriptDefaultValue(field: TSchema): string {
   if (field.type === "string") return '""';
   if (field.type === "boolean") return "false";
   if (field.type === "integer") return "0";
+  if (field.type === "bigint") return "0";
   if (field.type === "number") return "0";
   return "null";
 }
@@ -850,7 +853,7 @@ if (process.platform === "win32") {
   );
 }
 
-execSync(`DATABASE_URL='postgresql://postgres:This4Now!@localhost:5432/awesumDev' npx kysely-codegen --out-file ./db/db.d.ts --type-mapping='{"numeric":"number"}'`)
+execSync(`DATABASE_URL='postgresql://postgres:This4Now!@localhost:5432/awesumDev' npx kysely-codegen --out-file ./db/db.d.ts --type-mapping='{"int8":"number"}'`)
 
 setTimeout(async () => {
   const pub = createClient();

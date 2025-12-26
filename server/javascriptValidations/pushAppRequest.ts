@@ -27,7 +27,7 @@ transform: ['trim', 'toLowerCase'],
 type: 'string'},
 version: { default: 0, minimum: 0, type: 'integer' },
 touched: { default: false, type: 'boolean' },
-lastModified: { default: 1766705790326, type: 'number' },
+lastModified: { default: 1766767543272, type: 'integer' },
 homePageImageType: {
 default: 0,
 minimum: 0,
@@ -51,11 +51,11 @@ type: 'string'},
 enableNarrator: { default: false, type: 'boolean' },
 groups: { default: '', maxLength: 8000, type: 'string' },
 id: {
-default: '019b57de-fd76-747c-b304-03c369028860',
+default: '019b5b8d-43e8-77df-9534-2de95bdfb012',
 format: 'uuid',
 minLength: 36,
 type: 'string'},
-lastSync: { default: 0, type: 'number' }
+lastSync: { default: 0, type: 'integer' }
 },
 required: [
 'email',
@@ -382,13 +382,18 @@ if (data0.lastModified !== undefined) {
 let data6 = data0.lastModified
 const _errs13 = errors
 if (
-!(typeof data6 == 'number' && isFinite(data6))
+!(
+typeof data6 == 'number' &&
+!(data6 % 1) &&
+!isNaN(data6) &&
+isFinite(data6)
+)
 ) {errors.push(
 {
 instancePath: instancePath + '/app/lastModified',
 schemaPath: '#/properties/app/properties/lastModified/type',
 keyword: 'type',
-params: { type: 'number' },
+params: { type: 'integer' },
  message: "Must_be_a_number"
 }
 );
@@ -686,6 +691,8 @@ const _errs29 = errors
 if (
 !(
 typeof data14 == 'number' &&
+!(data14 % 1) &&
+!isNaN(data14) &&
 isFinite(data14)
 )
 ) {errors.push(
@@ -693,7 +700,7 @@ isFinite(data14)
 instancePath: instancePath + '/app/lastSync',
 schemaPath: '#/properties/app/properties/lastSync/type',
 keyword: 'type',
-params: { type: 'number' },
+params: { type: 'integer' },
  message: "Must_be_a_number"
 }
 );

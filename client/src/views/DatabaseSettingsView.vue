@@ -165,6 +165,7 @@ export default {
       // await this.$awesum.refreshCurrentDatabases();
 
       var defaultDatabaseUnit = getDefault(Value.Default(types.filter((x) => x.$id == "databaseUnit")[0], {}) as ServerDatabaseUnitInterface);
+      
       defaultDatabaseUnit.appId = this.$awesum.currentApp.id;
       defaultDatabaseUnit.databaseId = this.$awesum.currentDatabase.id;
       defaultDatabaseUnit.order = this.$awesum.currentDatabaseUnits.length == 0 ? 0 : this.$awesum.currentDatabaseUnits.reduce((max, databaseUnit) => Math.max(max, databaseUnit.order), 0) + 1;

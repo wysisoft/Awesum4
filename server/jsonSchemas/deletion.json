@@ -1,1 +1,1 @@
-{"$id":"deletion","type":"object","properties":{"id":{"format":"uuid","type":"string"},"databaseId":{"format":"uuid","type":"string"},"level":{"minimum":0,"maximum":9,"type":"integer"},"lastModified":{"default":0,"type":"number"}},"required":["id","databaseId","level","lastModified"]}
+{"$id":"deletion","type":"object","properties":{"id":{"format":"uuid","type":"string"},"databaseId":{"format":"uuid","type":"string"},"level":{"minimum":0,"maximum":9,"type":"integer"},"lastModified":{"default":0,"type":"integer"}},"required":["id","databaseId","level","lastModified"]}

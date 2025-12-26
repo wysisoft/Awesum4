@@ -1,6 +1,12 @@
 import {type DB} from "./db/db";
 import { Kysely, PostgresDialect } from 'kysely';
-import { Pool } from 'pg';
+import { Pool,types as pgTypes } from 'pg';
+
+const int8TypeId = 20
+// Map int8 to number.
+pgTypes.setTypeParser(int8TypeId, (val) => {
+  return parseInt(val, 10)
+})
 
 const db = new Kysely<DB>({
     dialect: new PostgresDialect({

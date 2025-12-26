@@ -56,7 +56,7 @@ itemType: { minimum: 0, maximum: 5, type: 'integer' },
 order: { minimum: 0, type: 'integer' },
 unitId: { format: 'uuid', type: 'string' },
 appId: { format: 'uuid', type: 'string' },
-lastModified: { default: 0, type: 'number' },
+lastModified: { default: 0, type: 'integer' },
 touched: { default: true, type: 'boolean' },
 version: { minimum: 0, type: 'integer' },
 databaseId: { format: 'uuid', type: 'string' },
@@ -1208,12 +1208,19 @@ vErrors.push(err65)
 }
 if (data.lastModified !== undefined) {
 let data18 = data.lastModified
-if (!(typeof data18 == 'number' && isFinite(data18))) {
+if (
+!(
+typeof data18 == 'number' &&
+!(data18 % 1) &&
+!isNaN(data18) &&
+isFinite(data18)
+)
+) {
 const err66 = {
 instancePath: instancePath + '/lastModified',
 schemaPath: '#/properties/lastModified/type',
 keyword: 'type',
-params: { type: 'number' },
+params: { type: 'integer' },
  message: "Must_be_a_number"
 }
 if (vErrors === null) {

@@ -4,7 +4,7 @@ $id: 'router',
 type: 'object',
 properties: {
 id: {
-default: '019b57de-fd76-747c-b304-180c2be7b861',
+default: '019b5b8d-43e9-7712-a981-a36ee4a3c4d0',
 format: 'uuid',
 type: 'string'},
 appId: { format: 'uuid', type: 'string' },
@@ -51,7 +51,7 @@ format: 'regex',
 pattern: '^([0-9]{2}:[0-9]{2})\\|([0-9]+)$',
 type: 'string'},
 version: { default: 0, minimum: 0, type: 'integer' },
-lastModified: { default: 0, type: 'number' },
+lastModified: { default: 0, type: 'integer' },
 touched: { default: true, type: 'boolean' },
 status: { default: 1, maximum: 2, type: 'integer' }
 },
@@ -851,12 +851,19 @@ vErrors.push(err46)
 }
 if (data.lastModified !== undefined) {
 let data12 = data.lastModified
-if (!(typeof data12 == 'number' && isFinite(data12))) {
+if (
+!(
+typeof data12 == 'number' &&
+!(data12 % 1) &&
+!isNaN(data12) &&
+isFinite(data12)
+)
+) {
 const err47 = {
 instancePath: instancePath + '/lastModified',
 schemaPath: '#/properties/lastModified/type',
 keyword: 'type',
-params: { type: 'number' },
+params: { type: 'integer' },
  message: "Must_be_a_number"
 }
 if (vErrors === null) {

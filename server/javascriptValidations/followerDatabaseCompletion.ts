@@ -4,14 +4,14 @@ $id: 'followerDatabaseCompletion',
 type: 'object',
 properties: {
 id: {
-default: '019b57de-fd76-747c-b304-15ef70b629f3',
+default: '019b5b8d-43e9-7712-a981-9d93b779f79c',
 format: 'uuid',
 type: 'string'},
 followerRequestId: { format: 'uuid', type: 'string' },
 itemId: { format: 'uuid', type: 'string' },
 parentItemId: { format: 'uuid', type: 'string' },
 itemLevel: { minimum: 0, maximum: 9, type: 'integer' },
-lastModified: { default: 0, type: 'number' }
+lastModified: { default: 0, type: 'integer' }
 },
 required: [
 'id',
@@ -237,12 +237,19 @@ if (valid0) {
 if (data.lastModified !== undefined) {
 let data5 = data.lastModified
 const _errs11 = errors
-if (!(typeof data5 == 'number' && isFinite(data5))) {errors.push(
+if (
+!(
+typeof data5 == 'number' &&
+!(data5 % 1) &&
+!isNaN(data5) &&
+isFinite(data5)
+)
+) {errors.push(
 {
 instancePath: instancePath + '/lastModified',
 schemaPath: '#/properties/lastModified/type',
 keyword: 'type',
-params: { type: 'number' },
+params: { type: 'integer' },
  message: "Must_be_a_number"
 }
 );

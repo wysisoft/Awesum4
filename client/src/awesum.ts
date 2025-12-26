@@ -774,6 +774,10 @@ export const awesum = reactive({
           await awesum.AwesumDexieDB.serverDatabaseItems.put(itemValues);
           await awesum.refreshCurrentDatabaseItems();
         }
+        if (item.level == ItemLevel.followerDatabaseCompletion) {
+          await awesum.AwesumDexieDB.serverFollowerDatabaseCompletions.put(item.values as ServerFollowerDatabaseCompletionInterface);
+          await awesum.refreshCurrentDatabaseCompletions();
+        }
       }
       if (item.action == syncAction.modify) {
         if (item.level == ItemLevel.followerRequest) {
@@ -1022,7 +1026,7 @@ export const awesum = reactive({
     //find all items with order greater than current order
     var nextIncompleteItems = this.currentDatabaseItems.filter((i) =>
       i.order > this.currentDatabaseItem.order &&
-      !this.currentDatabaseCompletions.get(i.id)
+      !this.currentDatabaseCompletions.has(i.id)
     );
     if (nextIncompleteItems.length > 0) {
       this.goToItem(nextIncompleteItems[0].order);
@@ -1030,7 +1034,7 @@ export const awesum = reactive({
       //find items with order less than current order
       var previousIncompleteItems = this.currentDatabaseItems.filter((i) =>
         i.order < this.currentDatabaseItem.order &&
-        !this.currentDatabaseCompletions.get(i.id)
+        !this.currentDatabaseCompletions.has(i.id)
       );
       if (previousIncompleteItems.length > 0) {
         this.goToItem(previousIncompleteItems[0].order);

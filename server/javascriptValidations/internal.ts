@@ -4,7 +4,7 @@ $id: 'internal',
 type: 'object',
 properties: {
 id: { format: 'uuid', type: 'string' },
-lastModified: { default: 0, type: 'number' }
+lastModified: { default: 0, type: 'integer' }
 },
 required: ['id', 'lastModified']
 }
@@ -69,12 +69,19 @@ if (valid0) {
 if (data.lastModified !== undefined) {
 let data1 = data.lastModified
 const _errs3 = errors
-if (!(typeof data1 == 'number' && isFinite(data1))) {errors.push(
+if (
+!(
+typeof data1 == 'number' &&
+!(data1 % 1) &&
+!isNaN(data1) &&
+isFinite(data1)
+)
+) {errors.push(
 {
 instancePath: instancePath + '/lastModified',
 schemaPath: '#/properties/lastModified/type',
 keyword: 'type',
-params: { type: 'number' },
+params: { type: 'integer' },
  message: "Must_be_a_number"
 }
 );

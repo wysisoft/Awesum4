@@ -1,1 +1,1 @@
-{"$id":"internal","type":"object","properties":{"id":{"format":"uuid","type":"string"},"lastModified":{"default":0,"type":"number"}},"required":["id","lastModified"]}
+{"$id":"internal","type":"object","properties":{"id":{"format":"uuid","type":"string"},"lastModified":{"default":0,"type":"integer"}},"required":["id","lastModified"]}

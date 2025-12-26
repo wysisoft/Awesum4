@@ -28,6 +28,11 @@ rm -r ../bun/dist || true && npm run build && cp -r dist ../bun/dist
 bun run automation
 bun run index.ts --env=dev
 
+
+
 DATABASE_URL='postgresql://postgres:This4Now!@localhost:5
 432/awesumDev' npx kysely-codegen --out-file ./db/db.d.ts --type-mapping='{"numeric":"
 number"}'
+
+(cd ./server && npx tsx automation.ts)
+PGPASSWORD=This4Now! psql -U postgres -h localhost -d awesumDev -p 5432 -f postgresSchemas.sql && (killall chrome || true) && (cd ./client/e2e/both && PWDEBUG=0 npx playwright test empty.spec.ts)

@@ -23,7 +23,7 @@ transform: ['trim', 'toLowerCase'],
 type: 'string'},
 version: { default: 0, minimum: 0, type: 'integer' },
 touched: { default: false, type: 'boolean' },
-lastModified: { default: 1766705790326, type: 'number' },
+lastModified: { default: 1766767543272, type: 'integer' },
 homePageImageType: { default: 0, minimum: 0, maximum: 3, type: 'integer' },
 homePageImage: {
 default: '00000000-0000-0000-0000-000000000001',
@@ -43,11 +43,11 @@ type: 'string'},
 enableNarrator: { default: false, type: 'boolean' },
 groups: { default: '', maxLength: 8000, type: 'string' },
 id: {
-default: '019b57de-fd76-747c-b304-03c369028860',
+default: '019b5b8d-43e8-77df-9534-2de95bdfb012',
 format: 'uuid',
 minLength: 36,
 type: 'string'},
-lastSync: { default: 0, type: 'number' }
+lastSync: { default: 0, type: 'integer' }
 },
 required: [
 'email',
@@ -347,12 +347,19 @@ if (valid0) {
 if (data.lastModified !== undefined) {
 let data5 = data.lastModified
 const _errs11 = errors
-if (!(typeof data5 == 'number' && isFinite(data5))) {errors.push(
+if (
+!(
+typeof data5 == 'number' &&
+!(data5 % 1) &&
+!isNaN(data5) &&
+isFinite(data5)
+)
+) {errors.push(
 {
 instancePath: instancePath + '/lastModified',
 schemaPath: '#/properties/lastModified/type',
 keyword: 'type',
-params: { type: 'number' },
+params: { type: 'integer' },
  message: "Must_be_a_number"
 }
 );
@@ -638,6 +645,8 @@ const _errs27 = errors
 if (
 !(
 typeof data13 == 'number' &&
+!(data13 % 1) &&
+!isNaN(data13) &&
 isFinite(data13)
 )
 ) {errors.push(
@@ -645,7 +654,7 @@ isFinite(data13)
 instancePath: instancePath + '/lastSync',
 schemaPath: '#/properties/lastSync/type',
 keyword: 'type',
-params: { type: 'number' },
+params: { type: 'integer' },
  message: "Must_be_a_number"
 }
 );

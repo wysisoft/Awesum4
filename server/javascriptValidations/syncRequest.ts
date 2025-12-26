@@ -31,7 +31,7 @@ transform: ['trim', 'toLowerCase'],
 type: 'string'},
 version: { default: 0, minimum: 0, type: 'integer' },
 touched: { default: false, type: 'boolean' },
-lastModified: { default: 1766705790326, type: 'number' },
+lastModified: { default: 1766767543272, type: 'integer' },
 homePageImageType: {
 default: 0,
 minimum: 0,
@@ -55,11 +55,11 @@ type: 'string'},
 enableNarrator: { default: false, type: 'boolean' },
 groups: { default: '', maxLength: 8000, type: 'string' },
 id: {
-default: '019b57de-fd76-747c-b304-03c369028860',
+default: '019b5b8d-43e8-77df-9534-2de95bdfb012',
 format: 'uuid',
 minLength: 36,
 type: 'string'},
-lastSync: { default: 0, type: 'number' }
+lastSync: { default: 0, type: 'integer' }
 },
 required: [
 'email',
@@ -83,11 +83,11 @@ $id: 'database',
 type: 'object',
 properties: {
 name: { minLength: 1, maxLength: 100, type: 'string' },
-lastModified: { default: 0, type: 'number' },
+lastModified: { default: 0, type: 'integer' },
 version: { default: 0, minimum: 0, type: 'integer' },
 appId: { format: 'uuid', type: 'string' },
 id: {
-default: '019b57de-fd76-747c-b304-04e220c16b11',
+default: '019b5b8d-43e8-77df-9534-308f2b6ef371',
 format: 'uuid',
 type: 'string'},
 order: { default: 0, minimum: 0, type: 'integer' },
@@ -101,9 +101,9 @@ default: '00000000-0000-0000-0000-000000000002',
 format: 'uuid',
 type: 'string'},
 touched: { default: true, type: 'boolean' },
-unitLastModified: { default: 0, type: 'number' },
-itemLastModified: { default: 0, type: 'number' },
-mediaLastModified: { default: 0, type: 'number' }
+unitLastModified: { default: 0, type: 'integer' },
+itemLastModified: { default: 0, type: 'integer' },
+mediaLastModified: { default: 0, type: 'integer' }
 },
 required: [
 'name',
@@ -126,7 +126,7 @@ type: 'object',
 properties: {
 name: { minLength: 1, maxLength: 100, type: 'string' },
 order: { minimum: 0, type: 'integer' },
-lastModified: { default: 0, type: 'number' },
+lastModified: { default: 0, type: 'integer' },
 touched: { default: true, type: 'boolean' },
 version: { minimum: 0, type: 'integer' },
 id: { format: 'uuid', type: 'string' },
@@ -164,7 +164,7 @@ router: {
 default: '00000000-0000-0000-0000-000000000000',
 format: 'uuid',
 type: 'string'},
-routerTime: { type: 'number' },
+routerTime: { type: 'integer' },
 routerTimeImmediate: { default: false, type: 'boolean' },
 points: { default: 0, minimum: 0, type: 'integer' }
 },
@@ -198,7 +198,7 @@ itemType: { minimum: 0, maximum: 5, type: 'integer' },
 order: { minimum: 0, type: 'integer' },
 unitId: { format: 'uuid', type: 'string' },
 appId: { format: 'uuid', type: 'string' },
-lastModified: { default: 0, type: 'number' },
+lastModified: { default: 0, type: 'integer' },
 touched: { default: true, type: 'boolean' },
 version: { minimum: 0, type: 'integer' },
 databaseId: { format: 'uuid', type: 'string' },
@@ -232,7 +232,7 @@ default: '00000000-0000-0000-0000-000000000000',
 format: 'uuid',
 type: 'string'},
 id: {
-default: '019b57de-fd76-747c-b304-0dbbc7213c98',
+default: '019b5b8d-43e9-7712-a981-97844a756ce8',
 format: 'uuid',
 type: 'string'},
 followerName: {
@@ -260,13 +260,13 @@ doesEmailExist: true,
 default: 'leader@example.com',
 type: 'string'},
 initiatedByFollower: { default: false, type: 'boolean' },
-lastModified: { default: 0, type: 'number' },
+lastModified: { default: 0, type: 'integer' },
 touched: { default: true, type: 'boolean' },
 version: { default: 0, minimum: 0, type: 'integer' },
 status: { default: 0, minimum: 0, maximum: 2, type: 'integer' },
 groups: { maxLength: 8000, default: '', type: 'string' },
 points: { default: 0, minimum: 0, type: 'integer' },
-completionLastModified: { default: 0, type: 'number' }
+completionLastModified: { default: 0, type: 'integer' }
 },
 required: [
 'leaderAppId',
@@ -295,14 +295,14 @@ default: '00000000-0000-0000-0000-000000000000',
 format: 'uuid',
 type: 'string'},
 id: {
-default: '019b57de-fd76-747c-b304-0a75fad8fc1b',
+default: '019b5b8d-43e9-7712-a981-9190d5796332',
 format: 'uuid',
 type: 'string'},
 databaseId: {
 default: '00000000-0000-0000-0000-000000000000',
 format: 'uuid',
 type: 'string'},
-lastModified: { default: 0, type: 'number' },
+lastModified: { default: 0, type: 'integer' },
 touched: { default: true, type: 'boolean' },
 version: { default: 0, minimum: 0, type: 'integer' }
 },
@@ -320,7 +320,7 @@ $id: 'router',
 type: 'object',
 properties: {
 id: {
-default: '019b57de-fd76-747c-b304-180c2be7b861',
+default: '019b5b8d-43e9-7712-a981-a36ee4a3c4d0',
 format: 'uuid',
 type: 'string'},
 appId: { format: 'uuid', type: 'string' },
@@ -367,7 +367,7 @@ format: 'regex',
 pattern: '^([0-9]{2}:[0-9]{2})\\|([0-9]+)$',
 type: 'string'},
 version: { default: 0, minimum: 0, type: 'integer' },
-lastModified: { default: 0, type: 'number' },
+lastModified: { default: 0, type: 'integer' },
 touched: { default: true, type: 'boolean' },
 status: { default: 1, maximum: 2, type: 'integer' }
 },
@@ -394,14 +394,14 @@ $id: 'followerDatabaseCompletion',
 type: 'object',
 properties: {
 id: {
-default: '019b57de-fd76-747c-b304-15ef70b629f3',
+default: '019b5b8d-43e9-7712-a981-9d93b779f79c',
 format: 'uuid',
 type: 'string'},
 followerRequestId: { format: 'uuid', type: 'string' },
 itemId: { format: 'uuid', type: 'string' },
 parentItemId: { format: 'uuid', type: 'string' },
 itemLevel: { minimum: 0, maximum: 9, type: 'integer' },
-lastModified: { default: 0, type: 'number' }
+lastModified: { default: 0, type: 'integer' }
 },
 required: [
 'id',
@@ -417,7 +417,7 @@ $id: 'media',
 type: 'object',
 properties: {
 id: {
-default: '019b57de-fd76-747c-b304-11c855f30ea2',
+default: '019b5b8d-43e9-7712-a981-9bf574cf9812',
 format: 'uuid',
 type: 'string'},
 size: { minimum: 0, type: 'integer' },
@@ -914,6 +914,8 @@ const _errs21 = errors
 if (
 !(
 typeof data10 == 'number' &&
+!(data10 % 1) &&
+!isNaN(data10) &&
 isFinite(data10)
 )
 ) {errors.push(
@@ -921,7 +923,7 @@ isFinite(data10)
 instancePath: instancePath + '/app/lastModified',
 schemaPath: '#/properties/app/properties/lastModified/type',
 keyword: 'type',
-params: { type: 'number' },
+params: { type: 'integer' },
  message: "Must_be_a_number"
 }
 );
@@ -1244,6 +1246,8 @@ const _errs37 = errors
 if (
 !(
 typeof data18 == 'number' &&
+!(data18 % 1) &&
+!isNaN(data18) &&
 isFinite(data18)
 )
 ) {errors.push(
@@ -1252,7 +1256,7 @@ instancePath: instancePath + '/app/lastSync',
 schemaPath: '#/properties/app/properties/lastSync/type',
 keyword: 'type',
 params: {
-type: 'number'},
+type: 'integer'},
  message: "Must_be_a_number"
 }
 );
@@ -1380,13 +1384,18 @@ if (data19.lastModified !== undefined) {
 let data21 = data19.lastModified
 const _errs43 = errors
 if (
-!(typeof data21 == 'number' && isFinite(data21))
+!(
+typeof data21 == 'number' &&
+!(data21 % 1) &&
+!isNaN(data21) &&
+isFinite(data21)
+)
 ) {errors.push(
 {
 instancePath: instancePath + '/database/lastModified',
 schemaPath: '#/properties/database/properties/lastModified/type',
 keyword: 'type',
-params: { type: 'number' },
+params: { type: 'integer' },
  message: "Must_be_a_number"
 }
 );
@@ -1674,6 +1683,8 @@ const _errs59 = errors
 if (
 !(
 typeof data29 == 'number' &&
+!(data29 % 1) &&
+!isNaN(data29) &&
 isFinite(data29)
 )
 ) {errors.push(
@@ -1681,7 +1692,7 @@ isFinite(data29)
 instancePath: instancePath + '/database/unitLastModified',
 schemaPath: '#/properties/database/properties/unitLastModified/type',
 keyword: 'type',
-params: { type: 'number' },
+params: { type: 'integer' },
  message: "Must_be_a_number"
 }
 );
@@ -1699,6 +1710,8 @@ const _errs61 = errors
 if (
 !(
 typeof data30 == 'number' &&
+!(data30 % 1) &&
+!isNaN(data30) &&
 isFinite(data30)
 )
 ) {errors.push(
@@ -1707,7 +1720,7 @@ instancePath: instancePath + '/database/itemLastModified',
 schemaPath: '#/properties/database/properties/itemLastModified/type',
 keyword: 'type',
 params: {
-type: 'number'},
+type: 'integer'},
  message: "Must_be_a_number"
 }
 );
@@ -1725,6 +1738,8 @@ const _errs63 = errors
 if (
 !(
 typeof data31 == 'number' &&
+!(data31 % 1) &&
+!isNaN(data31) &&
 isFinite(data31)
 )
 ) {errors.push(
@@ -1733,7 +1748,7 @@ instancePath: instancePath + '/database/mediaLastModified',
 schemaPath: '#/properties/database/properties/mediaLastModified/type',
 keyword: 'type',
 params: {
-type: 'number'},
+type: 'integer'},
  message: "Must_be_a_number"
 }
 );
@@ -1923,6 +1938,8 @@ const _errs71 = errors
 if (
 !(
 typeof data35 == 'number' &&
+!(data35 % 1) &&
+!isNaN(data35) &&
 isFinite(data35)
 )
 ) {errors.push(
@@ -1930,7 +1947,7 @@ isFinite(data35)
 instancePath: instancePath + '/databaseUnit/lastModified',
 schemaPath: '#/properties/databaseUnit/properties/lastModified/type',
 keyword: 'type',
-params: { type: 'number' },
+params: { type: 'integer' },
  message: "Must_be_a_number"
 }
 );
@@ -2532,6 +2549,12 @@ const _errs99 = errors
 if (
 !(
 typeof data49 == 'number' &&
+!(
+data49 % 1
+) &&
+!isNaN(
+data49
+) &&
 isFinite(
 data49
 )
@@ -2542,7 +2565,7 @@ instancePath: instancePath + '/databaseUnit/routerTime',
 schemaPath: '#/properties/databaseUnit/properties/routerTime/type',
 keyword: 'type',
 params: {
-type: 'number'},
+type: 'integer'},
  message: "Must_be_a_number"
 }
 );
@@ -2894,6 +2917,8 @@ const _errs115 = errors
 if (
 !(
 typeof data57 == 'number' &&
+!(data57 % 1) &&
+!isNaN(data57) &&
 isFinite(data57)
 )
 ) {errors.push(
@@ -2901,7 +2926,7 @@ isFinite(data57)
 instancePath: instancePath + '/databaseItem/lastModified',
 schemaPath: '#/properties/databaseItem/properties/lastModified/type',
 keyword: 'type',
-params: { type: 'number' },
+params: { type: 'integer' },
  message: "Must_be_a_number"
 }
 );
@@ -3549,6 +3574,8 @@ const _errs145 = errors
 if (
 !(
 typeof data72 == 'number' &&
+!(data72 % 1) &&
+!isNaN(data72) &&
 isFinite(data72)
 )
 ) {errors.push(
@@ -3557,7 +3584,7 @@ instancePath: instancePath + '/followerRequest/lastModified',
 schemaPath: '#/properties/followerRequest/properties/lastModified/type',
 keyword: 'type',
 params: {
-type: 'number'},
+type: 'integer'},
  message: "Must_be_a_number"
 }
 );
@@ -3817,6 +3844,12 @@ const _errs157 = errors
 if (
 !(
 typeof data78 == 'number' &&
+!(
+data78 % 1
+) &&
+!isNaN(
+data78
+) &&
 isFinite(
 data78
 )
@@ -3827,7 +3860,7 @@ instancePath: instancePath + '/followerRequest/completionLastModified',
 schemaPath: '#/properties/followerRequest/properties/completionLastModified/type',
 keyword: 'type',
 params: {
-type: 'number'},
+type: 'integer'},
  message: "Must_be_a_number"
 }
 );
@@ -4008,6 +4041,8 @@ const _errs167 = errors
 if (
 !(
 typeof data83 == 'number' &&
+!(data83 % 1) &&
+!isNaN(data83) &&
 isFinite(data83)
 )
 ) {errors.push(
@@ -4015,7 +4050,7 @@ isFinite(data83)
 instancePath: instancePath + '/followerDatabase/lastModified',
 schemaPath: '#/properties/followerDatabase/properties/lastModified/type',
 keyword: 'type',
-params: { type: 'number' },
+params: { type: 'integer' },
  message: "Must_be_a_number"
 }
 );
@@ -4790,6 +4825,12 @@ const _errs199 = errors
 if (
 !(
 typeof data99 == 'number' &&
+!(
+data99 % 1
+) &&
+!isNaN(
+data99
+) &&
 isFinite(
 data99
 )
@@ -4800,7 +4841,7 @@ instancePath: instancePath + '/router/lastModified',
 schemaPath: '#/properties/router/properties/lastModified/type',
 keyword: 'type',
 params: {
-type: 'number'},
+type: 'integer'},
  message: "Must_be_a_number"
 }
 );
@@ -5190,6 +5231,8 @@ const _errs217 = errors
 if (
 !(
 typeof data108 == 'number' &&
+!(data108 % 1) &&
+!isNaN(data108) &&
 isFinite(data108)
 )
 ) {errors.push(
@@ -5198,7 +5241,7 @@ instancePath: instancePath + '/followerDatabaseCompletion/lastModified',
 schemaPath: '#/properties/followerDatabaseCompletion/properties/lastModified/type',
 keyword: 'type',
 params: {
-type: 'number'},
+type: 'integer'},
  message: "Must_be_a_number"
 }
 );

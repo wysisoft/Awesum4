@@ -5,10 +5,10 @@ type: 'object',
 properties: {
 type: { const: 'updateRouterStatusRequest', type: 'string' },
 status: { type: 'string' },
-remainingTime: { type: 'number' },
-remainingImmediateTime: { type: 'number' },
-startTime: { type: 'number' },
-duration: { type: 'number' }
+remainingTime: { type: 'integer' },
+remainingImmediateTime: { type: 'integer' },
+startTime: { type: 'integer' },
+duration: { type: 'integer' }
 },
 required: [
 'type',
@@ -170,13 +170,20 @@ vErrors.push(err8)
 }
 if (data.remainingTime !== undefined) {
 let data2 = data.remainingTime
-if (!(typeof data2 == 'number' && isFinite(data2))) {
+if (
+!(
+typeof data2 == 'number' &&
+!(data2 % 1) &&
+!isNaN(data2) &&
+isFinite(data2)
+)
+) {
 const err9 = {
 instancePath: instancePath + '/remainingTime',
 schemaPath: '#/properties/remainingTime/type',
 keyword: 'type',
-params: { type: 'number' },
-message: 'must be number'
+params: { type: 'integer' },
+message: 'must be integer'
 }
 if (vErrors === null) {
 vErrors = [err9]
@@ -188,13 +195,20 @@ vErrors.push(err9)
 }
 if (data.remainingImmediateTime !== undefined) {
 let data3 = data.remainingImmediateTime
-if (!(typeof data3 == 'number' && isFinite(data3))) {
+if (
+!(
+typeof data3 == 'number' &&
+!(data3 % 1) &&
+!isNaN(data3) &&
+isFinite(data3)
+)
+) {
 const err10 = {
 instancePath: instancePath + '/remainingImmediateTime',
 schemaPath: '#/properties/remainingImmediateTime/type',
 keyword: 'type',
-params: { type: 'number' },
-message: 'must be number'
+params: { type: 'integer' },
+message: 'must be integer'
 }
 if (vErrors === null) {
 vErrors = [err10]
@@ -206,13 +220,20 @@ vErrors.push(err10)
 }
 if (data.startTime !== undefined) {
 let data4 = data.startTime
-if (!(typeof data4 == 'number' && isFinite(data4))) {
+if (
+!(
+typeof data4 == 'number' &&
+!(data4 % 1) &&
+!isNaN(data4) &&
+isFinite(data4)
+)
+) {
 const err11 = {
 instancePath: instancePath + '/startTime',
 schemaPath: '#/properties/startTime/type',
 keyword: 'type',
-params: { type: 'number' },
-message: 'must be number'
+params: { type: 'integer' },
+message: 'must be integer'
 }
 if (vErrors === null) {
 vErrors = [err11]
@@ -224,13 +245,20 @@ vErrors.push(err11)
 }
 if (data.duration !== undefined) {
 let data5 = data.duration
-if (!(typeof data5 == 'number' && isFinite(data5))) {
+if (
+!(
+typeof data5 == 'number' &&
+!(data5 % 1) &&
+!isNaN(data5) &&
+isFinite(data5)
+)
+) {
 const err12 = {
 instancePath: instancePath + '/duration',
 schemaPath: '#/properties/duration/type',
 keyword: 'type',
-params: { type: 'number' },
-message: 'must be number'
+params: { type: 'integer' },
+message: 'must be integer'
 }
 if (vErrors === null) {
 vErrors = [err12]
