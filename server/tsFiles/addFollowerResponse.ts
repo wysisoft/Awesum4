@@ -14,5 +14,6 @@ export type addFollowerResponse = {
     status: number
     groups: string
     points: number
+    completionLastModified: number
   }
 }

@@ -633,7 +633,19 @@ app.post("/api/sync", express.json({ limit: '1mb' }), async (req: express.Reques
     }
     const requestFollowerRequests = {}
     const requestFollowerDatabases = {}
-    
+
+    var query1 = await db.selectFrom('awesum.FollowerDatabase as fd')
+      .innerJoin('awesum.FollowerRequest as fr', 'fd.followerRequestId', 'fr.id')
+      .where(({ eb }) =>
+        eb('fr.leaderAppId', '=', foundLeaderAppId))
+      .selectAll('fd')
+
+    var resultArray1 = await query1.execute();
+    const leaderFollowerDatabases: { [key: string]: AwesumFollowerDatabase } = {}
+    for (const leaderDatabase of resultArray1) {
+      leaderFollowerDatabases[leaderDatabase.id] = leaderDatabase;
+    }
+
     for (const item of syncRequestArray) {
 
       if (item.level == ItemLevel.followerRequest) {
@@ -688,6 +700,27 @@ app.post("/api/sync", express.json({ limit: '1mb' }), async (req: express.Reques
           }
           if (followerRequest.lastModified > (item.values as AwesumFollowerRequest).lastModified
             && followerRequest.version > (item.values as AwesumFollowerRequest).version) {
+
+
+            //get all completions with version greater than foundFollowerDatabase.completionVersion
+            var completions = await db.selectFrom('awesum.FollowerDatabaseCompletion as fdc')
+              .where(({ eb }) =>
+                eb('fdc.followerRequestId', '=', followerRequest.followerRequestId)
+                && eb('fdc.lastModified', '>=', followerRequest.completionLastModified)
+              )
+              .selectAll()
+              .execute();
+
+            for (const completion of completions) {
+              syncResponseArray.push({
+                id: completion.id,
+                values: completion,
+                level: ItemLevel.followerDatabaseCompletion,
+                action: syncAction.add,
+              });
+            }
+
+
             syncResponseArray.push({
               id: item.id,
               values: followerRequest,
@@ -695,6 +728,31 @@ app.post("/api/sync", express.json({ limit: '1mb' }), async (req: express.Reques
               action: syncAction.modify,
             });
             continue;
+          }
+        }
+
+        if (item.level == ItemLevel.followerDatabase) {
+          var followerDatabase = item.values as AwesumFollowerDatabase;
+          foundFollowerDatabase = leaderFollowerDatabases[item.id];
+          if (!foundFollowerDatabase) {
+            debugger;
+            syncResponseArray.push({
+              id: item.id,
+              result: syncResultType.failedValidation,
+              message: "Follower database not found"
+            });
+            continue;
+          }
+
+          if (foundFollowerDatabase.lastModified > (item.values as AwesumFollowerDatabase).lastModified
+            && foundFollowerDatabase.version > (item.values as AwesumFollowerDatabase).version) {
+
+            syncResponseArray.push({
+              id: item.id,
+              values: foundFollowerDatabase,
+              level: ItemLevel.followerDatabase,
+              action: syncAction.modify,
+            });
           }
         }
       }
@@ -717,9 +775,10 @@ app.post("/api/sync", express.json({ limit: '1mb' }), async (req: express.Reques
             continue;
           }
 
-          foundFollowerRequest.status = followerRequest.status;
-          foundFollowerRequest.lastModified = followerRequest.lastModified;
-          foundFollowerRequest.version = followerRequest.version;
+          for (const key in followerRequest) {
+            if (key == 'id') continue;
+            foundFollowerRequest[key] = followerRequest[key];
+          }
 
           var validationErrors = await validateFollowerRequest(foundFollowerRequest);
           if (validationErrors.length > 0) {
@@ -744,6 +803,44 @@ app.post("/api/sync", express.json({ limit: '1mb' }), async (req: express.Reques
               level: ItemLevel.followerRequest,
               result: syncResultType.modified,
             });
+          }
+        }
+
+        if (item.level == ItemLevel.followerDatabase) {
+          var followerDatabase = item.values as AwesumFollowerDatabase;
+          foundFollowerDatabase = followerFollowerDatabases[followerDatabase.id];
+          if (!foundFollowerDatabase) {
+            debugger;
+            syncResponseArray.push({
+              id: item.id,
+              result: syncResultType.failedValidation,
+              message: "Follower database not found"
+            });
+            continue;
+          }
+
+
+          for (const key in followerDatabase) {
+            if (key == 'id') continue;
+            foundFollowerDatabase[key] = followerDatabase[key];
+          }
+
+          var validationErrors = await validateFollowerDatabase(foundFollowerDatabase as AwesumFollowerDatabase);
+          if (validationErrors.length > 0) {
+            for (const error of validationErrors) {
+              syncResponseArray.push({
+                id: item.id,
+                result: syncResultType.failedValidation,
+                message: error.message
+              });
+            }
+          }
+          else {
+            foundFollowerDatabase.touched = false;
+            await db.updateTable('awesum.FollowerDatabase')
+              .set(foundFollowerDatabase as AwesumFollowerDatabase)
+              .where('id', '=', item.id)
+              .execute();
           }
         }
       }

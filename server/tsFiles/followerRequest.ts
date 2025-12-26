@@ -13,4 +13,5 @@ export type followerRequest = {
   status: number
   groups: string
   points: number
+  completionLastModified: number
 }

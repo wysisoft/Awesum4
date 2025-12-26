@@ -877,16 +877,7 @@ export const types = [
                 minimumMessage: "Must_be_greater_than_or_equal_to_0",
                 typeMessage: "Must_be_an_integer",
             }),
-            completionLastModified: Type.Number({
-                default: 0,
-                typeMessage: "Must_be_a_number",
-            }),
-            completionVersion: Type.Integer({
-                default: 0,
-                minimum: 0,
-                minimumMessage: "Must_be_greater_than_or_equal_to_0",
-                typeMessage: "Must_be_an_integer",
-            }),
+            
         },
         { $id: "followerDatabase" },
     ),
@@ -1002,6 +993,10 @@ export const types = [
                 minimum: 0,
                 minimumMessage: "Must_be_greater_than_or_equal_to_0",
                 typeMessage: "Must_be_an_integer",
+            }),
+            completionLastModified: Type.Number({
+                default: 0,
+                typeMessage: "Must_be_a_number",
             }),
         },
         { $id: "followerRequest" },

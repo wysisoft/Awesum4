@@ -82,6 +82,7 @@ export type syncRequest = {
     status: number
     groups: string
     points: number
+    completionLastModified: number
   }
   followerDatabase?: {
     followerRequestId: string
@@ -90,7 +91,6 @@ export type syncRequest = {
     lastModified: number
     touched: boolean
     version: number
-    completionLastModified: number
   }
   router?: {
     id: string

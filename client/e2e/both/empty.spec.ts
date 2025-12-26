@@ -3,9 +3,11 @@ import { Browser, chromium, Page } from 'playwright';
 import { Kysely, PostgresDialect, HandleEmptyInListsPlugin, type HandleEmptyInListsOptions, pushValueIntoList } from 'kysely';
 import { Pool } from 'pg';
 
-import { type AwesumApp, type AwesumFollowerRequest, type AwesumFollowerDatabase, type DB, 
-  type AwesumFollowerDatabaseCompletion, type AwesumDatabaseUnit, type AwesumDatabaseItem, 
-  type AwesumRouter, type AwesumDatabase, type AwesumDnsEntry } from '../../../server/db/db.js';
+import {
+  type AwesumApp, type AwesumFollowerRequest, type AwesumFollowerDatabase, type DB,
+  type AwesumFollowerDatabaseCompletion, type AwesumDatabaseUnit, type AwesumDatabaseItem,
+  type AwesumRouter, type AwesumDatabase, type AwesumDnsEntry
+} from '../../../server/db/db.js';
 
 
 // import stealth from 'puppeteer-extra-plugin-stealth'
@@ -178,8 +180,8 @@ const db = new Kysely<DB>({
 
 while (true) {
   const followerRequest = await db.selectFrom('awesum.FollowerRequest as fr')
-  .where('followerEmail', '=', 'demobrat@gmail.com')
-  .executeTakeFirst();
+    .where('followerEmail', '=', 'demobrat@gmail.com')
+    .executeTakeFirst();
   if (followerRequest) {
     break;
   }
@@ -225,7 +227,6 @@ await wildert.getByRole('button', { name: 'Edit' }).click();
 await wildert.getByRole('button', { name: 'Add Assignment' }).click();
 
 await wildert.getByLabel('Select user').selectOption({ index: 1 });
-
 await wildert.getByRole('button', { name: 'Submit' }).click();
 await wildert.getByRole('button', { name: 'Home' }).click();
 
@@ -237,8 +238,12 @@ await demobrat.waitForTimeout(3000);
 await demobrat.getByRole('button', { name: 'Lets Go' }).click();
 await demobrat.getByRole('button', { name: 'Lets Go' }).click();
 await demobrat.getByRole('button', { name: 'Lets Go' }).click();
+await demobrat.evaluate(() => eval('debugger'));
 await demobrat.locator('body').click();
 await demobrat.locator('body').press('Tab');
+
+
+
 await demobrat.keyboard.press('C');
 await demobrat.keyboard.press('A');
 await demobrat.keyboard.press('L');
@@ -246,5 +251,16 @@ await demobrat.keyboard.press('V')
 await demobrat.keyboard.press('I');
 await demobrat.keyboard.press('N');
 
+while (true) {
+  const followerDatabaseCompletion = await db.selectFrom('awesum.FollowerDatabaseCompletion as fdc')
+    .executeTakeFirst();
+  if (followerDatabaseCompletion) {
+    break;
+  }
+  await demobrat.waitForTimeout(1000);
+}
+
+
+await wildert.getByRole('button', { name: 'Sync' }).click();
 
 await wildert.pause();

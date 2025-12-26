@@ -90,7 +90,6 @@ export interface AwesumDnsEntry {
 }
 
 export interface AwesumFollowerDatabase {
-  completionLastModified: number;
   databaseId: string;
   followerRequestId: string;
   id: string;
@@ -109,6 +108,7 @@ export interface AwesumFollowerDatabaseCompletion {
 }
 
 export interface AwesumFollowerRequest {
+  completionLastModified: number;
   followerAppId: string;
   followerEmail: string;
   followerName: string;

@@ -4,7 +4,7 @@ $id: 'router',
 type: 'object',
 properties: {
 id: {
-default: '019b559d-4823-75ca-9892-5d7f2a8d1171',
+default: '019b57de-fd76-747c-b304-180c2be7b861',
 format: 'uuid',
 type: 'string'},
 appId: { format: 'uuid', type: 'string' },

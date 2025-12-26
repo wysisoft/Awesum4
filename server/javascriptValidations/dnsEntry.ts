@@ -6,11 +6,11 @@ properties: {
 timestamp: { type: 'number' },
 domain: { type: 'string' },
 routerId: {
-default: '019b559d-4823-75ca-9892-63bff577d899',
+default: '019b57de-fd77-73a5-a03e-e305c8ef39cc',
 format: 'uuid',
 type: 'string'},
 id: {
-default: '019b559d-4823-75ca-9892-66931fdfff41',
+default: '019b57de-fd77-73a5-a03e-e794f5fe6ec5',
 format: 'uuid',
 type: 'string'
 }

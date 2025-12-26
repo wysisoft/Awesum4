@@ -100,9 +100,9 @@ export default {
                 }
             }
 
+            var followerDatabaseCompletions = await awesum.AwesumDexieDB.serverFollowerDatabaseCompletions.where('followerRequestId').equals(followerRequest.id)
+            .and((x) => x.lastModified >= followerRequest.completionLastModified).toArray();
 
-
-            var followerDatabaseCompletions = await awesum.AwesumDexieDB.serverFollowerDatabaseCompletions.where('followerRequestId').equals(followerRequest.id).toArray();
             for (const followerDatabaseCompletion of followerDatabaseCompletions) {
                 var syncRequest = {} as ServerSyncRequestInterface;
                 syncRequest.id = followerDatabaseCompletion.id;
@@ -125,121 +125,121 @@ export default {
             syncRequests.push(syncRequest);
         }
 
-        var followerDatabases = await awesum.AwesumDexieDB.serverFollowerDatabases.toArray();
-        for (const followerDatabase of followerDatabases) {
-            var syncRequest = {} as ServerSyncRequestInterface;
-            syncRequest.id = followerDatabase.id;
-            syncRequest.level = ItemLevel.followerDatabase;
-            syncRequest.values = {};
-            syncRequests.push(syncRequest);
-            if (additions.has(followerDatabase.id)) {
-                syncRequest.action = syncAction.add;
-                syncRequest.values = awesum.toPOJO(followerDatabase);
+        // var followerDatabases = await awesum.AwesumDexieDB.serverFollowerDatabases.toArray();
+        // for (const followerDatabase of followerDatabases) {
+        //     var syncRequest = {} as ServerSyncRequestInterface;
+        //     syncRequest.id = followerDatabase.id;
+        //     syncRequest.level = ItemLevel.followerDatabase;
+        //     syncRequest.values = {};
+        //     syncRequests.push(syncRequest);
+        //     if (additions.has(followerDatabase.id)) {
+        //         syncRequest.action = syncAction.add;
+        //         syncRequest.values = awesum.toPOJO(followerDatabase);
 
-            }
-            else if (followerDatabase.touched) {
-                syncRequest.action = syncAction.modify;
-                syncRequest.values = awesum.toPOJO(followerDatabase);
-            }
-            else {
-                syncRequest.action = syncAction.receiveChanges;
-                syncRequest.values = {
-                    lastModified: followerDatabase.lastModified,
-                    version: followerDatabase.version,
-                }
-            }
-        }
+        //     }
+        //     else if (followerDatabase.touched) {
+        //         syncRequest.action = syncAction.modify;
+        //         syncRequest.values = awesum.toPOJO(followerDatabase);
+        //     }
+        //     else {
+        //         syncRequest.action = syncAction.receiveChanges;
+        //         syncRequest.values = {
+        //             lastModified: followerDatabase.lastModified,
+        //             version: followerDatabase.version,
+        //         }
+        //     }
+        // }
 
-        var databases = await awesum.AwesumDexieDB.serverDatabases.toArray();
-        for (const database of databases) {
-            var syncRequest = {} as ServerSyncRequestInterface;
-            syncRequest.id = database.id;
-            syncRequest.level = ItemLevel.followerDatabase;
-            syncRequest.values = {};
-            syncRequests.push(syncRequest);
-            if (additions.has(database.id)) {
-                syncRequest.action = syncAction.add;
-                syncRequest.values = awesum.toPOJO(database);
+        // var databases = await awesum.AwesumDexieDB.serverDatabases.toArray();
+        // for (const database of databases) {
+        //     var syncRequest = {} as ServerSyncRequestInterface;
+        //     syncRequest.id = database.id;
+        //     syncRequest.level = ItemLevel.followerDatabase;
+        //     syncRequest.values = {};
+        //     syncRequests.push(syncRequest);
+        //     if (additions.has(database.id)) {
+        //         syncRequest.action = syncAction.add;
+        //         syncRequest.values = awesum.toPOJO(database);
 
-            }
-            else if (database.touched) {
-                syncRequest.action = syncAction.modify;
-                syncRequest.values = awesum.toPOJO(database);
-            }
-            else {
-                syncRequest.action = syncAction.receiveChanges;
-                syncRequest.values = {
-                    lastModified: database.lastModified,
-                    version: database.version,
-                }
-            }
+        //     }
+        //     else if (database.touched) {
+        //         syncRequest.action = syncAction.modify;
+        //         syncRequest.values = awesum.toPOJO(database);
+        //     }
+        //     else {
+        //         syncRequest.action = syncAction.receiveChanges;
+        //         syncRequest.values = {
+        //             lastModified: database.lastModified,
+        //             version: database.version,
+        //         }
+        //     }
 
-            var units = await awesum.AwesumDexieDB.serverDatabaseUnits.where('databaseId').equals(database.id).toArray();
-            for (const unit of units) {
-                var syncRequest = {} as ServerSyncRequestInterface;
-                syncRequest.id = unit.id;
-                syncRequest.level = ItemLevel.databaseUnit;
-                syncRequest.values = {};
-                syncRequests.push(syncRequest);
-                if (additions.has(unit.id)) {
-                    syncRequest.action = syncAction.add;
-                    syncRequest.values = awesum.toPOJO(unit);
+        //     var units = await awesum.AwesumDexieDB.serverDatabaseUnits.where('databaseId').equals(database.id).toArray();
+        //     for (const unit of units) {
+        //         var syncRequest = {} as ServerSyncRequestInterface;
+        //         syncRequest.id = unit.id;
+        //         syncRequest.level = ItemLevel.databaseUnit;
+        //         syncRequest.values = {};
+        //         syncRequests.push(syncRequest);
+        //         if (additions.has(unit.id)) {
+        //             syncRequest.action = syncAction.add;
+        //             syncRequest.values = awesum.toPOJO(unit);
 
-                }
-                else if (unit.touched) {
-                    syncRequest.action = syncAction.modify;
-                    syncRequest.values = awesum.toPOJO(unit);
-                }
-                else {
-                    syncRequest.action = syncAction.receiveChanges;
-                    syncRequest.values = {
-                        lastModified: unit.lastModified,
-                        version: unit.version,
-                    }
-                }
-            }
+        //         }
+        //         else if (unit.touched) {
+        //             syncRequest.action = syncAction.modify;
+        //             syncRequest.values = awesum.toPOJO(unit);
+        //         }
+        //         else {
+        //             syncRequest.action = syncAction.receiveChanges;
+        //             syncRequest.values = {
+        //                 lastModified: unit.lastModified,
+        //                 version: unit.version,
+        //             }
+        //         }
+        //     }
 
-            var items = await awesum.AwesumDexieDB.serverDatabaseItems.where('databaseId').equals(database.id).toArray();
-            for (const item of items) {
-                var syncRequest = {} as ServerSyncRequestInterface;
-                syncRequest.id = item.id;
-                syncRequest.level = ItemLevel.databaseItem;
-                syncRequest.values = {};
-                syncRequests.push(syncRequest);
-                if (additions.has(item.id)) {
-                    syncRequest.action = syncAction.add;
-                    syncRequest.values = awesum.toPOJO(item);
+        //     var items = await awesum.AwesumDexieDB.serverDatabaseItems.where('databaseId').equals(database.id).toArray();
+        //     for (const item of items) {
+        //         var syncRequest = {} as ServerSyncRequestInterface;
+        //         syncRequest.id = item.id;
+        //         syncRequest.level = ItemLevel.databaseItem;
+        //         syncRequest.values = {};
+        //         syncRequests.push(syncRequest);
+        //         if (additions.has(item.id)) {
+        //             syncRequest.action = syncAction.add;
+        //             syncRequest.values = awesum.toPOJO(item);
 
-                }
-                else if (item.touched) {
-                    syncRequest.action = syncAction.modify;
-                    syncRequest.values = awesum.toPOJO(item);
-                }
-                else {
-                    syncRequest.action = syncAction.receiveChanges;
-                    syncRequest.values = {
-                        lastModified: item.lastModified,
-                        version: item.version,
-                    }
-                }
-            }
-        }
+        //         }
+        //         else if (item.touched) {
+        //             syncRequest.action = syncAction.modify;
+        //             syncRequest.values = awesum.toPOJO(item);
+        //         }
+        //         else {
+        //             syncRequest.action = syncAction.receiveChanges;
+        //             syncRequest.values = {
+        //                 lastModified: item.lastModified,
+        //                 version: item.version,
+        //             }
+        //         }
+        //     }
+        // }
 
-        var mostRecentLastModified = 0;
-        var mostRecentLastModifiedItem = await awesum.AwesumDexieDB.serverFollowerDatabaseCompletions.orderBy('lastModified').reverse().limit(1).first();
-        if (mostRecentLastModifiedItem) {
-            mostRecentLastModified = mostRecentLastModifiedItem.lastModified;
-        }
+        // var mostRecentLastModified = 0;
+        // var mostRecentLastModifiedItem = await awesum.AwesumDexieDB.serverFollowerDatabaseCompletions.orderBy('lastModified').reverse().limit(1).first();
+        // if (mostRecentLastModifiedItem) {
+        //     mostRecentLastModified = mostRecentLastModifiedItem.lastModified;
+        // }
 
-        syncRequests.push({
-            id: constants.emptyGuid,
-            level: ItemLevel.followerDatabaseCompletion,
-            action: syncAction.receiveChanges,
-            values: {
-                lastModified: awesum.ownerApp.lastModified,
-                version: awesum.ownerApp.version,
-            }
-        });
+        // syncRequests.push({
+        //     id: constants.emptyGuid,
+        //     level: ItemLevel.followerDatabaseCompletion,
+        //     action: syncAction.receiveChanges,
+        //     values: {
+        //         lastModified: awesum.ownerApp.lastModified,
+        //         version: awesum.ownerApp.version,
+        //     }
+        // });
 
         var response = await awesum.sync(syncRequests);
 

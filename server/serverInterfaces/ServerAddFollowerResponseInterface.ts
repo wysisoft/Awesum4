@@ -24,5 +24,6 @@ export interface FollowerRequest {
   status: number;
   groups: string;
   points: number;
+  completionLastModified: number;
   
 }

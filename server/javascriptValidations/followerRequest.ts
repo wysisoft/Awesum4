@@ -12,7 +12,7 @@ default: '00000000-0000-0000-0000-000000000000',
 format: 'uuid',
 type: 'string'},
 id: {
-default: '019b559d-4823-75ca-9892-50e9b8015802',
+default: '019b57de-fd76-747c-b304-0dbbc7213c98',
 format: 'uuid',
 type: 'string'},
 followerName: {
@@ -45,7 +45,8 @@ touched: { default: true, type: 'boolean' },
 version: { default: 0, minimum: 0, type: 'integer' },
 status: { default: 0, minimum: 0, maximum: 2, type: 'integer' },
 groups: { maxLength: 8000, default: '', type: 'string' },
-points: { default: 0, minimum: 0, type: 'integer' }
+points: { default: 0, minimum: 0, type: 'integer' },
+completionLastModified: { default: 0, type: 'number' }
 },
 required: [
 'leaderAppId',
@@ -61,7 +62,8 @@ required: [
 'version',
 'status',
 'groups',
-'points'
+'points',
+'completionLastModified'
 ]
 }
 const formats2 = /^(?:urn:uuid:)?[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/i
@@ -93,7 +95,9 @@ if (
 (data.version === undefined && (missing0 = 'version')) ||
 (data.status === undefined && (missing0 = 'status')) ||
 (data.groups === undefined && (missing0 = 'groups')) ||
-(data.points === undefined && (missing0 = 'points'))
+(data.points === undefined && (missing0 = 'points')) ||
+(data.completionLastModified === undefined &&
+(missing0 = 'completionLastModified'))
 ) {errors.push(
 {
 instancePath,
@@ -654,6 +658,32 @@ limit: 0
 var valid0 = _errs27 === errors
 } else {
 var valid0 = true
+}
+if (valid0) {
+if (
+data.completionLastModified !== undefined
+) {
+let data14 = data.completionLastModified
+const _errs29 = errors
+if (
+!(
+typeof data14 == 'number' &&
+isFinite(data14)
+)
+) {errors.push(
+{
+instancePath: instancePath + '/completionLastModified',
+schemaPath: '#/properties/completionLastModified/type',
+keyword: 'type',
+params: { type: 'number' },
+ message: "Must_be_a_number"
+}
+);
+}
+var valid0 = _errs29 === errors
+} else {
+var valid0 = true
+}
 }
 }
 }

@@ -82,6 +82,7 @@ export type syncResponse = {
     status: number
     groups: string
     points: number
+    completionLastModified: number
   }
   followerDatabase?: {
     followerRequestId: string
@@ -90,7 +91,6 @@ export type syncResponse = {
     lastModified: number
     touched: boolean
     version: number
-    completionLastModified: number
   }
   followerDatabaseCompletion?: {
     id: string

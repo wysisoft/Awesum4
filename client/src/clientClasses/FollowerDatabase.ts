@@ -45,8 +45,5 @@
     private _version: number = 0;
     public get version():number { return this._version; }
     public set version(v:number) {if(this._version != v){this._version=v;}}
-    private _completionLastModified: number = 0;
-    public get completionLastModified():number { return this._completionLastModified; }
-    public set completionLastModified(v:number) {if(this._completionLastModified != v){this.version++;this.lastModified=new Date().getTime();this._completionLastModified=v;awesum.setTablePropertyValueById(this.id, 'completionLastModified',v,this.table)}}
   }
   

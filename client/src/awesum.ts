@@ -77,7 +77,7 @@ export const awesum = reactive({
   ownerApp: {} as ClientApp,
   currentRouter: {} as ServerRouterInterface,
   currentApp: {} as ServerAppInterface,
-  
+
   currentDatabase: {} as ServerDatabaseInterface,
   currentDatabases: Array<ServerDatabaseInterface>(),
   currentDatabaseUnits: Array<ServerDatabaseUnitInterface>(),
@@ -225,9 +225,9 @@ export const awesum = reactive({
   },
 
   async refreshCurrentFollowerDatabase() {
-    if(this.currentDatabase && this.currentDatabase.id){
+    if (this.currentDatabase && this.currentDatabase.id) {
       this.currentFollowerDatabase = await this.AwesumDexieDB.serverFollowerDatabases.where('databaseId')
-      .equals(this.currentDatabase.id).first() as ServerFollowerDatabaseInterface;
+        .equals(this.currentDatabase.id).first() as ServerFollowerDatabaseInterface;
     }
   },
 
@@ -248,13 +248,13 @@ export const awesum = reactive({
       for (const element of items) {
         this.currentDatabaseCompletions.add(element.itemId);
 
-        if(element.itemLevel == ItemLevel.databaseUnit) {
+        if (element.itemLevel == ItemLevel.databaseUnit) {
           var itemsInUnit = await this.AwesumDexieDB.serverDatabaseItems.where('unitId').equals(element.itemId).toArray();
           for (const item of itemsInUnit) {
             this.currentDatabaseCompletions.add(item.id);
           }
         }
-        if(element.itemLevel == ItemLevel.database) {
+        if (element.itemLevel == ItemLevel.database) {
           var unitsInDatabase = await this.AwesumDexieDB.serverDatabaseUnits.where('databaseId').equals(element.itemId).toArray();
           for (const unit of unitsInDatabase) {
             this.currentDatabaseCompletions.add(unit.id);
@@ -266,7 +266,7 @@ export const awesum = reactive({
 
 
   async refreshCurrentDatabaseUnits() {
-    if(this.currentDatabase && this.currentDatabase.id){
+    if (this.currentDatabase && this.currentDatabase.id) {
       this.currentDatabaseUnits = await this.AwesumDexieDB.serverDatabaseUnits
         .where({ databaseId: this.currentDatabase.id })
         .sortBy("order");
@@ -345,8 +345,8 @@ export const awesum = reactive({
   },
 
   async refreshCurrentDatabaseItems() {
-    if(this.currentDatabaseUnit && this.currentDatabaseUnit.id){
-    this.currentDatabaseItems = await this.AwesumDexieDB.serverDatabaseItems
+    if (this.currentDatabaseUnit && this.currentDatabaseUnit.id) {
+      this.currentDatabaseItems = await this.AwesumDexieDB.serverDatabaseItems
         .where({ unitId: this.currentDatabaseUnit.id })
         .sortBy("order");
     }
@@ -356,14 +356,18 @@ export const awesum = reactive({
   },
 
   async refreshCurrentFollowerRequest() {
-    if(this.currentApp){
-      this.currentFollowerRequest = await this.AwesumDexieDB.serverFollowerRequests
-      .where('followerAppId').equals(this.currentApp.id).first() as ServerFollowerRequestInterface;
+    if (this.currentApp) {
+      var followerRequest = await this.AwesumDexieDB.serverFollowerRequests
+        .where('followerAppId').equals(this.ownerApp.id)
+        .and((x) => x.leaderAppId == this.currentApp.id).first() as ServerFollowerRequestInterface;
+      if (followerRequest) {
+        this.currentFollowerRequest = followerRequest;
+      }
     }
   },
 
   async refreshCurrentFollowerDatabases() {
-    if(this.currentDatabase && this.currentDatabase.id){
+    if (this.currentDatabase && this.currentDatabase.id) {
       this.currentFollowerDatabases = await this.AwesumDexieDB.serverFollowerDatabases
         .where({ databaseId: this.currentDatabase.id }).toArray();
     }
@@ -373,10 +377,10 @@ export const awesum = reactive({
   },
 
   async refreshCurrentDatabases() {
-    if(this.currentApp && this.currentApp.id){
+    if (this.currentApp && this.currentApp.id) {
       this.currentDatabases = await this.AwesumDexieDB.serverDatabases
-      .where({ appId: this.currentApp.id })
-      .sortBy("order");
+        .where({ appId: this.currentApp.id })
+        .sortBy("order");
     }
     else {
       this.currentDatabases = [];
@@ -533,7 +537,7 @@ export const awesum = reactive({
       syncRequest.action = syncAction.delete;
       syncRequest.values = {
         lastModified: deletion.lastModified,
-        
+
       }
       syncRequests.push(syncRequest);
     }
@@ -594,7 +598,7 @@ export const awesum = reactive({
 
 
   async getDatabaseSyncRequests(databaseId: string): Promise<ServerSyncRequestInterface[]> {
-    
+
     var additionsQuery = await awesum.AwesumDexieDB.additions.toArray();
     var additions = new Set<string>();
     for (const addition of additionsQuery) {
@@ -629,7 +633,6 @@ export const awesum = reactive({
         mediaLastModified: database.mediaLastModified,
       }
     }
-    syncRequests.push(syncRequest);
     var units = await awesum.AwesumDexieDB.serverDatabaseUnits.where('databaseId').equals(databaseId).toArray();
     for (const unit of units) {
       var syncRequest = {} as ServerSyncRequestInterface;
@@ -651,11 +654,10 @@ export const awesum = reactive({
           version: unit.version,
         }
       }
-      syncRequests.push(syncRequest);
     }
     var items = await awesum.AwesumDexieDB.serverDatabaseItems.where('databaseId').equals(databaseId).toArray();
     for (const item of items) {
-      
+
       var syncRequest = {} as ServerSyncRequestInterface;
       syncRequest.id = item.id;
       syncRequest.level = ItemLevel.databaseItem;
@@ -677,7 +679,6 @@ export const awesum = reactive({
           version: item.version,
         }
       }
-      syncRequests.push(syncRequest);
     }
     return syncRequests;
   },

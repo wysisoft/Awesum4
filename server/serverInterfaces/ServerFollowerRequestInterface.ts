@@ -20,5 +20,6 @@ export interface ServerFollowerRequestInterface {
   status: number;
   groups: string;
   points: number;
+  completionLastModified: number;
   
 }

@@ -69,5 +69,8 @@
     private _points: number = 0;
     public get points():number { return this._points; }
     public set points(v:number) {if(this._points != v){this.version++;this.lastModified=new Date().getTime();this._points=v;awesum.setTablePropertyValueById(this.id, 'points',v,this.table)}}
+    private _completionLastModified: number = 0;
+    public get completionLastModified():number { return this._completionLastModified; }
+    public set completionLastModified(v:number) {if(this._completionLastModified != v){this.version++;this.lastModified=new Date().getTime();this._completionLastModified=v;awesum.setTablePropertyValueById(this.id, 'completionLastModified',v,this.table)}}
   }
   

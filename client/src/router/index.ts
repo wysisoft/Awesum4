@@ -443,6 +443,8 @@ router.beforeEach(async (to: RouteLocationNormalized, from: RouteLocationNormali
 
       awesum.currentDatabase = foundDatabase;
       await awesum.refreshCurrentDatabaseUnits();
+      
+      await awesum.refreshCurrentFollowerDatabase();
       await awesum.refreshCurrentFollowerDatabases();
       await awesum.refreshCurrentDatabaseCompletions();
     }

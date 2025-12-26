@@ -16,7 +16,7 @@ default: '00000000-0000-0000-0000-000000000000',
 format: 'uuid',
 type: 'string'},
 id: {
-default: '019b559d-4823-75ca-9892-50e9b8015802',
+default: '019b57de-fd76-747c-b304-0dbbc7213c98',
 format: 'uuid',
 type: 'string'},
 followerName: {
@@ -49,7 +49,8 @@ touched: { default: true, type: 'boolean' },
 version: { default: 0, minimum: 0, type: 'integer' },
 status: { default: 0, minimum: 0, maximum: 2, type: 'integer' },
 groups: { maxLength: 8000, default: '', type: 'string' },
-points: { default: 0, minimum: 0, type: 'integer' }
+points: { default: 0, minimum: 0, type: 'integer' },
+completionLastModified: { default: 0, type: 'number' }
 },
 required: [
 'leaderAppId',
@@ -65,7 +66,8 @@ required: [
 'version',
 'status',
 'groups',
-'points'
+'points',
+'completionLastModified'
 ]
 }
 },
@@ -122,7 +124,9 @@ if (
 (data0.version === undefined && (missing1 = 'version')) ||
 (data0.status === undefined && (missing1 = 'status')) ||
 (data0.groups === undefined && (missing1 = 'groups')) ||
-(data0.points === undefined && (missing1 = 'points'))
+(data0.points === undefined && (missing1 = 'points')) ||
+(data0.completionLastModified === undefined &&
+(missing1 = 'completionLastModified'))
 ) {errors.push(
 {
 instancePath: instancePath + '/follower',
@@ -696,6 +700,32 @@ limit: 0
 var valid1 = _errs29 === errors
 } else {
 var valid1 = true
+}
+if (valid1) {
+if (
+data0.completionLastModified !== undefined
+) {
+let data15 = data0.completionLastModified
+const _errs31 = errors
+if (
+!(
+typeof data15 == 'number' &&
+isFinite(data15)
+)
+) {errors.push(
+{
+instancePath: instancePath + '/follower/completionLastModified',
+schemaPath: '#/properties/follower/properties/completionLastModified/type',
+keyword: 'type',
+params: { type: 'number' },
+ message: "Must_be_a_number"
+}
+);
+}
+var valid1 = _errs31 === errors
+} else {
+var valid1 = true
+}
 }
 }
 }

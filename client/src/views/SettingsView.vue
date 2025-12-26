@@ -173,7 +173,6 @@ export default {
 
 
 
-
       <div v-if="$awesum.ownerApp && $awesum.ownerApp.lastModified">
         <h2 style="font-size:3.5svmin;">Manage Leaders and Followers</h2>
         <p>

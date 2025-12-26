@@ -8,7 +8,7 @@ default: '00000000-0000-0000-0000-000000000000',
 format: 'uuid',
 type: 'string'},
 id: {
-default: '019b559d-4823-75ca-9892-4ca6ba36abb3',
+default: '019b57de-fd76-747c-b304-0a75fad8fc1b',
 format: 'uuid',
 type: 'string'},
 databaseId: {
@@ -17,8 +17,7 @@ format: 'uuid',
 type: 'string'},
 lastModified: { default: 0, type: 'number' },
 touched: { default: true, type: 'boolean' },
-version: { default: 0, minimum: 0, type: 'integer' },
-completionLastModified: { default: 0, type: 'number' }
+version: { default: 0, minimum: 0, type: 'integer' }
 },
 required: [
 'followerRequestId',
@@ -26,8 +25,7 @@ required: [
 'databaseId',
 'lastModified',
 'touched',
-'version',
-'completionLastModified'
+'version'
 ]
 }
 const formats2 = /^(?:urn:uuid:)?[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/i
@@ -49,9 +47,7 @@ if (
 (data.databaseId === undefined && (missing0 = 'databaseId')) ||
 (data.lastModified === undefined && (missing0 = 'lastModified')) ||
 (data.touched === undefined && (missing0 = 'touched')) ||
-(data.version === undefined && (missing0 = 'version')) ||
-(data.completionLastModified === undefined &&
-(missing0 = 'completionLastModified'))
+(data.version === undefined && (missing0 = 'version'))
 ) {errors.push(
 {
 instancePath,
@@ -233,25 +229,6 @@ params: { comparison: '>=', limit: 0 },
 var valid0 = _errs11 === errors
 } else {
 var valid0 = true
-}
-if (valid0) {
-if (data.completionLastModified !== undefined) {
-let data6 = data.completionLastModified
-const _errs13 = errors
-if (!(typeof data6 == 'number' && isFinite(data6))) {errors.push(
-{
-instancePath: instancePath + '/completionLastModified',
-schemaPath: '#/properties/completionLastModified/type',
-keyword: 'type',
-params: { type: 'number' },
- message: "Must_be_a_number"
-}
-);
-}
-var valid0 = _errs13 === errors
-} else {
-var valid0 = true
-}
 }
 }
 }

@@ -4,7 +4,7 @@ $id: 'media',
 type: 'object',
 properties: {
 id: {
-default: '019b559d-4823-75ca-9892-5766aaa469d1',
+default: '019b57de-fd76-747c-b304-11c855f30ea2',
 format: 'uuid',
 type: 'string'},
 size: { minimum: 0, type: 'integer' },

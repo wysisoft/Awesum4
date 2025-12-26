@@ -221,8 +221,16 @@ export default {
 
         });
 
-      if (completionData && completionData.id && awesum.serverEmail != "" && currentFollowerRequest.followerAppId != currentFollowerRequest.leaderAppId) {
-        await this.syncCompletion(completionData);
+
+
+      if (completionData && completionData.id ) {
+        
+        awesum.currentFollowerRequest.completionLastModified = completionData.lastModified;
+        await awesum.waitForDexie();
+        
+        if( awesum.serverEmail != "" && currentFollowerRequest.followerAppId != currentFollowerRequest.leaderAppId){
+          await this.syncCompletion(completionData);
+        }
       }
     }
     // if (doneType.id) {
@@ -346,8 +354,13 @@ export default {
 
         });
       //}
-      if (completionData && completionData.id && awesum.serverEmail != "" && currentFollowerRequest.followerAppId != currentFollowerRequest.leaderAppId) {
-        await this.syncCompletion(completionData);
+      if (completionData && completionData.id ) {
+        awesum.currentFollowerRequest.completionLastModified = Date.now();
+        await awesum.waitForDexie();
+        
+        if( awesum.serverEmail != "" && currentFollowerRequest.followerAppId != currentFollowerRequest.leaderAppId){
+          await this.syncCompletion(completionData);
+        }
       }
     }
 
@@ -465,12 +478,11 @@ export default {
       });
 
       
-
       allData.push({
-        id: completionData.id,
-        level: ItemLevel.followerDatabaseCompletion,
-        values: completionData,
-        action: syncAction.add,
+        id: awesum.currentFollowerRequest.id,
+        level: ItemLevel.followerRequest,
+        values: awesum.toPOJO(awesum.currentFollowerRequest),
+        action: syncAction.modify,
       });
 
       await this.$awesum.sync(allData);
